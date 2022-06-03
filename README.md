@@ -1,3 +1,3 @@
-# Scripting voor ridder IQ bij Almacon
+# Scripting
 
-voor ridder IQ bij Almacon
+Voor ridder IQ bij Almacon
