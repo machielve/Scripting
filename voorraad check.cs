@@ -15,6 +15,7 @@ using Ridder.Common.Script;
 
 public class RidderScript : JobOrderDetailItemScript
 {
+
 	public void Execute()
 	{
 

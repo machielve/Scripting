@@ -15,7 +15,7 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
-	//	public myForm(){
+	
 	private static DialogResult ShowInputDialog(ref decimal input1, ref DataTable dtTest, ref String input2)
 	{
 

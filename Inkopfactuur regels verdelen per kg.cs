@@ -15,7 +15,13 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
-	//	public myForm(){
+	/*
+	
+	Inkoopfactuur regels verdelen, het  programma om een totaal inkoop bedrag te verdelen per kg over de geselecteerde regels
+	Uit te voeren vanuit een inkoopfactuur op regels
+	Geschreven door: Machiel R. van Emden mei-2022
+
+	*/
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
