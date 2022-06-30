@@ -156,7 +156,7 @@ public class RidderScript : CommandScript
 
 			}
 
-			// bericht als voorraad niet voldoende is voor het maakdeel
+			// bericht met de fouten
 			if (FoutLijst.Count > 0)
 			{
 				var message2 = string.Join(Environment.NewLine, FoutLijst);
