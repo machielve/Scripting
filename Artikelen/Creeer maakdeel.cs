@@ -120,7 +120,6 @@ public class RidderScript : CommandScript
 			rsSlRegel.MoveFirst();
 
 
-
 			// loop om aanwezige voorraad te checken
 			rsSlRegel.MoveFirst();
 			while (rsSlRegel.EOF == false)
@@ -157,6 +156,7 @@ public class RidderScript : CommandScript
 
 			}
 
+			// bericht als voorraad niet voldoende is voor het maakdeel
 			if (FoutLijst.Count > 0)
 			{
 				var message2 = string.Join(Environment.NewLine, FoutLijst);
