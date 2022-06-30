@@ -67,8 +67,6 @@ public class RidderScript : CommandScript
 
 		inputBox.Controls.Add(groepprijs);
 
-
-
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
@@ -76,9 +74,6 @@ public class RidderScript : CommandScript
 		DialogResult result = inputBox.ShowDialog();
 
 		input1 = textBox1.Value;
-
-
-
 
 		return result;
 	}
@@ -106,8 +101,6 @@ public class RidderScript : CommandScript
 			rsItem.Fields["GROSSPURCHASEPRICE"].Value = input1;
 
 			rsItem.Update();
-
-
 
 		}
 	}
