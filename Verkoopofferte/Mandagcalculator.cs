@@ -22,6 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
+	
 	private static DialogResult ShowInputDialog(	ref decimal input1, 
 													ref decimal input2, 
 													ref decimal input3, 

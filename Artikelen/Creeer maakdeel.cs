@@ -22,6 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
+	
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
@@ -68,7 +69,7 @@ public class RidderScript : CommandScript
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-		
+
 
 		DialogResult result = inputBox.ShowDialog();
 

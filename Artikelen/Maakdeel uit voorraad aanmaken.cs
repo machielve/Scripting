@@ -15,6 +15,11 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
+	/*
+	
+	Oude versie van Creeer maakdeel
+
+	*/
 
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{

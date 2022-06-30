@@ -22,6 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
+	
 	public void Execute()
 	{
 		string clipboardData = Clipboard.GetText();

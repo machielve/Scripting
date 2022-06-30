@@ -25,7 +25,6 @@ public class RidderScript : CommandScript
 
 	*/
 
-
 	public void Execute()
 
 	{
