@@ -68,6 +68,7 @@ public class RidderScript : CommandScript
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
+		
 
 		DialogResult result = inputBox.ShowDialog();
 
