@@ -144,7 +144,7 @@ public class RidderScript : CommandScript
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.ClientSize = size;
-		inputBox.Text = "Code fixert";
+		inputBox.Text = "Atikel reperatie";
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
@@ -194,7 +194,7 @@ public class RidderScript : CommandScript
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.ClientSize = size;
-		inputBox.Text = "Trafalgar";
+		inputBox.Text = "Artikel wissel";
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
@@ -244,7 +244,7 @@ public class RidderScript : CommandScript
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.ClientSize = size;
-		inputBox.Text = "Trafalgar";
+		inputBox.Text = "Substuklijst reperatie";
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
@@ -294,7 +294,7 @@ public class RidderScript : CommandScript
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.ClientSize = size;
-		inputBox.Text = "Trafalgar";
+		inputBox.Text = "Substuklijst wissel";
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
