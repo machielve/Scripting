@@ -31,7 +31,6 @@ public class RidderScript : CommandScript
 		if (records.Length == 0)
 			return;
 
-
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsBonregel = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
@@ -61,7 +60,6 @@ public class RidderScript : CommandScript
 		}
 
 		this.FormDataAwareFunctions.Refres();
-
 
 	}
 
