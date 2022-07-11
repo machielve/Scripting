@@ -527,13 +527,9 @@ public class RidderScript : CommandScript
 
 					rsAssemblySub.Update();
 
-
 				}
 			}
-
 		}
-
-
 	}
 
 	// M.R.v.E - 2022
