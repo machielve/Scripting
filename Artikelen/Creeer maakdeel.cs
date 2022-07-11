@@ -206,8 +206,6 @@ public class RidderScript : CommandScript
 			MessageBox.Show(message, "totaal uitgeboekt");
 
 		}
-
-
 	}
 
 	// M.R.v.E - 2022

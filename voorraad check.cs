@@ -33,12 +33,10 @@ public class RidderScript : JobOrderDetailItemScript
 		decimal voorraadReserv = Convert.ToDecimal(rsArtikel.Fields["TOTALSTOCKRESERVATION"].Value.ToString());
 		decimal voorraadInkoop = Convert.ToDecimal(rsArtikel.Fields["TOTALFUTURESTOCK"].Value.ToString());
 		string artikelNummer = rsArtikel.Fields["CODE"].Value.ToString();
-
 		decimal EcoVoorraad = (voorraadIn - voorraadUit + voorraadInkoop - voorraadReserv);
 
 		ScriptRecordset rsBonArtikel = this.GetRecordset("R_JOBORDERDETAILITEM", "", "FK_ITEM = " + itemCode, "");
 		rsBonArtikel.MoveFirst();
-
 
 		while (rsBonArtikel.EOF == false)
 
@@ -71,16 +69,10 @@ public class RidderScript : JobOrderDetailItemScript
 			rsToDO.Fields["FK_DONEBY"].Value = 13;
 			rsToDO.Fields["MEMO"].Value = "Aantal op Bonnen is meer dan op voorraad";
 
-
-
-
 			rsToDO.Update();
 
 
 		}
-
-
-
 
 	}
 }
