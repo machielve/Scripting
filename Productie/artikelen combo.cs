@@ -54,13 +54,9 @@ public class RidderScript : CommandScript
 
 			}
 
-
 			Bonnen.MoveNext();
 			i++;
-		}
-
-		
-		
+		}		
 
 	}
 }
