@@ -135,11 +135,9 @@ public class RidderScript : CommandScript
 				string Item1VIn = rsItemCheck1.Fields["TOTALSTOCKIN"].Value.ToString();
 				string Item1VOut = rsItemCheck1.Fields["TOTALSTOCKOUT"].Value.ToString();
 				string Item1VVast = rsItemCheck1.Fields["TOTALSTOCKRESERVATION"].Value.ToString();
-
 				int Item1VIn1 = Convert.ToInt32(Item1VIn);
 				int Item1VOut1 = Convert.ToInt32(Item1VOut);
 				int Item1VVast1 = Convert.ToInt32(Item1VVast);
-
 				int Item1VVrij = Item1VIn1 - Item1VOut1 - Item1VVast1;
 
 				if (AantalNodig > Item1VVrij)
@@ -176,7 +174,6 @@ public class RidderScript : CommandScript
 				rsArtikelUit.AddNew();
 
 				decimal aantaleruit = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
-
 				string EruitAantal = aantaleruit.ToString();
 				string EruitNaam = rsSlRegel.Fields["DESCRIPTION"].Value.ToString();
 
