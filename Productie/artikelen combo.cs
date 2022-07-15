@@ -29,46 +29,55 @@ public class RidderScript : CommandScript
 		int aantal = Bonnen.RecordCount;
 		int aantal1 = Bonnen1.RecordCount;
 		//MessageBox.Show(aantal.ToString()+" / "+aantal1.ToString());
-		
+
 		Bonnen.MoveFirst();
-		
+
 		int i = 0;
 		int j = 0;
 
-		while (i < aantal)
+		while (Bonnen.EOF == false)
 		{
 			string nummer = Bonnen.Fields["FK_ITEM"].Value.ToString();
 			string regel = Bonnen.Fields["PK_R_JOBORDERDETAILITEM"].Value.ToString();
 			string lengte = Bonnen.Fields["LENGTH"].Value.ToString();
-			
+			string quant = Bonnen.Fields["QUANTITY"].Value.ToString();
+			int quantity = Convert.ToInt32(quant);
 			Bonnen1.MoveFirst();
 			//Bonnen1.MoveNext();
 
-			while (j < aantal1)
+			while (Bonnen1.EOF == false)
 			{
 				//MessageBox.Show("Test"+"-"+j.ToString());
 
 				string nummer1 = Bonnen1.Fields["FK_ITEM"].Value.ToString();
 				string regel1 = Bonnen1.Fields["PK_R_JOBORDERDETAILITEM"].Value.ToString();
 				string lengte1 = Bonnen1.Fields["LENGTH"].Value.ToString();
-				if (	nummer == nummer1 && 
-						regel != regel1 &&
-						lengte == lengte1)
+				string quant1 = Bonnen1.Fields["QUANTITY"].Value.ToString();
+				int quantity1 = Convert.ToInt32(quant1);
+
+				if (nummer == nummer1 && regel != regel1 && lengte == lengte1)
 				{
-					MessageBox.Show("Gelijk");
+					int extra = quantity + quantity1;
+					Bonnen.Fields["QUANTITY"].Value = extra;
+					Bonnen.Update();
+					Bonnen1.Delete();
+					Bonnen1.Update();
+
+					//MessageBox.Show("Gelijk - " + extra.ToString());
 				}
+				Bonnen.Update();
 				Bonnen1.MoveNext();
 
 				j++;
 
 			}
 
-			MessageBox.Show("Loop -"+i.ToString());
+			MessageBox.Show("Loop -" + i.ToString());
 
 			Bonnen.MoveNext();
 			i++;
-			j=0;
-		}		
+			j = 0;
+		}
 
 	}
 }
