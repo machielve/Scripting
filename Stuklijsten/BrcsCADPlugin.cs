@@ -438,6 +438,8 @@ public class RidderScript : CommandScript
 		string bestand1 = @"W:\Almacon Ridder\Ridder Stuklijsten\DataExtracties\";
 		string bestand2	= tekening;
 		string bestand3 = @".csv";
+
+		
 		
 		var reader = new StreamReader(File.OpenRead(bestand1+bestand2+bestand3));
 		List<string> listA = new List<string>();                //Count
