@@ -407,7 +407,6 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = true;
 		}
-
 		else 
 		{
 			cb1 = false;
@@ -438,9 +437,7 @@ public class RidderScript : CommandScript
 		string bestand1 = @"W:\Almacon Ridder\Ridder Stuklijsten\DataExtracties\";
 		string bestand2	= tekening;
 		string bestand3 = @".csv";
-
-		
-		
+				
 		var reader = new StreamReader(File.OpenRead(bestand1+bestand2+bestand3));
 		List<string> listA = new List<string>();                //Count
 		List<string> listB = new List<string>();                //TAG
@@ -468,8 +465,8 @@ public class RidderScript : CommandScript
 		List<string> listX = new List<string>();                //W
 		List<string> listY = new List<string>();                //W1
 		List<string> listZ = new List<string>();                //Layer
-		List<string> listAA = new List<string>();          	  	//Area poly
-		List<string> listAB = new List<string>();           	//Length poly
+		List<string> listAA = new List<string>();          	  	//Area polyline
+		List<string> listAB = new List<string>();           	//Length polyline
 
 		while (!reader.EndOfStream)
 		{
@@ -479,7 +476,6 @@ public class RidderScript : CommandScript
 
 			listA.Add(values[0]);
 			listB.Add(values[1]);
-				
 			listC.Add(values[2]);
 			listD.Add(values[3]);
 			listE.Add(values[4]);
@@ -639,8 +635,7 @@ public class RidderScript : CommandScript
 
 	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser)
 	{
-		int artID;
-		
+		int artID;		
 
 		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", Acode), "");
 		rsItem.MoveFirst();
@@ -775,7 +770,6 @@ public class RidderScript : CommandScript
 			subswap(ref stuknummer, ref stukID);
 		}
 		else stukID = Convert.ToInt32(rsSub.Fields["PK_R_ASSEMBLY"].Value.ToString());
-
 
 		if (stukID == 0)
 		{
