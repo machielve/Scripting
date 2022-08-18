@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
-	
+
 	private static DialogResult ShowInputDialog(ref string input, ref decimal input1, ref string input2, ref bool rb10, ref bool rb11,
 												ref bool rb0, ref bool rb1, ref bool rb2, ref bool rb3, ref bool rb4, ref bool rb5)
 	{
@@ -209,15 +209,13 @@ public class RidderScript : CommandScript
 		string input2 = "Trap breedte";
 		bool rb10 = false;
 		bool rb11 = false;
-
-
+		
 		bool rb0 = true;
 		bool rb1 = false;
 		bool rb2 = false;
 		bool rb3 = false;
 		bool rb4 = false;
 		bool rb5 = false;
-
 
 		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5);
 
@@ -251,7 +249,7 @@ public class RidderScript : CommandScript
 			hoek = 0;
 			treden = 0;
 		}
-
+		
 		if (rb0 == true)
 		{
 			type = 0;
@@ -450,10 +448,8 @@ public class RidderScript : CommandScript
 							"\nArtikelcode roostertrede: " + tredecode + " - " + tottrede + " x" +
 							"\nArtikelcode stairsupport plate: " + supportcode + " - " + totsupp + " x" +
 							"\nStuklijstnummer: " + stuklijst + " - " + inputdec + " x"
-				//			"\n" +
-				//			"\nDit script heeft nog geen functie, komt er aan :)"
 							, "Trebuchet");
-			
+
 
 			{
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", tredecode), "");
