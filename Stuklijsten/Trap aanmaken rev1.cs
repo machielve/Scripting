@@ -209,7 +209,7 @@ public class RidderScript : CommandScript
 		string input2 = "Trap breedte";
 		bool rb10 = false;
 		bool rb11 = false;
-		
+
 		bool rb0 = true;
 		bool rb1 = false;
 		bool rb2 = false;
@@ -222,12 +222,18 @@ public class RidderScript : CommandScript
 		int hoek = 0;
 		int type = 0;
 		int ssm = 0;
-		string model = "";
-		string stuklijst = "";
+		
 		string tredecode = "";
 		string supportcode = "";
+		string trapcode = "";
+		string bevessettrap = "";
+		string bevessettrede = "S100337";
+		string bevessetweltrede = "S100337";
+		string bevessetsupplate = "S100338";
+		
 		decimal treden = 0;
 		decimal hoog = input1;
+		
 		decimal optreden42 = Math.Round(hoog / 210, 0);
 		decimal optreden37 = Math.Round(hoog / 190, 0);
 		decimal breed = Int32.Parse(input2);
@@ -249,151 +255,79 @@ public class RidderScript : CommandScript
 			hoek = 0;
 			treden = 0;
 		}
+		double hoekrad = hoek * (Math.PI / 180);
+		double hoogd = Convert.ToDouble(hoog);
+
+		double lang = hoogd / (Math.Sin(hoekrad));
 		
-		
-		
-		
-		
-		
+		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
 		{
 			type = 0;
-			model = "A";
+			bevessettrap = "S100509";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13699";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13700";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13701";
+			else 		trapcode = "";
+			
 		}
+		
 		else if (rb1 == true)
 		{
-			type = 1;
-			model = "A";
+			type = 1; 
+			bevessettrap = "S100510";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13702";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13703";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13704";
+			else 		trapcode = "";
 		}
 		else if (rb2 == true)
 		{
 			type = 2;
-			model = "B";
+			bevessettrap = "S100511";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13705";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13706";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13707";
+			else 		trapcode = "";
 		}
 		else if (rb3 == true)
 		{
 			type = 3;
-			model = "B";
+			bevessettrap = "S100512";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13708";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13709";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13710";
+			else 		trapcode = "";
 		}
 		else if (rb4 == true)
 		{
 			type = 4;
-			model = "B";
+			bevessettrap = "S100513";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13711";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13712";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13713";
+			else 		trapcode = "";
 		}
 		else if (rb5 == true)
 		{
 			type = 5;
-			model = "B";
+			bevessettrap = "S100514";
+			if 			(1000 >= hoog && hoog < 2500) trapcode = "13714";
+			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13715";
+			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13716";
+			else 		trapcode = "";
 		}
 
 		else
 		{
 			type = 10;
-			model = "";
+			trapcode = "";
+			bevessettrap = "";
 		}
 
 
 
-		if (hoek == 37 && model == "A")
-		{
-			if (hoog >= 0 && hoog <= 190) { stuklijst = "S100021"; }
-			else if (hoog <= 380) { stuklijst = "S100022"; }
-			else if (hoog <= 570) { stuklijst = "S100023"; }
-			else if (hoog <= 760) { stuklijst = "S100024"; }
-			else if (hoog <= 950) { stuklijst = "S100025"; }
-			else if (hoog <= 1140) { stuklijst = "S100026"; }
-			else if (hoog <= 1330) { stuklijst = "S100027"; }
-			else if (hoog <= 1520) { stuklijst = "S100028"; }
-			else if (hoog <= 1710) { stuklijst = "S100029"; }
-			else if (hoog <= 1900) { stuklijst = "S100030"; }
-			else if (hoog <= 2090) { stuklijst = "S100031"; }
-			else if (hoog <= 2280) { stuklijst = "S100032"; }
-			else if (hoog <= 2470) { stuklijst = "S100033"; }
-			else if (hoog <= 2660) { stuklijst = "S100034"; }
-			else if (hoog <= 2850) { stuklijst = "S100035"; }
-			else if (hoog <= 3040) { stuklijst = "S100036"; }
-			else if (hoog <= 3230) { stuklijst = "S100037"; }
-			else if (hoog <= 3420) { stuklijst = "S100038"; }
-			else if (hoog <= 3610) { stuklijst = "S100039"; }
-			else if (hoog <= 3800) { stuklijst = "S100040"; }
-			else if (hoog <= 3990) { stuklijst = "S100041"; }
-			else if (hoog <= 4001) { stuklijst = "S100042"; }
-		}
-
-		if (hoek == 37 && model == "B")
-		{
-			if (hoog >= 0 && hoog <= 190) { stuklijst = "S100043"; }
-			else if (hoog <= 380) { stuklijst = "S100044"; }
-			else if (hoog <= 570) { stuklijst = "S100045"; }
-			else if (hoog <= 760) { stuklijst = "S100046"; }
-			else if (hoog <= 950) { stuklijst = "S100047"; }
-			else if (hoog <= 1140) { stuklijst = "S100048"; }
-			else if (hoog <= 1330) { stuklijst = "S100049"; }
-			else if (hoog <= 1520) { stuklijst = "S100050"; }
-			else if (hoog <= 1710) { stuklijst = "S100051"; }
-			else if (hoog <= 1900) { stuklijst = "S100052"; }
-			else if (hoog <= 2090) { stuklijst = "S100053"; }
-			else if (hoog <= 2280) { stuklijst = "S100054"; }
-			else if (hoog <= 2470) { stuklijst = "S100055"; }
-			else if (hoog <= 2660) { stuklijst = "S100056"; }
-			else if (hoog <= 2850) { stuklijst = "S100057"; }
-			else if (hoog <= 3040) { stuklijst = "S100058"; }
-			else if (hoog <= 3230) { stuklijst = "S100059"; }
-			else if (hoog <= 3420) { stuklijst = "S100060"; }
-			else if (hoog <= 3610) { stuklijst = "S100061"; }
-			else if (hoog <= 3800) { stuklijst = "S100062"; }
-			else if (hoog <= 3990) { stuklijst = "S100063"; }
-			else if (hoog <= 4001) { stuklijst = "S100064"; }
-		}
-
-		if (hoek == 42 && model == "A")
-		{
-			if (hoog >= 0 && hoog <= 210) { stuklijst = "S100065"; }
-			else if (hoog <= 420) { stuklijst = "S100066"; }
-			else if (hoog <= 630) { stuklijst = "S100067"; }
-			else if (hoog <= 840) { stuklijst = "S100068"; }
-			else if (hoog <= 1050) { stuklijst = "S100069"; }
-			else if (hoog <= 1260) { stuklijst = "S100070"; }
-			else if (hoog <= 1470) { stuklijst = "S100071"; }
-			else if (hoog <= 1680) { stuklijst = "S100072"; }
-			else if (hoog <= 1890) { stuklijst = "S100073"; }
-			else if (hoog <= 2100) { stuklijst = "S100074"; }
-			else if (hoog <= 2310) { stuklijst = "S100075"; }
-			else if (hoog <= 2520) { stuklijst = "S100076"; }
-			else if (hoog <= 2730) { stuklijst = "S100077"; }
-			else if (hoog <= 2940) { stuklijst = "S100078"; }
-			else if (hoog <= 3150) { stuklijst = "S100079"; }
-			else if (hoog <= 3360) { stuklijst = "S100080"; }
-			else if (hoog <= 3570) { stuklijst = "S100081"; }
-			else if (hoog <= 3780) { stuklijst = "S100082"; }
-			else if (hoog <= 3990) { stuklijst = "S100083"; }
-			else if (hoog <= 4001) { stuklijst = "S100084"; }
-		}
-
-		if (hoek == 42 && model == "B")
-		{
-			if (hoog >= 0 && hoog <= 210) { stuklijst = "S100085"; }
-			else if (hoog <= 420) { stuklijst = "S100086"; }
-			else if (hoog <= 630) { stuklijst = "S100087"; }
-			else if (hoog <= 840) { stuklijst = "S100088"; }
-			else if (hoog <= 1050) { stuklijst = "S100089"; }
-			else if (hoog <= 1260) { stuklijst = "S100090"; }
-			else if (hoog <= 1470) { stuklijst = "S100091"; }
-			else if (hoog <= 1680) { stuklijst = "S100092"; }
-			else if (hoog <= 1890) { stuklijst = "S100093"; }
-			else if (hoog <= 2100) { stuklijst = "S100094"; }
-			else if (hoog <= 2310) { stuklijst = "S100095"; }
-			else if (hoog <= 2520) { stuklijst = "S100096"; }
-			else if (hoog <= 2730) { stuklijst = "S100097"; }
-			else if (hoog <= 2940) { stuklijst = "S100098"; }
-			else if (hoog <= 3150) { stuklijst = "S100099"; }
-			else if (hoog <= 3360) { stuklijst = "S100100"; }
-			else if (hoog <= 3570) { stuklijst = "S100101"; }
-			else if (hoog <= 3780) { stuklijst = "S100102"; }
-			else if (hoog <= 3990) { stuklijst = "S100103"; }
-			else if (hoog <= 4001) { stuklijst = "S100104"; }
-		}
-
+		//Selecteren tredes
 		if (hoek == 37)
 		{
 			if (breed == 600) { tredecode = "11960"; }
@@ -416,12 +350,12 @@ public class RidderScript : CommandScript
 
 		if (hoek != 00)
 		{
-			if (breed == 600) { supportcode = "12070"; }
+			if (breed == 600) { supportcode = ""; }
 			else if (breed == 650) { supportcode = ""; }
-			else if (breed == 800) { supportcode = "11945"; }
-			else if (breed == 900) { supportcode = "12470"; }
-			else if (breed == 1000) { supportcode = "12071"; }
-			else if (breed == 1200) { supportcode = "12072"; }
+			else if (breed == 800) { supportcode = "13453"; }
+			else if (breed == 900) { supportcode = "13452"; }
+			else if (breed == 1000) { supportcode = "13451"; }
+			else if (breed == 1200) { supportcode = "13450"; }
 		}
 
 		if (type == 0) { ssm = 1; }
@@ -434,10 +368,12 @@ public class RidderScript : CommandScript
 		decimal inputdec = Convert.ToDecimal(input);
 
 		decimal tottrede = inputdec * treden;
-		decimal totsupp = inputdec * ssm;
+		decimal totsupp = inputdec * ssm;		
+		
 
-		if (stuklijst == "" || tredecode == "" || supportcode == "" || inputdec == 0)
+		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" ||inputdec == 0)
 		{
+			// cancel als artikelcodes niet ingevuld zijn
 			return;
 		}
 
@@ -450,19 +386,19 @@ public class RidderScript : CommandScript
 							"\n" + treden + " treden" +
 							"\n" + input2 + " mm breed" +
 							"\n" +
+							"\n" +
 							"\nArtikelcode roostertrede: " + tredecode + " - " + tottrede + " x" +
-							"\nArtikelcode stairsupport plate: " + supportcode + " - " + totsupp + " x" +
-							"\nStuklijstnummer: " + stuklijst + " - " + inputdec + " x"
+							"\nArtikelcode weltrede: " + supportcode + " - " + totsupp + " x" +
+							"\nArtikelcode trapboom: " + trapcode + " - " + inputdec + " x"
 							, "Trebuchet");
 
 
-			{
+			{	// treden invoegen
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", tredecode), "");
 				rsItem.MoveFirst();
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-
 					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + tredecode);
 				}
 				else
@@ -476,18 +412,15 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(tottrede);
 
 					rsAssemblyItem.Update();
-
 				}
 			}
 
-
-			{
+			{	//weltrede invoegen
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", supportcode), "");
 				rsItem.MoveFirst();
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-
 					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + supportcode);
 				}
 				else
@@ -501,19 +434,38 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
 
 					rsAssemblyItem.Update();
-
 				}
 			}
 
+			{   //trap invoegen
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcode), "");
+				rsItem.MoveFirst();
 
-			{
-				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", stuklijst), "");
+				if (rsItem != null && rsItem.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcode);
+				}
+				else
+				{
+					ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+					rsAssemblyItem.UseDataChanges = true;
+					rsAssemblyItem.AddNew();
+
+					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
+					
+					rsAssemblyItem.Update();
+				}
+			}
+
+			{	// trap bevset invoegen
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessettrap), "");
 				rsSub.MoveFirst();
 
 				if (rsSub != null && rsSub.RecordCount == 0)
 				{
-
-					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + stuklijst);
+					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + bevessettrap);
 				}
 				else
 				{
@@ -525,11 +477,62 @@ public class RidderScript : CommandScript
 					rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
 					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
-
 					rsAssemblySub.Update();
-
 				}
 			}
+
+			{   // trede bevset invoegen
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessettrede), "");
+				rsSub.MoveFirst();
+
+				if (rsSub != null && rsSub.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + bevessettrede);
+				}
+				else
+				{
+					ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
+					rsAssemblySub.UseDataChanges = true;
+					rsAssemblySub.AddNew();
+
+					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+					rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
+					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(tottrede);
+
+					rsAssemblySub.Update();
+				}
+			}
+			
+			{   // weltrede bevset invoegen
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessetweltrede), "");
+				rsSub.MoveFirst();
+
+				if (rsSub != null && rsSub.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + bevessetweltrede);
+				}
+				else
+				{
+					ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
+					rsAssemblySub.UseDataChanges = true;
+					rsAssemblySub.AddNew();
+
+					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+					rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
+					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
+
+					rsAssemblySub.Update();
+				}
+			}
+			
+			
+
+
+
+
+
+			MessageBox.Show("klaar");
+			
 		}
 	}
 
