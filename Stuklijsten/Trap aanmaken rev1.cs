@@ -24,7 +24,7 @@ public class RidderScript : CommandScript
 	*/
 
 	private static DialogResult ShowInputDialog(ref string input, ref decimal input1, ref string input2, ref bool rb10, ref bool rb11,
-												ref bool rb0, ref bool rb1, ref bool rb2, ref bool rb3, ref bool rb4, ref bool rb5)
+												ref bool rb0, ref bool rb1, ref bool rb2, ref bool rb3, ref bool rb4, ref bool rb5, ref bool rb6)
 	{
 
 		System.Drawing.Size size = new System.Drawing.Size(300, 700);
@@ -104,7 +104,7 @@ public class RidderScript : CommandScript
 
 		//groep type
 		GroupBox groepBoxType = new GroupBox();
-		groepBoxType.Size = new System.Drawing.Size(180, 200);
+		groepBoxType.Size = new System.Drawing.Size(180, 225);
 		groepBoxType.Location = new System.Drawing.Point(10, 225);
 		groepBoxType.Text = "Trap type";
 
@@ -152,12 +152,19 @@ public class RidderScript : CommandScript
 		rbutton5.Text = "Type 5";
 		groepBoxType.Controls.Add(rbutton5);
 
+		System.Windows.Forms.RadioButton rbutton6 = new RadioButton();
+		rbutton6.Size = new System.Drawing.Size(150, 25);
+		rbutton6.Location = new System.Drawing.Point(10, 175);
+		rbutton6.Checked = rb6;
+		rbutton6.Text = "Type 6 (EuroSort)";
+		groepBoxType.Controls.Add(rbutton6);
+
 		inputBox.Controls.Add(groepBoxType);
 
 		//groephoek	
 		GroupBox groepBoxHoek = new GroupBox();
 		groepBoxHoek.Size = new System.Drawing.Size(180, 100);
-		groepBoxHoek.Location = new System.Drawing.Point(10, 450);
+		groepBoxHoek.Location = new System.Drawing.Point(10, 475);
 		groepBoxHoek.Text = "Trap hoek";
 
 
@@ -198,6 +205,7 @@ public class RidderScript : CommandScript
 		rb3 = rbutton3.Checked;
 		rb4 = rbutton4.Checked;
 		rb5 = rbutton5.Checked;
+		rb6 = rbutton6.Checked;
 
 		return result;
 	}
@@ -216,8 +224,9 @@ public class RidderScript : CommandScript
 		bool rb3 = false;
 		bool rb4 = false;
 		bool rb5 = false;
+		bool rb6 = false;
 
-		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5);
+		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5, ref rb6);
 
 		int hoek = 0;
 		int type = 0;
@@ -265,9 +274,9 @@ public class RidderScript : CommandScript
 		{
 			type = 0;
 			bevessettrap = "S100509";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13699";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13700";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13701";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13699";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13700";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13701";
 			else 		trapcode = "";
 			
 		}
@@ -276,45 +285,55 @@ public class RidderScript : CommandScript
 		{
 			type = 1; 
 			bevessettrap = "S100510";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13702";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13703";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13704";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13702";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13703";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13704";
 			else 		trapcode = "";
 		}
 		else if (rb2 == true)
 		{
 			type = 2;
 			bevessettrap = "S100511";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13705";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13706";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13707";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13705";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13706";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13707";
 			else 		trapcode = "";
 		}
 		else if (rb3 == true)
 		{
 			type = 3;
 			bevessettrap = "S100512";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13708";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13709";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13710";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13708";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13709";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13710";
 			else 		trapcode = "";
 		}
 		else if (rb4 == true)
 		{
 			type = 4;
 			bevessettrap = "S100513";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13711";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13712";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13713";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13711";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13712";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13713";
 			else 		trapcode = "";
 		}
 		else if (rb5 == true)
 		{
 			type = 5;
 			bevessettrap = "S100514";
-			if 			(1000 >= hoog && hoog < 2500) trapcode = "13714";
-			else if 	(2500 >= hoog && hoog < 3500) trapcode = "13715";
-			else if 	(3500 >= hoog && hoog < 5000) trapcode = "13716";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13714";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "13715";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "13716";
+			else 		trapcode = "";
+		}
+
+		else if (rb6)
+		{
+			type = 6;
+			bevessettrap = "S100522";
+			if 			(lang >= 1000 && lang < 2500) trapcode = "13749";
+			else if 	(lang >= 2500 && lang < 3500) trapcode = "";
+			else if 	(lang >= 3500 && lang < 5000) trapcode = "";
 			else 		trapcode = "";
 		}
 
@@ -324,8 +343,6 @@ public class RidderScript : CommandScript
 			trapcode = "";
 			bevessettrap = "";
 		}
-
-
 
 		//Selecteren tredes
 		if (hoek == 37)
@@ -364,6 +381,7 @@ public class RidderScript : CommandScript
 		else if (type == 3) { ssm = 0; }
 		else if (type == 4) { ssm = 2; }
 		else if (type == 5) { ssm = 1; }
+		else if (type == 6) { ssm = 1; }
 
 		decimal inputdec = Convert.ToDecimal(input);
 
@@ -373,6 +391,7 @@ public class RidderScript : CommandScript
 
 		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" ||inputdec == 0)
 		{
+			MessageBox.Show("Er ontbreken artikelcodes");
 			// cancel als artikelcodes niet ingevuld zijn
 			return;
 		}
@@ -524,12 +543,6 @@ public class RidderScript : CommandScript
 					rsAssemblySub.Update();
 				}
 			}
-			
-			
-
-
-
-
 
 			MessageBox.Show("klaar");
 			
