@@ -297,7 +297,7 @@ public class RidderScript : CommandScript
 		decimal spuitvlak = oppervlak / 1000000;
 
 		int AGroep = 116;
-		int AEenheid = 18;  //moet 33 zijn in de live versie ivm spuitvlak
+		int AEenheid = 33;
 		int zaagcode = 1;
 		int prijsupdate = 2;
 		int insjabloon = 2;
@@ -342,7 +342,7 @@ public class RidderScript : CommandScript
 			rsItem.Fields["FK_ITEMSALESPRICETEMPLATEGROUP"].Value = versjabloon;
 			rsItem.Fields["WEIGHT"].Value = gewicht;
 			rsItem.Fields["REGISTRATIONPATH"].Value = rTraject;
-		//	rsItem.Fields["PAINTAREA"].Value = spuitvlak;			
+			rsItem.Fields["PAINTAREA"].Value = spuitvlak;			
 
 			rsItem.Update();
 
@@ -363,12 +363,12 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Update();
 
-/*			rsItemSup.AddNew();
+			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = BCBid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Update();
 			
-*/
+
 
 
 
