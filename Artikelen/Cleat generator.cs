@@ -209,7 +209,6 @@ public class RidderScript : CommandScript
 		inputBox.Controls.Add(groepMod);
 
 
-
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
@@ -297,29 +296,83 @@ public class RidderScript : CommandScript
 		decimal gewicht = volume / 1000000000 * 7850;
 		decimal spuitvlak = oppervlak / 1000000;
 
-		MessageBox.Show(naam1);
-
-		MessageBox.Show(gewicht.ToString() + " kg");
-		MessageBox.Show(spuitvlak.ToString() + " m²");
-
 		int AGroep = 116;
-		int AEenheid = 33;
+		int AEenheid = 18;  //moet 33 zijn in de live versie ivm spuitvlak
 		int zaagcode = 1;
 		int prijsupdate = 2;
 		int insjabloon = 2;
 		int versjabloon = 2;
-		
-		
-		
-		
-		
-		
-		
-		
+		int rTraject = 3;
+
+		int BCBid = 796;
+		int Tailorid = 732;
+		int Laserid = 764;
 		
 
 
+		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("DESCRIPTION = '{0}'", naam1), "");
+		rsItem.MoveFirst();			
 
+		ScriptRecordset rsItem2 = this.GetRecordset("R_ITEM", "", string.Format("DESCRIPTION = '{0}'", naam2), "");
+		rsItem2.MoveFirst();
+		
+		
+		if (rsItem.RecordCount > 0 || rsItem2.RecordCount > 0) 
+		{
+			if (rsItem2.RecordCount > 0)
+			{
+				string ItemCode2 = rsItem2.Fields["CODE"].Value.ToString();
+				MessageBox.Show("Artikel bestaat al onder: " + ItemCode2);
+			}
+			else
+			{
+				string ItemCode = rsItem.Fields["CODE"].Value.ToString();
+				MessageBox.Show("Artikel bestaat al onder: " + ItemCode);
+			}			
+		}
+		
+		else 
+		{
+			rsItem.AddNew();
+			rsItem.Fields["DESCRIPTION"].Value = naam1;
+			rsItem.Fields["FK_ITEMGROUP"].Value = AGroep;
+			rsItem.Fields["FK_ITEMUNIT"].Value = AEenheid;
+			rsItem.Fields["DEFAULTSAWINGCODE"].Value = zaagcode;
+			rsItem.Fields["FK_ITEMPURCHASEPRICETEMPLATEGROUP"].Value = insjabloon;
+			rsItem.Fields["FK_ITEMSALESPRICETEMPLATEGROUP"].Value = versjabloon;
+			rsItem.Fields["WEIGHT"].Value = gewicht;
+			rsItem.Fields["REGISTRATIONPATH"].Value = rTraject;
+		//	rsItem.Fields["PAINTAREA"].Value = spuitvlak;			
+
+			rsItem.Update();
+
+			string NCode = rsItem.Fields["CODE"].Value.ToString();
+			MessageBox.Show("Nieuw artikel = " + NCode + " - " + naam1);
+
+
+			ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMSUPPLIER", "", "PK_R_ITEMSUPPLIER = -1", "");
+			rsItemSup.MoveFirst();
+			
+			rsItemSup.AddNew();
+			rsItemSup.Fields["FK_RELATION"].Value = Tailorid;
+			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Update();
+		
+			rsItemSup.AddNew();
+			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
+			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Update();
+
+/*			rsItemSup.AddNew();
+			rsItemSup.Fields["FK_RELATION"].Value = BCBid;
+			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Update();
+			
+*/
+
+
+
+		}
 	}
 }
 
