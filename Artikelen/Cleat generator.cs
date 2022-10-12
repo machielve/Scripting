@@ -253,7 +253,7 @@ public class RidderScript : CommandScript
 		bool cb2 = false;
 
 
-		ShowInputDialog(	ref input1, ref input2, ref input3, ref input4,
+		ShowInputDialog(ref input1, ref input2, ref input3, ref input4,
 							ref rb10, ref rb11, ref rb12,
 							ref rb20, ref rb21, ref rb22,
 							ref cb1, ref cb2);
@@ -269,20 +269,20 @@ public class RidderScript : CommandScript
 		string mod2 = "";
 		string materiaal = "";
 
-		if (rb10 == true)	voorzet = "Joist cleat ";		
-		if (rb11 == true)	voorzet = "Beam cleat ";		
-		if (rb12 == true) 	voorzet = "Column cleat ";
-				
-		
-		if (cb1 == true) 	mod1 = "multi ";		
-		if (cb2 == true) 	mod2 = "braced ";
-				
+		if (rb10 == true) voorzet = "Joist cleat ";
+		if (rb11 == true) voorzet = "Beam cleat ";
+		if (rb12 == true) voorzet = "Column cleat ";
+
+
+		if (cb1 == true) mod1 = "multi ";
+		if (cb2 == true) mod2 = "braced ";
+
 
 		if (rb20 == true) materiaal = " S235JR";
 		if (rb21 == true) materiaal = " S275JR";
 		if (rb22 == true) materiaal = " S355JR";
-		
-		
+
+
 
 		string maat1 = sinput1 + "x" + sinput2 + "x" + sinput3 + " H=" + sinput4;
 		string maat2 = sinput2 + "x" + sinput1 + "x" + sinput3 + " H=" + sinput4;
@@ -290,8 +290,22 @@ public class RidderScript : CommandScript
 		string naam1 = voorzet + mod1 + mod2 + maat1 + materiaal;
 		string naam2 = voorzet + mod1 + mod2 + maat2 + materiaal;
 
-		decimal oppervlak = (input1 + input2) * input4 * 2;
-		decimal volume = (input1 + input2) * input3 * input1;
+		decimal oppervlak;
+		decimal volume;
+
+		if (rb12 == true)
+		{
+			oppervlak = (input1 + input2 + input1) * input4 * 2;
+			volume = (input1 + input2 + input1) * input3 * input1;
+		}
+
+		else
+		{
+			oppervlak = (input1 + input2) * input4 * 2;
+			volume = (input1 + input2) * input3 * input1;
+		}
+		
+		
 
 		decimal gewicht = volume / 1000000000 * 7850;
 		decimal spuitvlak = oppervlak / 1000000;
@@ -307,17 +321,17 @@ public class RidderScript : CommandScript
 		int BCBid = 796;
 		int Tailorid = 732;
 		int Laserid = 764;
-		
+
 
 
 		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("DESCRIPTION = '{0}'", naam1), "");
-		rsItem.MoveFirst();			
+		rsItem.MoveFirst();
 
 		ScriptRecordset rsItem2 = this.GetRecordset("R_ITEM", "", string.Format("DESCRIPTION = '{0}'", naam2), "");
 		rsItem2.MoveFirst();
-		
-		
-		if (rsItem.RecordCount > 0 || rsItem2.RecordCount > 0) 
+
+
+		if (rsItem.RecordCount > 0 || rsItem2.RecordCount > 0)
 		{
 			if (rsItem2.RecordCount > 0)
 			{
@@ -328,10 +342,10 @@ public class RidderScript : CommandScript
 			{
 				string ItemCode = rsItem.Fields["CODE"].Value.ToString();
 				MessageBox.Show("Artikel bestaat al onder: " + ItemCode);
-			}			
+			}
 		}
-		
-		else 
+
+		else
 		{
 			rsItem.AddNew();
 			rsItem.Fields["DESCRIPTION"].Value = naam1;
@@ -352,12 +366,12 @@ public class RidderScript : CommandScript
 
 			ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMSUPPLIER", "", "PK_R_ITEMSUPPLIER = -1", "");
 			rsItemSup.MoveFirst();
-			
+
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Tailorid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Update();
-		
+
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
@@ -367,8 +381,8 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["FK_RELATION"].Value = BCBid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Update();
-			
 
+			
 
 
 
