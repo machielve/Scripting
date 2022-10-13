@@ -544,6 +544,28 @@ public class RidderScript : CommandScript
 				}
 			}
 
+			{   // poedercoaten invoegen
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessetweltrede), "");
+				rsSub.MoveFirst();
+
+				if (rsSub != null && rsSub.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + bevessetweltrede);
+				}
+				else
+				{
+					ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
+					rsAssemblySub.UseDataChanges = true;
+					rsAssemblySub.AddNew();
+
+					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+					rsAssemblySub.Fields["FK_OUTSOURCEDACTIVITY"].Value = 7;
+					rsAssemblySub.Fields["QUANTITY"].Value = 1;
+
+					rsAssemblySub.Update();
+				}
+			}
+
 			MessageBox.Show("klaar");
 			
 		}
