@@ -475,7 +475,9 @@ public class RidderScript : CommandScript
 
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= "+hoog+"mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
+
 					
 					rsAssemblyItem.Update();
 				}
