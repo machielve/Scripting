@@ -444,6 +444,8 @@ public class RidderScript : CommandScript
 				}
 				else
 				{
+					if( totsupp > 0)
+					{
 					ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 					rsAssemblyItem.UseDataChanges = true;
 					rsAssemblyItem.AddNew();
@@ -453,6 +455,7 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
 
 					rsAssemblyItem.Update();
+					}
 				}
 			}
 
@@ -532,15 +535,19 @@ public class RidderScript : CommandScript
 				}
 				else
 				{
+
 					ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
 					rsAssemblySub.UseDataChanges = true;
 					rsAssemblySub.AddNew();
 
+					if( totsupp > 0)
+					{
 					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
 					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
 
 					rsAssemblySub.Update();
+					}
 				}
 			}
 
