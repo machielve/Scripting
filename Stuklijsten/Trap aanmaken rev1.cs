@@ -231,7 +231,7 @@ public class RidderScript : CommandScript
 		int hoek = 0;
 		int type = 0;
 		int ssm = 0;
-		
+
 		string tredecode = "";
 		string supportcode = "";
 		string trapcode = "";
@@ -239,10 +239,10 @@ public class RidderScript : CommandScript
 		string bevessettrede = "S100337";
 		string bevessetweltrede = "S100337";
 		string bevessetsupplate = "S100338";
-		
+
 		decimal treden = 0;
 		decimal hoog = input1;
-		
+
 		decimal optreden42 = Math.Round(hoog / 210, 0);
 		decimal optreden37 = Math.Round(hoog / 190, 0);
 		decimal breed = Int32.Parse(input2);
@@ -268,73 +268,73 @@ public class RidderScript : CommandScript
 		double hoogd = Convert.ToDouble(hoog);
 
 		double lang = hoogd / (Math.Sin(hoekrad));
-		
+
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
 		{
 			type = 0;
 			bevessettrap = "S100509";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13699";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13700";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13701";
-			else 		trapcode = "";
-			
+			if (lang >= 1000 && lang < 2500) trapcode = "13699";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13700";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13701";
+			else trapcode = "";
+
 		}
-		
+
 		else if (rb1 == true)
 		{
-			type = 1; 
+			type = 1;
 			bevessettrap = "S100510";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13702";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13703";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13704";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13702";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13703";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13704";
+			else trapcode = "";
 		}
 		else if (rb2 == true)
 		{
 			type = 2;
 			bevessettrap = "S100511";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13705";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13706";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13707";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13705";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13706";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13707";
+			else trapcode = "";
 		}
 		else if (rb3 == true)
 		{
 			type = 3;
 			bevessettrap = "S100512";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13708";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13709";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13710";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13708";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13709";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13710";
+			else trapcode = "";
 		}
 		else if (rb4 == true)
 		{
 			type = 4;
 			bevessettrap = "S100513";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13711";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13712";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13713";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13711";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13712";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13713";
+			else trapcode = "";
 		}
 		else if (rb5 == true)
 		{
 			type = 5;
 			bevessettrap = "S100514";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13714";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "13715";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "13716";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13714";
+			else if (lang >= 2500 && lang < 3500) trapcode = "13715";
+			else if (lang >= 3500 && lang < 5000) trapcode = "13716";
+			else trapcode = "";
 		}
 
 		else if (rb6)
 		{
 			type = 6;
 			bevessettrap = "S100522";
-			if 			(lang >= 1000 && lang < 2500) trapcode = "13749";
-			else if 	(lang >= 2500 && lang < 3500) trapcode = "";
-			else if 	(lang >= 3500 && lang < 5000) trapcode = "";
-			else 		trapcode = "";
+			if (lang >= 1000 && lang < 2500) trapcode = "13749";
+			else if (lang >= 2500 && lang < 3500) trapcode = "";
+			else if (lang >= 3500 && lang < 5000) trapcode = "";
+			else trapcode = "";
 		}
 
 		else
@@ -386,10 +386,15 @@ public class RidderScript : CommandScript
 		decimal inputdec = Convert.ToDecimal(input);
 
 		decimal tottrede = inputdec * treden;
-		decimal totsupp = inputdec * ssm;		
+		decimal totsupp = inputdec * ssm;
+
+		decimal paintarea = 1;
+		int trapnummer = 1;
+		int coatingnummer = 1;
 		
 
-		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" ||inputdec == 0)
+
+		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" || inputdec == 0)
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
 			// cancel als artikelcodes niet ingevuld zijn
@@ -412,7 +417,7 @@ public class RidderScript : CommandScript
 							, "Trebuchet");
 
 
-			{	// treden invoegen
+			{   // treden invoegen
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", tredecode), "");
 				rsItem.MoveFirst();
 
@@ -434,7 +439,7 @@ public class RidderScript : CommandScript
 				}
 			}
 
-			{	//weltrede invoegen
+			{   //weltrede invoegen
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", supportcode), "");
 				rsItem.MoveFirst();
 
@@ -444,17 +449,17 @@ public class RidderScript : CommandScript
 				}
 				else
 				{
-					if( totsupp > 0)
+					if (totsupp > 0)
 					{
-					ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
-					rsAssemblyItem.UseDataChanges = true;
-					rsAssemblyItem.AddNew();
+						ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+						rsAssemblyItem.UseDataChanges = true;
+						rsAssemblyItem.AddNew();
 
-					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
+						rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+						rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+						rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
 
-					rsAssemblyItem.Update();
+						rsAssemblyItem.Update();
 					}
 				}
 			}
@@ -475,15 +480,20 @@ public class RidderScript : CommandScript
 
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= "+hoog+"mm";
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
-					
 					rsAssemblyItem.Update();
+
+					paintarea = Convert.ToDecimal(rsAssemblyItem.Fields["PAINTAREA"].Value.ToString());
+					trapnummer = Convert.ToInt32(rsAssemblyItem.Fields["PK_R_ASSEMBLYDETAILITEM"].Value.ToString());
+					
+					
+					
 				}
 			}
 
-			{	// trap bevset invoegen
+			{   // trap bevset invoegen
 				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessettrap), "");
 				rsSub.MoveFirst();
 
@@ -524,9 +534,10 @@ public class RidderScript : CommandScript
 					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(tottrede);
 
 					rsAssemblySub.Update();
+					
 				}
 			}
-			
+
 			{   // weltrede bevset invoegen
 				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessetweltrede), "");
 				rsSub.MoveFirst();
@@ -542,13 +553,13 @@ public class RidderScript : CommandScript
 					rsAssemblySub.UseDataChanges = true;
 					rsAssemblySub.AddNew();
 
-					if( totsupp > 0)
+					if (totsupp > 0)
 					{
-					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
-					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
+						rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+						rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
+						rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
 
-					rsAssemblySub.Update();
+						rsAssemblySub.Update();
 					}
 				}
 			}
@@ -569,14 +580,34 @@ public class RidderScript : CommandScript
 
 					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblySub.Fields["FK_OUTSOURCEDACTIVITY"].Value = 7;
-					rsAssemblySub.Fields["QUANTITY"].Value = 1;
+					rsAssemblySub.Fields["QUANTITY"].Value = paintarea;
 
 					rsAssemblySub.Update();
+
+					coatingnummer = Convert.ToInt32(rsAssemblySub.Fields["PK_R_ASSEMBLYDETAILOUTSOURCED"].Value.ToString());
+					
+					
 				}
 			}
 
-			MessageBox.Show("klaar");
+			{   // poedercoaten koppelen
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLYITEMOUTSOURCED", "", "PK_R_ASSEMBLYITEMOUTSOURCED= -1", "");
+				rsSub.UseDataChanges = true;
+				rsSub.AddNew();
+
+
+				rsSub.Fields["FK_ASSEMBLYDETAILITEM"].Value = trapnummer;
+				rsSub.Fields["FK_ASSEMBLYDETAILOUTSOURCED"].Value = coatingnummer;
+				rsSub.Update();
+				
+			}
 			
+			
+
+			MessageBox.Show("Klaar");
+			MessageBox.Show("Poeder coaten is ook ge-automatizeerd");
+			
+
 		}
 	}
 
