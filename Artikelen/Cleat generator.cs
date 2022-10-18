@@ -370,22 +370,25 @@ public class RidderScript : CommandScript
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Tailorid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
+			rsItemSup.Fields["ITEMTYPE"].Value = 6;
 			rsItemSup.Update();
 
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
+			rsItemSup.Fields["ITEMTYPE"].Value = 6;
 			rsItemSup.Update();
 
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = BCBid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
+			rsItemSup.Fields["ITEMTYPE"].Value = 2;
 			rsItemSup.Update();
 
 			
-
-
-
 		}
 	}
 }
