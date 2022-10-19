@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
-	
+
 	private static DialogResult ShowInputDialog(ref decimal input1, ref decimal input2, ref decimal input3, ref decimal input4)
 	{
 
@@ -118,12 +118,8 @@ public class RidderScript : CommandScript
 
 		inputBox.Controls.Add(groeptransport);
 
-
-
-
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-
 
 		DialogResult result = inputBox.ShowDialog();
 
@@ -146,15 +142,17 @@ public class RidderScript : CommandScript
 		decimal input4 = 1;
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
-		
+
 		string InkoopNummer = this.FormDataAwareFunctions.FormParent.CurrentRecord.GetPrimaryKeyValue().ToString();
 
-	//	MessageBox.Show(InkoopNummer);
+		//	MessageBox.Show(InkoopNummer);
 
 		if (records.Length == 0)
 			return;
 
 		decimal totaal = 0;
+		
+		// Totaal oppervlak berekenen
 
 		foreach (IRecord record in records)
 		{
@@ -171,12 +169,12 @@ public class RidderScript : CommandScript
 			decimal output4 = opp;
 
 			totaal += output4;
-
-
 		}
-
-
+		
 		decimal input6 = totaal;
+		
+		
+		// Totaal bedrag berekenen
 
 		ShowInputDialog(ref input1, ref input2, ref input3, ref input4);
 
@@ -187,11 +185,13 @@ public class RidderScript : CommandScript
 		decimal input31 = Math.Round(input3, 2);
 		decimal input41 = Math.Round(input4, 2);
 
+		
+		// Meter prijs berekenen
+		
 		decimal output2 = output1 / input6;
 
 		decimal output3 = Math.Round(output2, 2);
-
-
+		
 		MessageBox.Show("€ " + input11 + " totale houtprijs" +
 						"\n" + "€ " + input21 + " totale zaagprijs" +
 						"\n" + "€ " + input31 + " totale groefprijs" +
@@ -209,22 +209,27 @@ public class RidderScript : CommandScript
 
 
 
+		// Meter prijs invullen
+		
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsItem = this.GetRecordset("R_PURCHASEORDERDETAILITEM", "", "PK_R_PURCHASEORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem.MoveFirst();
 			rsItem.UseDataChanges = true;
+			
+			if (rsItem.Fields["FK_ITEM"].Value.ToString() == "578") rsItem.Fields["GROSSPURCHASEPRICE"].Value = 0;
 
-			rsItem.Fields["GROSSPURCHASEPRICE"].Value = output3;
+			else rsItem.Fields["GROSSPURCHASEPRICE"].Value = output3;
 
 			rsItem.Update();
-
 		}
 
 
+		// Prijs controle nieuw totaal vs. ingevoerd
+		
 		decimal test = 0;
 		decimal totaal2 = 0;
-		string test1 = "0";
+		string 	test1 = "0";
 
 		foreach (IRecord record in records)
 		{
@@ -241,9 +246,10 @@ public class RidderScript : CommandScript
 				test = prijs;
 				test1 = rsItem.Fields["PK_R_PURCHASEORDERDETAILITEM"].Value.ToString();
 			}
+		}		
 
-		}
-
+		// Prijs verschil berekenen
+		
 		decimal verschil = output1 - totaal2;
 
 		ScriptRecordset rsItem9 = this.GetRecordset("R_PURCHASEORDERDETAILITEM", "", "PK_R_PURCHASEORDERDETAILITEM = " + test1, "");
@@ -253,11 +259,11 @@ public class RidderScript : CommandScript
 		rsItem9.Fields["NETPURCHASEPRICE"].Value = Convert.ToDecimal(rsItem9.Fields["NETPURCHASEPRICE"].Value) + verschil;
 
 		rsItem9.Update();
-
+		
+		
 
 		decimal test50 = 0;
 		decimal totaal51 = 0;
-
 
 		foreach (IRecord record in records)
 		{
@@ -272,13 +278,12 @@ public class RidderScript : CommandScript
 			if (prijs > test50)
 			{
 				test50 = prijs;
-
 			}
-			
-			
-
 		}
-
+		
+		
+		
+		// Transport prijs invullen
 
 		ScriptRecordset rsTransport = this.GetRecordset("R_PURCHASEORDERDETAILMISC", "", "FK_PURCHASEORDER = " + Convert.ToInt32(InkoopNummer), "");
 		rsTransport.MoveFirst();
@@ -287,8 +292,6 @@ public class RidderScript : CommandScript
 		rsTransport.Fields["NETPURCHASEPRICE"].Value = input41;
 
 		rsTransport.Update();
-
-
 
 	}
 
