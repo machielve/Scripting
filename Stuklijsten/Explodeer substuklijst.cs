@@ -42,13 +42,23 @@ Geschreven door: Machiel R. van Emden mei-2022
 			double aantal = Convert.ToDouble(rsSubstuklijst.Fields["QUANTITY"].Value.ToString());			
 
 
-			// Hoofdstuklijst artikelen
+			// Hoofdstuklijst regel artikelen
 			ScriptRecordset rsStuklijstItemNew = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM = -1", "");
 			rsStuklijstItemNew.MoveFirst();
 
-			// Hoofdstuklijst substuklijsten
+			// Hoofdstuklijst regel substuklijsten
 			ScriptRecordset rsStuklijstSubNew = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY = -1", "");
 			rsStuklijstSubNew.MoveFirst();
+
+			// Hoofdstuklijst regel Divers
+			ScriptRecordset rsSubStuklijstDivNew = this.GetRecordset("R_ASSEMBLYDETAILMISC", "", "PK_R_ASSEMBLYDETAILMISC = -1", "");
+			rsSubStuklijstDivNew.MoveFirst();
+
+			// Hoofdstuklijst regel UBW
+			ScriptRecordset rsSubStuklijstUBWNew = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
+			rsSubStuklijstUBWNew.MoveFirst();
+			
+			
 
 			// Originele substuklijstregels artikelen om te exploderen
 			ScriptRecordset rsSubStuklijstItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
@@ -57,6 +67,17 @@ Geschreven door: Machiel R. van Emden mei-2022
 			// Originele substuklijstregels substuklijst om te exploderen
 			ScriptRecordset rsSubStuklijstSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
 			rsSubStuklijstSub.MoveFirst();
+
+			// Originele substuklijstregels Divers om te exploderen
+			ScriptRecordset rsSubStuklijstDiv = this.GetRecordset("R_ASSEMBLYDETAILMISC", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
+			rsSubStuklijstDiv.MoveFirst();
+
+			// Originele substuklijstregels UBW om te exploderen
+			ScriptRecordset rsSubStuklijstUBW = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
+			rsSubStuklijstUBW.MoveFirst();
+			
+			
+			
 			
 			// Nieuwe artikelen toevoegen op de hoofdstuklijst
 			while (rsSubStuklijstItem.EOF == false)
