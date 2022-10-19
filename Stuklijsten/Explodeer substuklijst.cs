@@ -51,12 +51,12 @@ Geschreven door: Machiel R. van Emden mei-2022
 			rsStuklijstSubNew.MoveFirst();
 
 			// Hoofdstuklijst regel Divers
-			ScriptRecordset rsSubStuklijstDivNew = this.GetRecordset("R_ASSEMBLYDETAILMISC", "", "PK_R_ASSEMBLYDETAILMISC = -1", "");
-			rsSubStuklijstDivNew.MoveFirst();
+			ScriptRecordset rsStuklijstDivNew = this.GetRecordset("R_ASSEMBLYDETAILMISC", "", "PK_R_ASSEMBLYDETAILMISC = -1", "");
+			rsStuklijstDivNew.MoveFirst();
 
 			// Hoofdstuklijst regel UBW
-			ScriptRecordset rsSubStuklijstUBWNew = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
-			rsSubStuklijstUBWNew.MoveFirst();
+			ScriptRecordset rsStuklijstUBWNew = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
+			rsStuklijstUBWNew.MoveFirst();
 			
 			
 
@@ -111,18 +111,46 @@ Geschreven door: Machiel R. van Emden mei-2022
 				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + SubCode, "");
 				rsSub.MoveFirst();
 
-				double totaalItem = SubAantal * aantal;
+				double totaalSub = SubAantal * aantal;
 
 				rsStuklijstSubNew.AddNew();
 				rsStuklijstSubNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
 				rsStuklijstSubNew.Fields["FK_SUBASSEMBLY"].Value = SubCode;
-				rsStuklijstSubNew.Fields["QUANTITY"].Value = totaalItem;
+				rsStuklijstSubNew.Fields["QUANTITY"].Value = totaalSub;
 				rsStuklijstSubNew.Fields["DESCRIPTION"].Value = rsSub.Fields["DESCRIPTION"].Value.ToString();
 				rsStuklijstSubNew.Update();
 
 				rsSubStuklijstSub.MoveNext();
 
 			}
+
+			// Nieuwe Diverse posten toevoegen op de hoofdstuklijst			
+			while (rsSubStuklijstDiv.EOF == false)
+			{
+				string DivCode = rsSubStuklijstDiv.Fields["FK_MISC"].Value.ToString();
+				double DivAantal = Convert.ToDouble(rsSubStuklijstDiv.Fields["QUANTITY"].Value.ToString());
+				string DivDiscripion = rsSubStuklijstDiv.Fields["DESCRIPTION"].Value.ToString();
+				string DivEenheid = rsSubStuklijstDiv.Fields["FK_UNIT"].Value.ToString();
+				double DivPrijs = Convert.ToDouble(rsSubStuklijstDiv.Fields["COSTPRICE"].Value.ToString());
+				
+				double totaalDiv = DivAantal * aantal;
+				
+				rsStuklijstDivNew.AddNew();
+				rsStuklijstDivNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
+				rsStuklijstDivNew.Fields["FK_MISC"].Value = DivCode;
+				rsStuklijstDivNew.Fields["QUANTITY"].Value = totaalDiv;
+				rsStuklijstDivNew.Fields["FK_UNIT"].Value = DivEenheid;
+				rsStuklijstDivNew.Fields["COSTPRICE"].Value = DivPrijs;
+				rsStuklijstDivNew.Fields["DESCRIPTION"].Value = DivDiscripion;
+				rsStuklijstDivNew.Update();
+
+				rsSubStuklijstDiv.MoveNext();
+
+			}
+			
+			
+			
+			
 
 
 			// Originele substuklijst verwijderen van de hoofdstuklijst
