@@ -151,17 +151,17 @@ Geschreven door: Machiel R. van Emden mei-2022
 			// Nieuwe UBW posten toevoegen op de hoofdstuklijst			
 			while (rsSubStuklijstUBW.EOF == false)
 			{				
-				string UBWCode = rsSubStuklijstUBW.Fields["FK_OUTCOURCEDACTIVITY"].Value.ToString();
+				string UBWCode = rsSubStuklijstUBW.Fields["FK_OUTSOURCEDACTIVITY"].Value.ToString();
 				double UBWAantal = Convert.ToDouble(rsSubStuklijstUBW.Fields["QUANTITY"].Value.ToString());
 
-				ScriptRecordset rsUBW = this.GetRecordset("R_OUTCOURCEDACTIVITY", "", "PK_R_OUTCOURCEDACTIVITY= " + UBWCode, "");
+				ScriptRecordset rsUBW = this.GetRecordset("R_OUTSOURCEDACTIVITY", "", "PK_R_OUTSOURCEDACTIVITY= " + UBWCode, "");
 				rsUBW.MoveFirst();				
 				
 				double totaalUBW = UBWAantal * aantal;
 				
 				rsStuklijstUBWNew.AddNew();
 				rsStuklijstUBWNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
-				rsStuklijstUBWNew.Fields["FK_OUTCOURCEDACTIVITY"].Value = UBWCode;
+				rsStuklijstUBWNew.Fields["FK_OUTSOURCEDACTIVITY"].Value = UBWCode;
 				rsStuklijstUBWNew.Fields["QUANTITY"].Value = totaalUBW;	
 				rsStuklijstUBWNew.Fields["DESCRIPTION"].Value = rsUBW.Fields["DESCRIPTION"].Value.ToString();
 				rsStuklijstUBWNew.Update();
