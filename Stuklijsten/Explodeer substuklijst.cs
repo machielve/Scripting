@@ -14,15 +14,15 @@ using System.Data;
 using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
-{
-    /*
-	
-	Explodeer substuklijst, het  programma om de een substuklijstregel op te splisten in de onderliggende artikelen, d posten, en substuklijsten
-	Uit te voeren vanuit een stuklijst met de status engineering
-	Geschreven door: Machiel R. van Emden mei-2022
 
-	*/
-	
+/*
+
+Explodeer substuklijst, het  programma om de een substuklijstregel op te splisten in de onderliggende artikelen, d posten, en substuklijsten
+Uit te voeren vanuit een stuklijst met de status engineering
+Geschreven door: Machiel R. van Emden mei-2022
+
+*/
+{
 	public void Execute()
 	{
 
@@ -37,29 +37,30 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsSubstuklijst = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY = " + (int)record.GetPrimaryKeyValue(), "");
 			rsSubstuklijst.MoveFirst();
 
-
 			string stuklijstnummer = rsSubstuklijst.Fields["FK_SUBASSEMBLY"].Value.ToString();
 			string stuklijstdoel = rsSubstuklijst.Fields["FK_ASSEMBLY"].Value.ToString();
-			double aantal = Convert.ToDouble(rsSubstuklijst.Fields["QUANTITY"].Value.ToString());
-			
+			double aantal = Convert.ToDouble(rsSubstuklijst.Fields["QUANTITY"].Value.ToString());			
 
 
+			// Hoofdstuklijst artikelen
 			ScriptRecordset rsStuklijstItemNew = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM = -1", "");
 			rsStuklijstItemNew.MoveFirst();
 
+			// Hoofdstuklijst substuklijsten
 			ScriptRecordset rsStuklijstSubNew = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY = -1", "");
 			rsStuklijstSubNew.MoveFirst();
 
-
-
+			// Originele substuklijstregels artikelen om te exploderen
 			ScriptRecordset rsSubStuklijstItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
 			rsSubStuklijstItem.MoveFirst();
 
-
+			// Originele substuklijstregels substuklijst om te exploderen
+			ScriptRecordset rsSubStuklijstSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
+			rsSubStuklijstSub.MoveFirst();
+			
+			// Nieuwe artikelen toevoegen op de hoofdstuklijst
 			while (rsSubStuklijstItem.EOF == false)
 			{
-
-
 				string itemCode = rsSubStuklijstItem.Fields["FK_ITEM"].Value.ToString();
 				double itemAantal = Convert.ToDouble(rsSubStuklijstItem.Fields["QUANTITY"].Value.ToString());
 
@@ -78,15 +79,9 @@ public class RidderScript : CommandScript
 				rsStuklijstItemNew.Update();
 
 				rsSubStuklijstItem.MoveNext();
-
 			}
-
-
-
-			ScriptRecordset rsSubStuklijstSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY= " + stuklijstnummer, "");
-			rsSubStuklijstSub.MoveFirst();
-
-
+			
+			// Nieuwe Substuklijsten toevoegen op de hoofdstuklijst			
 			while (rsSubStuklijstSub.EOF == false)
 			{
 				string SubCode = rsSubStuklijstSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
@@ -109,6 +104,7 @@ public class RidderScript : CommandScript
 			}
 
 
+			// Originele substuklijst verwijderen van de hoofdstuklijst
 			rsSubstuklijst.Delete();
 
 		}
@@ -117,7 +113,4 @@ public class RidderScript : CommandScript
 
 
 	}
-
-	// M.R.v.E - 2022
-	
 }
