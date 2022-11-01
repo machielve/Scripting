@@ -579,7 +579,7 @@ public class RidderScript : CommandScript
 					rsAssemblySub.AddNew();
 
 					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblySub.Fields["FK_OUTSOURCEDACTIVITY"].Value = 7;
+					rsAssemblySub.Fields["FK_OUTSOURCEDACTIVITY"].Value = 21;
 					rsAssemblySub.Fields["QUANTITY"].Value = paintarea;
 
 					rsAssemblySub.Update();
