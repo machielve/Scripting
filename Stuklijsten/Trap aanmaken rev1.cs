@@ -91,6 +91,9 @@ public class RidderScript : CommandScript
 		BoxBreed.Location = new System.Drawing.Point(5, 25);
 		BoxBreed.DropDownStyle = ComboBoxStyle.DropDown;
 		BoxBreed.Items.Add("600");
+		BoxBreed.Items.Add("650");
+		BoxBreed.Items.Add("700");
+		BoxBreed.Items.Add("750");
 		BoxBreed.Items.Add("800");
 		BoxBreed.Items.Add("900");
 		BoxBreed.Items.Add("1000");
@@ -349,6 +352,8 @@ public class RidderScript : CommandScript
 		{
 			if (breed == 600) { tredecode = "11960"; }
 			else if (breed == 650) { tredecode = "12075"; }
+			else if (breed == 700) { tredecode = ""; }
+			else if (breed == 750) { tredecode = ""; }
 			else if (breed == 800) { tredecode = "10379"; }
 			else if (breed == 900) { tredecode = "10380"; }
 			else if (breed == 1000) { tredecode = "10381"; }
@@ -359,6 +364,8 @@ public class RidderScript : CommandScript
 		{
 			if (breed == 600) { tredecode = "11959"; }
 			else if (breed == 650) { tredecode = "12074"; }
+			else if (breed == 700) { tredecode = ""; }
+			else if (breed == 750) { tredecode = "13751"; }
 			else if (breed == 800) { tredecode = "10375"; }
 			else if (breed == 900) { tredecode = "10376"; }
 			else if (breed == 1000) { tredecode = "10377"; }
@@ -367,8 +374,10 @@ public class RidderScript : CommandScript
 
 		if (hoek != 00)
 		{
-			if (breed == 600) { supportcode = ""; }
+			if (breed == 600) { supportcode = "13750"; }
 			else if (breed == 650) { supportcode = ""; }
+			else if (breed == 700) { tredecode = ""; }
+			else if (breed == 750) { tredecode = "13752"; }
 			else if (breed == 800) { supportcode = "13453"; }
 			else if (breed == 900) { supportcode = "13452"; }
 			else if (breed == 1000) { supportcode = "13451"; }
