@@ -280,6 +280,7 @@ public class RidderScript : CommandScript
 			if (lang >= 1000 && lang < 2500) trapcode = "13699";
 			else if (lang >= 2500 && lang < 3500) trapcode = "13700";
 			else if (lang >= 3500 && lang < 5000) trapcode = "13701";
+			else if (lang >= 5000 && lang < 7000) trapcode = "13732";
 			else trapcode = "";
 
 		}
@@ -318,6 +319,7 @@ public class RidderScript : CommandScript
 			if (lang >= 1000 && lang < 2500) trapcode = "13711";
 			else if (lang >= 2500 && lang < 3500) trapcode = "13712";
 			else if (lang >= 3500 && lang < 5000) trapcode = "13713";
+			else if (lang >= 5000 && lang < 7000) trapcode = "13733";
 			else trapcode = "";
 		}
 		else if (rb5 == true)
@@ -400,7 +402,7 @@ public class RidderScript : CommandScript
 		decimal paintarea = 1;
 		int trapnummer = 1;
 		int coatingnummer = 1;
-		
+
 
 
 		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" || inputdec == 0)
@@ -409,7 +411,7 @@ public class RidderScript : CommandScript
 
 			MessageBox.Show("Stringer set =" + trapcode +
 							"\nTrap trede =" + tredecode +
-							"\nWeltrede code=" + supportcode 
+							"\nWeltrede code=" + supportcode
 							, "WipWapWop");
 
 			// cancel als artikelcodes niet ingevuld zijn
@@ -502,9 +504,9 @@ public class RidderScript : CommandScript
 
 					paintarea = Convert.ToDecimal(rsAssemblyItem.Fields["PAINTAREA"].Value.ToString());
 					trapnummer = Convert.ToInt32(rsAssemblyItem.Fields["PK_R_ASSEMBLYDETAILITEM"].Value.ToString());
-					
-					
-					
+
+
+
 				}
 			}
 
@@ -549,7 +551,7 @@ public class RidderScript : CommandScript
 					rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(tottrede);
 
 					rsAssemblySub.Update();
-					
+
 				}
 			}
 
@@ -600,8 +602,8 @@ public class RidderScript : CommandScript
 					rsAssemblySub.Update();
 
 					coatingnummer = Convert.ToInt32(rsAssemblySub.Fields["PK_R_ASSEMBLYDETAILOUTSOURCED"].Value.ToString());
-					
-					
+
+
 				}
 			}
 
@@ -614,14 +616,14 @@ public class RidderScript : CommandScript
 				rsSub.Fields["FK_ASSEMBLYDETAILITEM"].Value = trapnummer;
 				rsSub.Fields["FK_ASSEMBLYDETAILOUTSOURCED"].Value = coatingnummer;
 				rsSub.Update();
-				
+
 			}
-			
-			
+
+
 
 			MessageBox.Show("Klaar");
 			MessageBox.Show("Poeder coaten is ook ge-automatizeerd, met de correcte UBW: U1020");
-			
+
 
 		}
 	}
