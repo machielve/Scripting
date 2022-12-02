@@ -622,8 +622,7 @@ public class RidderScript : CommandScript
 
 
 			MessageBox.Show("Klaar");
-			MessageBox.Show("Poeder coaten is ook ge-automatizeerd, met de correcte UBW: U1020");
-
+			//MessageBox.Show("Poeder coaten is ook ge-automatizeerd, met de correcte UBW: U1020");
 
 		}
 	}
