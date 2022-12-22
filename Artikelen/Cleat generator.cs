@@ -73,7 +73,6 @@ public class RidderScript : CommandScript
 		label1.Text = "L1=";
 		groephoog.Controls.Add(label1);
 
-
 		System.Windows.Forms.NumericUpDown textBox2 = new NumericUpDown();
 		textBox2.Size = new System.Drawing.Size(100, 25);
 		textBox2.Location = new System.Drawing.Point(50, 50);
@@ -150,11 +149,6 @@ public class RidderScript : CommandScript
 		inputBox.Controls.Add(groeptype);
 
 
-
-
-
-
-
 		//groep materiaal
 		GroupBox groepmateriaal = new GroupBox();
 		groepmateriaal.Size = new System.Drawing.Size(180, 125);
@@ -183,7 +177,6 @@ public class RidderScript : CommandScript
 		groepmateriaal.Controls.Add(rbutton22);
 
 		inputBox.Controls.Add(groepmateriaal);
-
 
 
 		//groep modificator
@@ -296,13 +289,13 @@ public class RidderScript : CommandScript
 		if (rb12 == true)
 		{
 			oppervlak = (input1 + input2 + input1) * input4 * 2;
-			volume = (input1 + input2 + input1) * input3 * input1;
+			volume = (input1 + input2 + input1) * input4 * input3;
 		}
 
 		else
 		{
 			oppervlak = (input1 + input2) * input4 * 2;
-			volume = (input1 + input2) * input3 * input1;
+			volume = (input1 + input2) * input4 * input3;
 		}
 		
 		
