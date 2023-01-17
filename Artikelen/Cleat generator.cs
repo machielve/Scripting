@@ -363,7 +363,7 @@ public class RidderScript : CommandScript
 			rsItemSup.MoveFirst();
 
 			rsItemSup.AddNew();
-			rsItemSup.Fields["FK_RELATION"].Value = laserid;
+			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
@@ -371,14 +371,14 @@ public class RidderScript : CommandScript
 			
 			
 			rsItemSup.AddNew();
-			rsItemSup.Fields["FK_RELATION"].Value = Tailorid;
+			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
 			rsItemSup.Update();
 
 			rsItemSup.AddNew();
-			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
+			rsItemSup.Fields["FK_RELATION"].Value = Tailorid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
