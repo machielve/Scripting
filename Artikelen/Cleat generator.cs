@@ -367,8 +367,7 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
-			rsItemSup.Update();
-			
+			rsItemSup.Update();			
 			
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
