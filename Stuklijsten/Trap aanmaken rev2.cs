@@ -238,12 +238,15 @@ public class RidderScript : CommandScript
 		string tredecode = "";
 		string supportcode = "";
 		string trapcode = "";
+		string trapcodeRH = "";
+		string trapcodeLH = "";
 		string bevessettrap = "";
 		string bevessettrede = "S100337";
 		string bevessetweltrede = "S100337";
 		string bevessetsupplate = "S100338";
 
 		decimal treden = 0;
+		decimal optrede;
 		decimal hoog = input1;
 
 		decimal optreden42 = Math.Round(hoog / 210, 0);
@@ -255,32 +258,40 @@ public class RidderScript : CommandScript
 		{
 			hoek = 42;
 			treden = optreden42 - 1;
+			optrede = optreden42;
 
 		}
 		else if (rb11 == true)
 		{
 			hoek = 37;
 			treden = optreden37 - 1;
+			optrede = optreden37;
 		}
 		else
 		{
 			hoek = 0;
 			treden = 0;
+			optrede = 0;
 		}
 		double hoekrad = hoek * (Math.PI / 180);
 		double hoogd = Convert.ToDouble(hoog);
 
 		double lang = hoogd / (Math.Sin(hoekrad));
 
+		
+		
+		
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
 		{
 			type = 0;
 			bevessettrap = "S100509";
-			if (lang >= 1000 && lang < 2500) trapcode = "13699";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13700";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13701";
-			else if (lang >= 5000 && lang < 7000) trapcode = "13732";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 
 		}
@@ -289,46 +300,60 @@ public class RidderScript : CommandScript
 		{
 			type = 1;
 			bevessettrap = "S100510";
-			if (lang >= 1000 && lang < 2500) trapcode = "13702";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13703";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13704";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 		else if (rb2 == true)
 		{
 			type = 2;
 			bevessettrap = "S100511";
-			if (lang >= 1000 && lang < 2500) trapcode = "13705";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13706";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13707";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 		else if (rb3 == true)
 		{
 			type = 3;
 			bevessettrap = "S100512";
-			if (lang >= 1000 && lang < 2500) trapcode = "13708";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13709";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13710";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 		else if (rb4 == true)
 		{
 			type = 4;
 			bevessettrap = "S100513";
-			if (lang >= 1000 && lang < 2500) trapcode = "13711";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13712";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13713";
-			else if (lang >= 5000 && lang < 7000) trapcode = "13733";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 		else if (rb5 == true)
 		{
 			type = 5;
 			bevessettrap = "S100514";
-			if (lang >= 1000 && lang < 2500) trapcode = "13714";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13715";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13716";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 
@@ -336,9 +361,12 @@ public class RidderScript : CommandScript
 		{
 			type = 6;
 			bevessettrap = "S100522";
-			if (lang >= 1000 && lang < 2500) trapcode = "13749";
-			else if (lang >= 2500 && lang < 3500) trapcode = "";
-			else if (lang >= 3500 && lang < 5000) trapcode = "";
+			if (optrede < 26) 
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 
@@ -496,16 +524,12 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.AddNew();
 
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;					
+					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
 					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
-
-					paintarea = Convert.ToDecimal(rsAssemblyItem.Fields["PAINTAREA"].Value.ToString());
-					trapnummer = Convert.ToInt32(rsAssemblyItem.Fields["PK_R_ASSEMBLYDETAILITEM"].Value.ToString());
-
-
 
 				}
 			}
