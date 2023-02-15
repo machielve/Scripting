@@ -553,7 +553,7 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;					
 					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
-					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
@@ -565,7 +565,7 @@ public class RidderScript : CommandScript
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcodeLH), "");
 				rsItem.MoveFirst();
 
-				if (rsItem != null && rsItem.RecordCount == 0)
+				if (rsItem != null && rsItem.RecordCount == 0)+
 				{
 					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcodeLH);
 				}
@@ -578,7 +578,7 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;					
 					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
-					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
