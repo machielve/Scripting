@@ -448,7 +448,7 @@ public class RidderScript : CommandScript
 
 		else
 		{
-			MessageBox.Show(input + " trappen" +
+			MessageBox.Show(input + " trap(pen)" +
 							"\nType " + type +
 							"\n" + hoek + " graden" +
 							"\n" + input1 + " mm hoog" +
@@ -456,11 +456,11 @@ public class RidderScript : CommandScript
 							"\n" + input2 + " mm breed" +
 							"\n" +
 							"\n" +
-							"\nArtikelcode roostertrede: " + tredecode + " - " + tottrede + " x" +
-							"\nArtikelcode weltrede: " + supportcode + " - " + totsupp + " x" +							
-							"\nArtikelcode trapboom: " + trapcode + " - " + inputdec + " x" +							
-							"\nArtikelcode trapboom RH: " + trapcodeRH + " - " + inputdec + " x" +
-							"\nArtikelcode trapboom LH: " + trapcodeLH + " - " + inputdec + " x"
+							"\nArtikelcode roostertrede: " 	+ tredecode 		+ " - " + tottrede 	+ " x" +
+							"\nArtikelcode weltrede: " 		+ supportcode 		+ " - " + totsupp 	+ " x" +							
+							"\nArtikelcode trapboom: " 		+ trapcode 			+ " - " + inputdec 	+ " x" +							
+							"\nArtikelcode trapboom RH: " 	+ trapcodeRH 		+ " - " + inputdec 	+ " x" +
+							"\nArtikelcode trapboom LH: " 	+ trapcodeLH 		+ " - " + inputdec 	+ " x"
 							, "Trebuchet");
 
 
