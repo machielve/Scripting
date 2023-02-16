@@ -436,12 +436,10 @@ public class RidderScript : CommandScript
 		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" || inputdec == 0)
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
-
 			MessageBox.Show("Stringer set =" + trapcode +
 							"\nTrap trede =" + tredecode +
 							"\nWeltrede code=" + supportcode
 							, "WipWapWop");
-
 			// cancel als artikelcodes niet ingevuld zijn
 			return;
 		}
