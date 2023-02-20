@@ -432,11 +432,12 @@ public class RidderScript : CommandScript
 		int coatingnummer = 1;
 
 
+		string trapcheck = trapcode + " - " + trapcodeRH + " - " + trapcodeLH;
 
-		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" || inputdec == 0)
+		if (tredecode == "" || supportcode == "" || trapcheck == "" || bevessettrap == "" || inputdec == 0)
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
-			MessageBox.Show("Stringer set =" + trapcode +
+			MessageBox.Show("Stringer set =" + trapcheck +
 							"\nTrap trede =" + tredecode +
 							"\nWeltrede code=" + supportcode
 							, "WipWapWop");
@@ -530,7 +531,6 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
-
 				}
 			}
 
@@ -555,7 +555,6 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
-
 				}
 			}
 
@@ -580,7 +579,6 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
-
 				}
 			}
 
