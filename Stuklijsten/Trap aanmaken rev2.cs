@@ -186,13 +186,10 @@ public class RidderScript : CommandScript
 		rbutton11.Text = "37º";
 		groepBoxHoek.Controls.Add(rbutton11);
 
-
 		inputBox.Controls.Add(groepBoxHoek);
-
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-
 
 		DialogResult result = inputBox.ShowDialog();
 		input = textBox.Text;
@@ -211,6 +208,7 @@ public class RidderScript : CommandScript
 		rb6 = rbutton6.Checked;
 
 		return result;
+		
 	}
 
 	public void Execute()
@@ -231,6 +229,8 @@ public class RidderScript : CommandScript
 
 		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5, ref rb6);
 
+		
+		
 		int hoek = 0;
 		int type = 0;
 		int ssm = 0;
@@ -253,26 +253,27 @@ public class RidderScript : CommandScript
 		decimal optreden37 = Math.Round(hoog / 190, 0);
 		decimal breed = Int32.Parse(input2);
 
-
 		if (rb10 == true)
 		{
 			hoek = 42;
 			treden = optreden42 - 1;
 			optrede = optreden42;
-
 		}
+
 		else if (rb11 == true)
 		{
 			hoek = 37;
 			treden = optreden37 - 1;
 			optrede = optreden37;
 		}
+
 		else
 		{
 			hoek = 0;
 			treden = 0;
 			optrede = 0;
 		}
+
 		double hoekrad = hoek * (Math.PI / 180);
 		double hoogd = Convert.ToDouble(hoog);
 
@@ -293,7 +294,6 @@ public class RidderScript : CommandScript
 				trapcodeLH = "12796";
 			}
 			else trapcode = "";
-
 		}
 
 		else if (rb1 == true)
@@ -308,6 +308,7 @@ public class RidderScript : CommandScript
 			}
 			else trapcode = "";
 		}
+
 		else if (rb2 == true)
 		{
 			type = 2;
@@ -320,6 +321,7 @@ public class RidderScript : CommandScript
 			}
 			else trapcode = "";
 		}
+
 		else if (rb3 == true)
 		{
 			type = 3;
@@ -332,6 +334,7 @@ public class RidderScript : CommandScript
 			}
 			else trapcode = "";
 		}
+
 		else if (rb4 == true)
 		{
 			type = 4;
@@ -344,6 +347,7 @@ public class RidderScript : CommandScript
 			}
 			else trapcode = "";
 		}
+
 		else if (rb5 == true)
 		{
 			type = 5;
@@ -380,36 +384,36 @@ public class RidderScript : CommandScript
 		//Selecteren tredes
 		if (hoek == 37)
 		{
-			if (breed == 600) { tredecode = "11960"; }
-			else if (breed == 650) { tredecode = "12075"; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = ""; }
-			else if (breed == 800) { tredecode = "10379"; }
-			else if (breed == 900) { tredecode = "10380"; }
+			if 		(breed == 600) 	{ tredecode = "11960"; }
+			else if (breed == 650) 	{ tredecode = "12075"; }
+			else if (breed == 700) 	{ tredecode = ""; }
+			else if (breed == 750) 	{ tredecode = ""; }
+			else if (breed == 800) 	{ tredecode = "10379"; }
+			else if (breed == 900) 	{ tredecode = "10380"; }
 			else if (breed == 1000) { tredecode = "10381"; }
 			else if (breed == 1200) { tredecode = "10382"; }
 		}
 
 		if (hoek == 42)
 		{
-			if (breed == 600) { tredecode = "11959"; }
-			else if (breed == 650) { tredecode = "12074"; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = "13751"; }
-			else if (breed == 800) { tredecode = "10375"; }
-			else if (breed == 900) { tredecode = "10376"; }
+			if 		(breed == 600) 	{ tredecode = "11959"; }
+			else if (breed == 650) 	{ tredecode = "12074"; }
+			else if (breed == 700) 	{ tredecode = ""; }
+			else if (breed == 750) 	{ tredecode = "13751"; }
+			else if (breed == 800) 	{ tredecode = "10375"; }
+			else if (breed == 900) 	{ tredecode = "10376"; }
 			else if (breed == 1000) { tredecode = "10377"; }
 			else if (breed == 1200) { tredecode = "10378"; }
 		}
 
 		if (hoek != 00)
 		{
-			if (breed == 600) { supportcode = "13750"; }
-			else if (breed == 650) { supportcode = ""; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = "13752"; }
-			else if (breed == 800) { supportcode = "13453"; }
-			else if (breed == 900) { supportcode = "13452"; }
+			if 		(breed == 600) 	{ supportcode = "13750"; }
+			else if (breed == 650) 	{ supportcode = ""; }
+			else if (breed == 700) 	{ supportcode = ""; }
+			else if (breed == 750) 	{ supportcode = "13752"; }
+			else if (breed == 800) 	{ supportcode = "13453"; }
+			else if (breed == 900) 	{ supportcode = "13452"; }
 			else if (breed == 1000) { supportcode = "13451"; }
 			else if (breed == 1200) { supportcode = "13450"; }
 		}
