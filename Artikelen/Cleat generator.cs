@@ -362,6 +362,7 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMSUPPLIER", "", "PK_R_ITEMSUPPLIER = -1", "");
 			rsItemSup.MoveFirst();
 
+			// Hoofdleverancier als eerst
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
@@ -369,6 +370,7 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
 			rsItemSup.Update();			
 			
+			// extra leveranciers erna
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
