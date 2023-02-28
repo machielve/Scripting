@@ -436,14 +436,15 @@ public class RidderScript : CommandScript
 		int coatingnummer = 1;
 
 
-		string trapcheck = trapcode + " - " + trapcodeRH + " - " + trapcodeLH;
+		string trapcheck = trapcode + " / " + trapcodeRH + " / " + trapcodeLH;
+		string trapcheck1 = trapcode + trapcodeRH + trapcodeLH;
 
-		if (tredecode == "" || supportcode == "" || trapcheck == "" || bevessettrap == "" || inputdec == 0)
+		if (tredecode == "" || supportcode == "" || trapcheck1 == "" || bevessettrap == "" || inputdec == 0)
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
-			MessageBox.Show("Stringer set =" + trapcheck +
-							"\nTrap trede =" + tredecode +
-							"\nWeltrede code=" + supportcode
+			MessageBox.Show("Stringer set = " + trapcheck +
+							"\nTrap trede = " + tredecode +
+							"\nWeltrede code = " + supportcode
 							, "WipWapWop");
 			// cancel als artikelcodes niet ingevuld zijn
 			return;
