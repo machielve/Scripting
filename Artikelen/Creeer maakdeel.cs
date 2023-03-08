@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
-	
+
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
@@ -180,6 +180,7 @@ public class RidderScript : CommandScript
 				rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 				rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
 				rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+				rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 				rsArtikelUit.Update();
 
@@ -197,13 +198,14 @@ public class RidderScript : CommandScript
 			rsArtikelIn.Fields["FK_ITEM"].Value = (int)record.GetPrimaryKeyValue();
 			rsArtikelIn.Fields["QUANTITY"].Value = input1;
 			rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+			rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 			rsArtikelIn.Update();
 			MessageBox.Show("Voorraad van maakdeel aangevult");
 
 			// resultaat bericht
 			var message = string.Join(Environment.NewLine, UitLijst);
-			MessageBox.Show(message, "totaal uitgeboekt");
+			MessageBox.Show(message, "Totaal uitgeboekt");
 
 		}
 	}

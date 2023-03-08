@@ -159,6 +159,7 @@ public class RidderScript : CommandScript
 				rsArtikelIn.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 				rsArtikelIn.Fields["QUANTITY"].Value = aantaleruit;
 				rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+				rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 				rsArtikelIn.Update();
 
@@ -176,13 +177,14 @@ public class RidderScript : CommandScript
 			rsArtikelUit.Fields["FK_ITEM"].Value = (int)record.GetPrimaryKeyValue();
 			rsArtikelUit.Fields["QUANTITY"].Value = input1;
 			rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+			rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 			rsArtikelUit.Update();
 			MessageBox.Show("Voorraad van maakdeel aangepast");
 
 			// resultaat bericht
 			var message = string.Join(Environment.NewLine, UitLijst);
-			MessageBox.Show(message, "totaal ingeboekt");
+			MessageBox.Show(message, "Totaal ingeboekt");
 
 		}
 	}
