@@ -64,8 +64,8 @@ public class RidderScript : CommandScript
 
 			//regel 3
 			taaknummer = 13;             //fysiek zwaar werk
-			risiconummer = 63;           //fysieke belasting tillen
-			maatregelnummer = 61;        //voorlichting hulpmiddelen
+			risiconummer = 63;          //fysieke belasting tillen
+			maatregelnummer = 245;        //voorlichting hulpmiddelen
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
 			//regel 4
@@ -89,7 +89,7 @@ public class RidderScript : CommandScript
 			//regel 7
 			taaknummer = 18;             //vallen van voorwerpen
 			risiconummer = 88;           //onder, boven elkaar werken
-			maatregelnummer = 1;        //geen los gereedschap
+			maatregelnummer = 257;        //geen los gereedschap
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
 			//regel 8
