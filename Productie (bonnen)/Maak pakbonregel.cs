@@ -70,7 +70,7 @@ public class RidderScript : CommandScript
 
 		if (records.Length == 0)
 		{
-			MessageBox.Show("test");
+			MessageBox.Show("Geen regels geselecteerd");
 			return;
 		}
 		
@@ -80,37 +80,30 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem.MoveFirst();
 
-
 			decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
 			string bonS =  rsItem.Fields["FK_JOBORDER"].Value.ToString();
-			int bon = Convert.ToInt32(bonS);
-			
+			int bon = Convert.ToInt32(bonS);			
 			string bonregelS = rsItem.Fields["PK_R_JOBORDERDETAILITEM"].Value.ToString();
 			int bonregel = Convert.ToInt32(bonregelS);
 
-			string check = rsItem.Fields["DIRECTELEVERING"].Value.ToString();
 
-			if (check == "False")
+			// controle of de regel overgeslagen moet worden
+			if (rsItem.Fields["DIRECTELEVERING"].Value.ToString() == "False")
 			{
-				MessageBox.Show("Pakbonregel uitgevinkt. Regel overgeslagen.");
+				MessageBox.Show("Pakbonregel uitgevinkt. Regel is overgeslagen.");
 				continue;
-			}		
+			}	
 			
-			int totaal = 0;
+				
 			
-			ScriptRecordset rsAanwezig = this.GetRecordset("U_PACKLISTDETAILITEM", "", "FK_BONREGELART = " + (int)bonregel, "");
-			rsAanwezig.MoveFirst();
+		
 
-			while (rsAanwezig.EOF == false)
-			{
-				totaal += Convert.ToInt32(rsAanwezig.Fields["QUANTITY"].Value.ToString());
-				rsAanwezig.MoveNext();
-			}			
+			
+			// achterhalen van pakbon id nummer
+			int pakboner = 0;
 
 			ScriptRecordset rsPakbon = this.GetRecordset("U_PACKLIST", "", "FK_JOBORDER= " + (int)bon, "PACKLISTNUMBER");
 			rsPakbon.MoveFirst();
-
-			int pakboner = 0;
 
 			while (rsPakbon.EOF == false)
 			{ 
@@ -122,6 +115,21 @@ public class RidderScript : CommandScript
 				else rsPakbon.MoveNext();	
 			}
 
+
+
+			// uitrekenen hoeveel per regel al gebruikt is
+			int totaal = 0;
+			
+			ScriptRecordset rsAanwezig = this.GetRecordset("U_PACKLISTDETAILITEM", "", "FK_BONREGELART = " + (int)bonregel, "");
+			rsAanwezig.MoveFirst();
+
+			while (rsAanwezig.EOF == false)
+			{
+				totaal += Convert.ToInt32(rsAanwezig.Fields["QUANTITY"].Value.ToString());
+				rsAanwezig.MoveNext();
+			}	
+
+			// uitrekenen hoeveel op de regel toe gevoegd word en aanmaken van pakbon regel
 			decimal mogelijk = aantal - totaal;
 
 			if (mogelijk == 0)
