@@ -436,8 +436,8 @@ public class RidderScript : CommandScript
 		int coatingnummer = 1;
 
 
-		string trapcheck = trapcode + " / " + trapcodeRH + " / " + trapcodeLH;
-		string trapcheck1 = trapcode + trapcodeRH + trapcodeLH;
+		string trapcheck = trapcodeRH + " / " + trapcodeLH;
+		string trapcheck1 = trapcodeRH + trapcodeLH;
 
 		if (tredecode == "" || supportcode == "" || trapcheck1 == "" || bevessettrap == "" || inputdec == 0)
 		{
@@ -462,7 +462,6 @@ public class RidderScript : CommandScript
 							"\n" +
 							"\nArtikelcode roostertrede: " 	+ tredecode 		+ " - " + tottrede 	+ " x" +
 							"\nArtikelcode weltrede: " 		+ supportcode 		+ " - " + totsupp 	+ " x" +							
-							"\nArtikelcode trapboom: " 		+ trapcode 			+ " - " + inputdec 	+ " x" +							
 							"\nArtikelcode trapboom RH: " 	+ trapcodeRH 		+ " - " + inputdec 	+ " x" +
 							"\nArtikelcode trapboom LH: " 	+ trapcodeLH 		+ " - " + inputdec 	+ " x"
 							, "Trebuchet");
@@ -512,30 +511,6 @@ public class RidderScript : CommandScript
 
 						rsAssemblyItem.Update();
 					}
-				}
-			}
-
-			{   //trapboomset invoegen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcode), "");
-				rsItem.MoveFirst();
-
-				if (rsItem != null && rsItem.RecordCount == 0)
-				{
-					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcode);
-				}
-				else
-				{
-					ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
-					rsAssemblyItem.UseDataChanges = true;
-					rsAssemblyItem.AddNew();
-
-					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;					
-					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
-					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
-					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
-
-					rsAssemblyItem.Update();
 				}
 			}
 
