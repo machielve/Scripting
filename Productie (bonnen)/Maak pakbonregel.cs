@@ -117,8 +117,8 @@ public class RidderScript : CommandScript
 				MessageBox.Show("Pakbon bestaat (nog) niet");
 				rsPakbon.AddNew();
 
-				rsPakbon.Fields["FK_ORDER"].Value = bonS;
-				rsPakbon.Fields["FK_JOBORDER"].Value = orderS;
+				rsPakbon.Fields["FK_ORDER"].Value = orderS;
+				rsPakbon.Fields["FK_JOBORDER"].Value = bonS;
 				rsPakbon.Update();
 
 				pakboner += Convert.ToInt32(rsPakbon.Fields["PK_U_PACKLIST"].Value.ToString());
