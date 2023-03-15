@@ -542,7 +542,7 @@ public class RidderScript : CommandScript
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcodeLH), "");
 				rsItem.MoveFirst();
 
-				if (rsItem != null && rsItem.RecordCount == 0)+
+				if (rsItem != null && rsItem.RecordCount == 0)
 				{
 					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcodeLH);
 				}
