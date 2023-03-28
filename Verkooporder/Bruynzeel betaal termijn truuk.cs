@@ -19,9 +19,9 @@ public class RidderScript : CommandScript
 {
 	/*
 	
-	Bito truuk , het  programma om de betaaltermijnen te berekenen met de afspraak van een aanbetaling van 10.000
+	Bruynzeel truuk , het  programma om de betaaltermijnen te berekenen met de afspraak van een aanbetaling van 10.000
 	Uit te voeren vanuit een order met bestaande open betaaltermijnen
-	Geschreven door: Machiel R. van Emden mei-2022
+	Geschreven door: Machiel R. van Emden maart-2023
 
 	*/
 
@@ -42,7 +42,7 @@ public class RidderScript : CommandScript
 		int check2 = 0;
 		int check3 = 0;
 
-		string termijnnummer1 = "18";
+        string termijnnummer1 = "18";
         string termijnnummer2 = "19";
         string termijnnummer3 = "20";
 
@@ -171,6 +171,6 @@ public class RidderScript : CommandScript
 
 	}
 
-	// M.R.v.E - 2022
+	// M.R.v.E - 2023
 	
 }
