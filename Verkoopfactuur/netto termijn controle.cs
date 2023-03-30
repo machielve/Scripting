@@ -32,7 +32,7 @@ public class RidderScript : ConditionalFormatScript
 
 
         //BRNZEEL_3 regel 1	
-        if (FindItem("TCR").Value.ToString() == "18" && 
+        if (FindItem("TCR").Value.ToString() == "97" && 
 		this.Item.Value.ToInteger()!=10000)
 		{
 			this.Item.Control.SetStrikeOut(true);
@@ -42,7 +42,7 @@ public class RidderScript : ConditionalFormatScript
 		}
 
         //BRNZEEL_3 regel 3
-		if (FindItem("TCR").Value.ToString() == "20" && 
+		if (FindItem("TCR").Value.ToString() == "99" && 
 		FindItem("TP").Value.ToDouble()<0.451 &&
 		FindItem("TP").Value.ToDouble()>0.449)
 		{

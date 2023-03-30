@@ -42,9 +42,9 @@ public class RidderScript : CommandScript
 		int check2 = 0;
 		int check3 = 0;
 
-        string termijnnummer1 = "18";
-        string termijnnummer2 = "19";
-        string termijnnummer3 = "20";
+        string termijnnummer1 = "97";
+        string termijnnummer2 = "98";
+        string termijnnummer3 = "99";
 
 		foreach (IRecord record in records)
 		{
