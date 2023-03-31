@@ -256,14 +256,14 @@ public class RidderScript : CommandScript
 		if (rb10 == true)
 		{
 			hoek = 42;
-			treden = optreden42 - 1;
+			treden = optreden42 ;
 			optrede = optreden42;
 		}
 
 		else if (rb11 == true)
 		{
 			hoek = 37;
-			treden = optreden37 - 1;
+			treden = optreden37 ;
 			optrede = optreden37;
 		}
 
