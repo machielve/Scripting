@@ -26,9 +26,9 @@ public class RidderScript : CommandScript
 
 	*/	
 	
-	private static DialogResult ShowInputDialog(ref string input, ref string input2, ref string input3, ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5)
+	private static DialogResult ShowInputDialog(ref string input, ref string input2, ref string input3, ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6)
 	{
-		System.Drawing.Size size = new System.Drawing.Size(250, 250);
+		System.Drawing.Size size = new System.Drawing.Size(250, 300);
 		Form inputBox = new Form();
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -91,14 +91,20 @@ public class RidderScript : CommandScript
 		cbox3.Text = "Trappen";
 		inputBox.Controls.Add(cbox3);
 
+		System.Windows.Forms.CheckBox cbox6 = new CheckBox();
+		cbox6.Location = new System.Drawing.Point(5, 155);
+		cbox6.Checked = cb6;
+		cbox6.Text = "Ladders";
+		inputBox.Controls.Add(cbox6);
+
 		System.Windows.Forms.CheckBox cbox4 = new CheckBox();
-		cbox4.Location = new System.Drawing.Point(5, 155);
+		cbox4.Location = new System.Drawing.Point(5, 180);
 		cbox4.Checked = cb4;
 		cbox4.Text = "Leuning";
 		inputBox.Controls.Add(cbox4);
 
 		System.Windows.Forms.CheckBox cbox5 = new CheckBox();
-		cbox5.Location = new System.Drawing.Point(5, 180);
+		cbox5.Location = new System.Drawing.Point(5, 205);
 		cbox5.Checked = cb5;
 		cbox5.Text = "Opzetplekken";
 		inputBox.Controls.Add(cbox5);
@@ -133,6 +139,7 @@ public class RidderScript : CommandScript
 		cb3 = cbox3.Checked;
 		cb4 = cbox4.Checked;
 		cb5 = cbox5.Checked;
+		cb6 = cbox6.Checked;
 		return result;
 		
 	}
@@ -345,6 +352,7 @@ public class RidderScript : CommandScript
 		bool cb3;
 		bool cb4;
 		bool cb5;
+		bool cb6;
 		string groepnmr;
 
 		string hoofdlijst = FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
@@ -374,6 +382,7 @@ public class RidderScript : CommandScript
 			cb3 = false;
 			cb4 = false;
 			cb5 = false;
+			cb6 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100218/")
 		{
@@ -382,6 +391,7 @@ public class RidderScript : CommandScript
 			cb3 = false;
 			cb4 = false;
 			cb5 = false;
+			cb6 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100215/")
 		{
@@ -390,6 +400,7 @@ public class RidderScript : CommandScript
 			cb3 = true;
 			cb4 = false;
 			cb5 = false;
+			cb6 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100219/")
 		{
@@ -398,6 +409,7 @@ public class RidderScript : CommandScript
 			cb3 = false;
 			cb4 = true;
 			cb5 = false;
+			cb6 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100220/")
 		{
@@ -406,6 +418,16 @@ public class RidderScript : CommandScript
 			cb3 = false;
 			cb4 = false;
 			cb5 = true;
+			cb6 = false;
+		}
+		else if (hoofdlijstCode.Substring(0, 8) == "S100542/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = true;
 		}
 		else 
 		{
@@ -414,13 +436,14 @@ public class RidderScript : CommandScript
 			cb3 = false;
 			cb4 = false;
 			cb5 = false;
+			cb6 = false;
 		}
 		
 		string input = tekeningnmr1;
 		string input2 = "";
 		string input3 = groepnmr;
 
-		ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5);
+		ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6);
 		
 		string input4;
 		
@@ -624,6 +647,11 @@ public class RidderScript : CommandScript
 		if (cb5 == true) //POP injectie
 		{
 			POPinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+		}
+
+		if (cb6 == true) //Ladder injectie
+		{
+			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		subcombine(ref hoofdlijstNmr);
@@ -1063,6 +1091,30 @@ public class RidderScript : CommandScript
 		// MessageBox.Show("trappen klaar");
 
 	}											//importeren van alle regels met groep trappen
+
+	public void Ladderinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+							ref List<string> listD,
+							ref List<string> listU,
+							ref List<string> listL,
+							ref List<string> listG,
+							ref List<string> listF,
+							ref List<string> listQ,
+							ref List<string> listR,
+							ref List<string> listS,
+							ref List<string> listT)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			if (listH[i] == "Ladders")
+			{
+				knalErin(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+
+			}
+		}
+
+		// MessageBox.Show("Ladders klaar");
+
+	}											//importeren van alle regels met groep Ladders
 	
 	public void leuninginput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
