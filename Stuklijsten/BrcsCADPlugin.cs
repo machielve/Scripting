@@ -24,8 +24,8 @@ public class RidderScript : CommandScript
 	Uit te voeren vanuit een stuklijst met de status engineering
 	Geschreven door: Machiel R. van Emden mei-2022
 
-	*/	
-	
+	*/
+
 	private static DialogResult ShowInputDialog(ref string input, ref string input2, ref string input3, ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(250, 300);
@@ -47,7 +47,7 @@ public class RidderScript : CommandScript
 		label.Location = new System.Drawing.Point(5, 5);
 		label.Text = "Tekening";
 		inputBox.Controls.Add(label);
-	
+
 		System.Windows.Forms.TextBox textBox2 = new TextBox();
 		textBox2.Size = new System.Drawing.Size(size.Width - 75, 23);
 		textBox2.Location = new System.Drawing.Point(60, 30);
@@ -108,28 +108,28 @@ public class RidderScript : CommandScript
 		cbox5.Checked = cb5;
 		cbox5.Text = "Opzetplekken";
 		inputBox.Controls.Add(cbox5);
-		
-		
-		
+
+
+
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
 		okButton.Size = new System.Drawing.Size(75, 23);
 		okButton.Text = "&OK";
-		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height-40);
+		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 40);
 		inputBox.Controls.Add(okButton);
 
 		Button cancelButton = new Button();
 		cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 		cancelButton.Name = "cancelButton";
-		cancelButton.Size = new System.Drawing.Size(75,23);
+		cancelButton.Size = new System.Drawing.Size(75, 23);
 		cancelButton.Text = "&Cancel";
-		cancelButton.Location = new System.Drawing.Point(size.Width - 80, size.Height-40);
+		cancelButton.Location = new System.Drawing.Point(size.Width - 80, size.Height - 40);
 		inputBox.Controls.Add(cancelButton);
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-		
+
 		DialogResult result = inputBox.ShowDialog();
 		input = textBox.Text;
 		input2 = textBox2.Text;
@@ -141,10 +141,10 @@ public class RidderScript : CommandScript
 		cb5 = cbox5.Checked;
 		cb6 = cbox6.Checked;
 		return result;
-		
+
 	}
 
-	private static DialogResult ShowInputDialog2(ref string inputer, ref string wiewatwaar,ref DataTable dtTest)
+	private static DialogResult ShowInputDialog2(ref string inputer, ref string wiewatwaar, ref DataTable dtTest)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(500, 350);
 		Form inputBox = new Form();
@@ -162,7 +162,7 @@ public class RidderScript : CommandScript
 		combo1.Location = new System.Drawing.Point(5, 150);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
-	
+
 		System.Windows.Forms.Label label1 = new Label();
 		label1.Location = new System.Drawing.Point(5, 40);
 		label1.Text = wiewatwaar;
@@ -173,7 +173,7 @@ public class RidderScript : CommandScript
 		okButton.Name = "okButton";
 		okButton.Size = new System.Drawing.Size(75, 23);
 		okButton.Text = "&OK";
-		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height-50);
+		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 50);
 		inputBox.Controls.Add(okButton);
 
 		Button cancelButton = new Button();
@@ -181,7 +181,7 @@ public class RidderScript : CommandScript
 		cancelButton.Name = "cancelButton";
 		cancelButton.Size = new System.Drawing.Size(75, 23);
 		cancelButton.Text = "&Cancel";
-		cancelButton.Location = new System.Drawing.Point(size.Width - 80, size.Height-50);
+		cancelButton.Location = new System.Drawing.Point(size.Width - 80, size.Height - 50);
 		inputBox.Controls.Add(cancelButton);
 
 		inputBox.AcceptButton = okButton;
@@ -192,9 +192,9 @@ public class RidderScript : CommandScript
 
 		return result;
 
-	}			//Artfixer pop-up
+	}           //Artfixer pop-up
 
-	private static DialogResult ShowInputDialog3(ref string artswapper, ref string watser,ref DataTable dtTest)
+	private static DialogResult ShowInputDialog3(ref string artswapper, ref string watser, ref DataTable dtTest)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(500, 350);
 		Form inputBox = new Form();
@@ -242,7 +242,7 @@ public class RidderScript : CommandScript
 
 		return result;
 
-	}			//Artswapper pop-up
+	}           //Artswapper pop-up
 
 	private static DialogResult ShowInputDialog4(ref string subs, ref string watdan, ref DataTable dtTest)
 	{
@@ -294,7 +294,7 @@ public class RidderScript : CommandScript
 
 	}               //Subfixer pop-up
 
-	private static DialogResult ShowInputDialog5(ref string subswapper,ref DataTable dtTest)
+	private static DialogResult ShowInputDialog5(ref string subswapper, ref DataTable dtTest)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(500, 350);
 		Form inputBox = new Form();
@@ -342,7 +342,7 @@ public class RidderScript : CommandScript
 
 		return result;
 
-	}         					//Subswapper pop-up
+	}                           //Subswapper pop-up
 
 	public void Execute()
 	{
@@ -358,7 +358,7 @@ public class RidderScript : CommandScript
 		string hoofdlijst = FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 
 		int hoofdlijstNmr = Convert.ToInt32(hoofdlijst);
-		
+
 		ScriptRecordset rsHoofdlijst = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY = " + hoofdlijstNmr, "");
 		rsHoofdlijst.MoveFirst();
 
@@ -372,7 +372,7 @@ public class RidderScript : CommandScript
 			groepnmr = tekeningnmr.Substring(loc + 1);
 		}
 		else groepnmr = "";
-		
+
 		string hoofdlijstCode = rsHoofdlijst.Fields["CODE"].Value.ToString();
 
 		if (hoofdlijstCode.Substring(0, 8) == "S100217/")
@@ -429,7 +429,7 @@ public class RidderScript : CommandScript
 			cb5 = false;
 			cb6 = true;
 		}
-		else 
+		else
 		{
 			cb1 = false;
 			cb2 = false;
@@ -438,42 +438,42 @@ public class RidderScript : CommandScript
 			cb5 = false;
 			cb6 = false;
 		}
-		
+
 		string input = tekeningnmr1;
 		string input2 = "";
 		string input3 = groepnmr;
 
 		ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6);
-		
+
 		string input4;
-		
-		if (input3 == "") 
+
+		if (input3 == "")
 		{
-			 input4 = "";
+			input4 = "";
 		}
 		else
 		{
-			 input4 = "#" + input3;
+			input4 = "#" + input3;
 		}
-	
+
 		string tekening = input + input2 + input4;
 		string bestand1 = @"W:\Almacon Ridder\Ridder Stuklijsten\DataExtracties\";
-		string bestand2	= tekening;
+		string bestand2 = tekening;
 		string bestand3 = @".csv";
-				
-		var reader = new StreamReader(File.OpenRead(bestand1+bestand2+bestand3));
+
+		var reader = new StreamReader(File.OpenRead(bestand1 + bestand2 + bestand3));
 		List<string> listA = new List<string>();                //Count
 		List<string> listB = new List<string>();                //TAG
 		List<string> listC = new List<string>();                //Name
 		List<string> listD = new List<string>();                //Afmeting
 		List<string> listE = new List<string>();                //Afmeting 2
 		List<string> listF = new List<string>();                //Artikelcode
-		List<string> listG = new List<string>();          	    //Breedte
+		List<string> listG = new List<string>();                //Breedte
 		List<string> listH = new List<string>();                //Groep
 		List<string> listI = new List<string>();                //Hoek
 		List<string> listJ = new List<string>();                //Hoogte
 		List<string> listK = new List<string>();                //Kwaliteit
-		List<string> listL = new List<string>();          	    //Lengte
+		List<string> listL = new List<string>();                //Lengte
 		List<string> listM = new List<string>();                //Lengte B
 		List<string> listN = new List<string>();                //Optie 1
 		List<string> listO = new List<string>();                //Option 1
@@ -488,12 +488,12 @@ public class RidderScript : CommandScript
 		List<string> listX = new List<string>();                //W
 		List<string> listY = new List<string>();                //W1
 		List<string> listZ = new List<string>();                //Layer
-		List<string> listAA = new List<string>();          	  	//Area polyline
-		List<string> listAB = new List<string>();           	//Length polyline
+		List<string> listAA = new List<string>();               //Area polyline
+		List<string> listAB = new List<string>();               //Length polyline
 
 		while (!reader.EndOfStream)
 		{
-		//	var header = reader.ReadLine();
+			//	var header = reader.ReadLine();
 			var line = reader.ReadLine();
 			var values = line.Split(';');
 
@@ -502,29 +502,29 @@ public class RidderScript : CommandScript
 			listC.Add(values[2]);
 			listD.Add(values[3]);
 			listE.Add(values[4]);
-			
+
 			if (values[5] == "") { listF.Add("-"); }
-			else if (values[5].Substring(0,1) != "1" && values[5].Substring(0,1) != "2" && values[5].Substring(0,3) != "Art")
+			else if (values[5].Substring(0, 1) != "1" && values[5].Substring(0, 1) != "2" && values[5].Substring(0, 3) != "Art")
 			{
 				string naam = values[1];
 				string maat = values[3];
 				string type = values[20];
 				string wiewatwaar = naam + " - " + type + " - " + maat;
-				
+
 				artfix(ref listF, ref wiewatwaar);
 			}
 			else { listF.Add(values[5]); }
 
-			
+
 			if (values[6] == "") { listG.Add("0"); }
 			else if (values[6] != "Breedte")
 			{
-				decimal aan = Convert.ToDecimal(values[6])/1000000;
-				listG.Add(Convert.ToString(aan)); 
+				decimal aan = Convert.ToDecimal(values[6]) / 1000000;
+				listG.Add(Convert.ToString(aan));
 			}
 			else listG.Add(values[6]);
 
-			
+
 			if (values[7] == "" && values[25] == "ALM_HANDRAIL") { listH.Add("Leuning"); }
 			else if (values[7] == "") { listH.Add("-"); }
 			else { listH.Add(values[7]); }
@@ -538,11 +538,11 @@ public class RidderScript : CommandScript
 			if (values[11] == "") { listL.Add("0"); }
 			else if (values[11] != "Lengte")
 			{
-				decimal aan1 = Convert.ToDecimal(values[11])/1000000;
+				decimal aan1 = Convert.ToDecimal(values[11]) / 1000000;
 				listL.Add(Convert.ToString(aan1));
 			}
 			else listL.Add(values[11]);
-			
+
 			listM.Add(values[12]);
 			listN.Add(values[13]);
 			listO.Add(values[14]);
@@ -555,10 +555,10 @@ public class RidderScript : CommandScript
 				string maat = values[3];
 				string type = values[20];
 				string watdan = naam + " - " + maat + " - " + type;
-				sub1fix(ref listQ, ref watdan);				
+				sub1fix(ref listQ, ref watdan);
 			}
 			else { listQ.Add(values[16]); }
-			
+
 
 			if (values[17] == "") { listR.Add("-"); }
 			else if (values[17].Substring(0, 2) != "S1" && values[17].Substring(0, 3) != "Stu")
@@ -570,7 +570,7 @@ public class RidderScript : CommandScript
 				sub2fix(ref listR, ref watdan);
 			}
 			else { listR.Add(values[17]); }
-			
+
 
 			if (values[18] == "") { listS.Add("-"); }
 			else if (values[18].Substring(0, 2) != "S1" && values[18].Substring(0, 3) != "Stu")
@@ -583,7 +583,7 @@ public class RidderScript : CommandScript
 			}
 			else { listS.Add(values[18]); }
 
-			
+
 			if (values[19] == "") { listT.Add("-"); }
 			else if (values[19].Substring(0, 2) != "S1" && values[19].Substring(0, 3) != "Stu")
 			{
@@ -595,7 +595,7 @@ public class RidderScript : CommandScript
 			}
 			else { listT.Add(values[19]); }
 
-			
+
 			listU.Add(values[20]);
 			listV.Add(values[21]);
 			listW.Add(values[22]);
@@ -606,7 +606,7 @@ public class RidderScript : CommandScript
 			if (values[26] == "") { listAA.Add("0"); }
 			else if (values[26] != "Area")
 			{
-				decimal aan2 = Convert.ToDecimal(values[26])/1000000;
+				decimal aan2 = Convert.ToDecimal(values[26]) / 1000000;
 				listAA.Add(Convert.ToString(aan2));
 			}
 			else listAA.Add(values[26]);
@@ -624,52 +624,52 @@ public class RidderScript : CommandScript
 
 		int regels = listA.Count;
 
-		if (cb1 == true)	//staalconstructie injectie	
+		if (cb1 == true)    //staalconstructie injectie	
 		{
-			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
-		
+
 		if (cb2 == true) //vloer injectie
 		{
-			vloerinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			vloerinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
-		
+
 		if (cb3 == true) //trappen injectie
 		{
-			trapinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			trapinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
-		
+
 		if (cb4 == true) //leuning injectie
 		{
-			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAB);
+			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAB);
 		}
-		
+
 		if (cb5 == true) //POP injectie
 		{
-			POPinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			POPinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		if (cb6 == true) //Ladder injectie
 		{
-			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB,ref listD,ref listU,ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		subcombine(ref hoofdlijstNmr);
-		
-		MessageBox.Show("Gereed","Klaar");
-		
-	
+
+		MessageBox.Show("Gereed", "Klaar");
+
+
 	}
 
 	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser)
 	{
-		int artID;		
+		int artID;
 
 		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", Acode), "");
 		rsItem.MoveFirst();
 
 		if (rsItem.RecordCount == 0)
-		{	
+		{
 			artID = 0;
 			artswap(ref Acode, ref artID, ref watser);
 		}
@@ -684,7 +684,7 @@ public class RidderScript : CommandScript
 		rsSlArt.Fields["WIDTH"].Value = breedte / 1000;
 		rsSlArt.Fields["QUANTITY"].Value = aantal;
 		rsSlArt.Update();
-	}		//artikel import
+	}       //artikel import
 
 	public void artfix(ref List<string> listF, ref string wiewatwaar)
 	{
@@ -693,7 +693,7 @@ public class RidderScript : CommandScript
 		while (go == 0)
 		{
 			string inputer = "Test";
-			
+
 			ScriptRecordset rsTest = this.GetRecordset("R_ITEM", "CODE, DESCRIPTION, DRAWINGNUMBER", string.Format("UNMARKETABLE = '{0}'", false), "DESCRIPTION");
 			rsTest.MoveFirst();
 
@@ -718,11 +718,11 @@ public class RidderScript : CommandScript
 			}
 			else MessageBox.Show("Artikel niet gevonden");
 		}
-	}						//DataEx aanvullen indien artikelnummer ontbreekt
+	}                       //DataEx aanvullen indien artikelnummer ontbreekt
 
 	public void artswap(ref string Acode, ref int artID, ref string watser)
 	{
-		MessageBox.Show("Artikel " + Acode +" - "+watser+ " niet herkend");
+		MessageBox.Show("Artikel " + Acode + " - " + watser + " niet herkend");
 
 		int go = 0;
 
@@ -741,7 +741,7 @@ public class RidderScript : CommandScript
 			extracolumn.Expression = "(CODE)+(' - ')+(DESCRIPTION)+(' - ')+(DRAWINGNUMBER)";
 
 			dtTest.Columns.Add(extracolumn);
-			
+
 			ShowInputDialog3(ref artswapper, ref watser, ref dtTest);
 
 			ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", String.Format("CODE = '{0}'", artswapper), "");
@@ -759,8 +759,8 @@ public class RidderScript : CommandScript
 			}
 
 		}
-	}					//artikel uitwisselen indien onbekend
-	
+	}                   //artikel uitwisselen indien onbekend
+
 	public void sub0input(ref int hoofdlijstNmr, ref int aantalT, ref String sub0)
 	{
 		ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "", string.Format("CODE = '{0}'", sub0), "");
@@ -774,7 +774,7 @@ public class RidderScript : CommandScript
 		rsSlSub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
 		rsSlSub.Update();
 
-	}			//losse stuklijst injecteren
+	}           //losse stuklijst injecteren
 
 	public void subinput(ref int hoofdlijstNmr, ref int aantal, ref String sub)
 	{
@@ -792,7 +792,7 @@ public class RidderScript : CommandScript
 		}
 		else if (rsSub.Fields["FK_WORKFLOWSTATE"].Value.ToString() != "8d7fae53-228b-4ee9-a72a-a60d0ea6c65c")
 		{
-			MessageBox.Show("Stuklijst "+(rsSub.Fields["CODE"].Value.ToString())+" status is niet beschikbaar");
+			MessageBox.Show("Stuklijst " + (rsSub.Fields["CODE"].Value.ToString()) + " status is niet beschikbaar");
 			stuknummer = sub;
 			stukID = 0;
 			subswap(ref stuknummer, ref stukID);
@@ -813,39 +813,39 @@ public class RidderScript : CommandScript
 		rsSlSub.Fields["FK_SUBASSEMBLY"].Value = stukID;
 		rsSlSub.Update();
 
-	}				//stuklijsten importeren
-	
+	}               //stuklijsten importeren
+
 	public void sub1input(ref int hoofdlijstNmr, ref int aantal, ref String sub1)
 	{
 		string sub = sub1;
 
-		subinput(ref  hoofdlijstNmr, ref  aantal, ref  sub);
-		
+		subinput(ref hoofdlijstNmr, ref aantal, ref sub);
 
-	}			//stuklijst 1 import
-	
+
+	}           //stuklijst 1 import
+
 	public void sub2input(ref int hoofdlijstNmr, ref int aantal, ref String sub2)
 	{
 		string sub = sub2;
 
 		subinput(ref hoofdlijstNmr, ref aantal, ref sub);
 
-	}			//stuklijst 2 import
-	
+	}           //stuklijst 2 import
+
 	public void sub3input(ref int hoofdlijstNmr, ref int aantal, ref String sub3)
 	{
 		string sub = sub3;
 
 		subinput(ref hoofdlijstNmr, ref aantal, ref sub);
-	}			//stuklijst 3 import
-	
+	}           //stuklijst 3 import
+
 	public void sub4input(ref int hoofdlijstNmr, ref int aantal, ref String sub4)
 	{
 		string sub = sub4;
 
 		subinput(ref hoofdlijstNmr, ref aantal, ref sub);
 
-	}           	//stuklijst 4 import
+	}               //stuklijst 4 import
 
 	public void subfix(ref List<String> lijst, ref string watdan)
 	{
@@ -861,10 +861,10 @@ public class RidderScript : CommandScript
 
 			foreach (var regel in rsTest.AsEnumerable())
 			{
-				if (	rsTest.Fields["DESCRIPTION"].Value.ToString() == "" 	||
-						rsTest.Fields["CODE"].Value.ToString().Contains(@"/") 	||
-						rsTest.Fields["CODE"].Value.ToString().Contains(@"\") 	||
-						rsTest.Fields["CODE"].Value.ToString().Contains(@"#")) 	rsTest.Delete();
+				if (rsTest.Fields["DESCRIPTION"].Value.ToString() == "" ||
+						rsTest.Fields["CODE"].Value.ToString().Contains(@"/") ||
+						rsTest.Fields["CODE"].Value.ToString().Contains(@"\") ||
+						rsTest.Fields["CODE"].Value.ToString().Contains(@"#")) rsTest.Delete();
 			}
 			DataTable dtTest = rsTest.DataTable;
 
@@ -872,8 +872,8 @@ public class RidderScript : CommandScript
 			extracolumn.DataType = System.Type.GetType("System.String");
 			extracolumn.ColumnName = "TOTAAL";
 			extracolumn.Expression = "(CODE)+('- rev.')+(REVISION)+(' - ')+(DESCRIPTION)+(' - ')+(KEYWORDS)";
-			dtTest.Columns.Add(extracolumn);			
-			
+			dtTest.Columns.Add(extracolumn);
+
 			ShowInputDialog4(ref subs, ref watdan, ref dtTest);
 
 			if (subs == "-")
@@ -892,43 +892,43 @@ public class RidderScript : CommandScript
 			}
 			else MessageBox.Show("Stuklijst niet gevonden");
 		}
-	}							//Substuklijst aanvullen indien ontbreekt						
-	
+	}                           //Substuklijst aanvullen indien ontbreekt						
+
 	public void sub1fix(ref List<string> listQ, ref string watdan)
 	{
 		List<string> lijst = listQ;
 
 		subfix(ref lijst, ref watdan);
-		
-	}							//DataEx aanvullen indien stuklijstnummer 1 ontbreekt
+
+	}                           //DataEx aanvullen indien stuklijstnummer 1 ontbreekt
 
 	public void sub2fix(ref List<string> listR, ref string watdan)
 	{
 		List<string> lijst = listR;
-		
+
 		subfix(ref lijst, ref watdan);
-		
-	}							//DataEx aanvullen indien stuklijstnummer 2 ontbreekt
+
+	}                           //DataEx aanvullen indien stuklijstnummer 2 ontbreekt
 
 	public void sub3fix(ref List<string> listS, ref string watdan)
 	{
 		List<string> lijst = listS;
-		
+
 		subfix(ref lijst, ref watdan);
-		
-	}							//DataEx aanvullen indien stuklijstnummer 3 ontbreekt
+
+	}                           //DataEx aanvullen indien stuklijstnummer 3 ontbreekt
 
 	public void sub4fix(ref List<string> listT, ref string watdan)
 	{
 		List<string> lijst = listT;
-		
+
 		subfix(ref lijst, ref watdan);
 
-	}							//DataEx aanvullen indien stuklijstnummer 4 ontbreekt
-	
+	}                           //DataEx aanvullen indien stuklijstnummer 4 ontbreekt
+
 	public void subswap(ref string Stuknummer, ref int stukID)
 	{
-	//	MessageBox.Show("Stuklijst " + Stuknummer + " niet herkend");
+		//	MessageBox.Show("Stuklijst " + Stuknummer + " niet herkend");
 
 		int go = 0;
 
@@ -954,7 +954,7 @@ public class RidderScript : CommandScript
 			extracolumn.ColumnName = "TOTAAL";
 			extracolumn.Expression = "(CODE)+('- rev.')+(REVISION)+(' - ')+(DESCRIPTION)+(' - ')+(KEYWORDS)";
 			dtTest.Columns.Add(extracolumn);
-						
+
 			ShowInputDialog5(ref subswapper, ref dtTest);
 
 			if (subswapper == "0")
@@ -976,12 +976,12 @@ public class RidderScript : CommandScript
 			{
 				stukID = 0;
 				MessageBox.Show("Stuklijst niet gevonden");
-			}		
+			}
 
 		}
-		
-			
-	}								//stuklijst uitwisselen met een andere stuklijst
+
+
+	}                               //stuklijst uitwisselen met een andere stuklijst
 
 	public void subcombine(ref int hoofdlijstNmr)
 	{
@@ -1018,9 +1018,9 @@ public class RidderScript : CommandScript
 
 		}
 
-	}											//alle sub-stuklijsten combineeren als ze gelijk zijn
-	
-	public void staalinput(	ref int regels ,ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB, 
+	}                                           //alle sub-stuklijsten combineeren als ze gelijk zijn
+
+	public void staalinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1036,15 +1036,15 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Staalconstructie")
 			{
-				knalErin(ref  regels, ref  hoofdlijstNmr, ref listH, ref listA, ref  listB,	ref  listD, ref  listU, ref  listL,	ref  listG,ref  listF,ref  listQ,ref  listR,ref  listS,ref  listT, ref i);
-				
+				knalErin(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+
 			}
 		}
 		// MessageBox.Show("staal klaar");
 
-	}											//importeren van alle regels met groep staalconstructie
+	}                                           //importeren van alle regels met groep staalconstructie
 
-	public void vloerinput(	ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+	public void vloerinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1064,11 +1064,11 @@ public class RidderScript : CommandScript
 			}
 
 		}
-		
+
 		// MessageBox.Show("vloer klaar");
-	}											//importeren van alle regels met groep Vloerplaten
-	
-	public void trapinput(	ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+	}                                           //importeren van alle regels met groep Vloerplaten
+
+	public void trapinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1090,7 +1090,7 @@ public class RidderScript : CommandScript
 
 		// MessageBox.Show("trappen klaar");
 
-	}											//importeren van alle regels met groep trappen
+	}                                           //importeren van alle regels met groep trappen
 
 	public void Ladderinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
@@ -1114,8 +1114,8 @@ public class RidderScript : CommandScript
 
 		// MessageBox.Show("Ladders klaar");
 
-	}											//importeren van alle regels met groep Ladders
-	
+	}                                           //importeren van alle regels met groep Ladders
+
 	public void leuninginput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
@@ -1129,7 +1129,7 @@ public class RidderScript : CommandScript
 							ref List<string> listAB)
 	{
 		decimal leuninglengte = 0;
-		
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Leuning")
@@ -1137,17 +1137,15 @@ public class RidderScript : CommandScript
 				knalErin(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
 
 			}
-		
+
 			if (listB[i] == "Polyline" && listH[i] == "Leuning")
 			{
-				
 				int aantalR = Convert.ToInt32(listA[i]);
 				decimal lengteR = Convert.ToDecimal(listAB[i]) / 1000 / 2;
-				
+
 				decimal EXlengte = aantalR * lengteR;
 
 				leuninglengte += EXlengte;
-
 
 			}
 
@@ -1158,10 +1156,16 @@ public class RidderScript : CommandScript
 		String sub0 = "S100223";
 		sub1input(ref hoofdlijstNmr, ref aantalT, ref sub0);
 
+		decimal LL1 = Math.Ceiling(leuninglengte);
+
+		string LL = Convert.ToString(LL1);
+
+		MessageBox.Show(LL+" meter leuning toegevoegd");
+
 		// MessageBox.Show("leuning klaar");
-	}											//importeren van alle regels met groep leuning
-	
-	public void POPinput(	ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+	}                                           //importeren van alle regels met groep leuning
+
+	public void POPinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1182,9 +1186,9 @@ public class RidderScript : CommandScript
 		}
 
 		// MessageBox.Show("POP klaar");
-	}											//importeren van alle regels met groep POP
+	}                                           //importeren van alle regels met groep POP
 
-	public void knalErin(	ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+	public void knalErin(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1216,8 +1220,8 @@ public class RidderScript : CommandScript
 		if (sub4 != "-") sub4input(ref hoofdlijstNmr, ref aantal, ref sub4);
 
 
-	}								//alle import acties aanroepen
+	}                               //alle import acties aanroepen
 
 	// M.R.v.E - 2022
-	
+
 }
