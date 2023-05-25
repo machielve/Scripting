@@ -77,8 +77,8 @@ public class RidderScript : CommandScript
 
 			
 			
-		//	System.Diagnostics.Process.Start(gekozen);
-			MessageBox.Show(gekozen);
+			System.Diagnostics.Process.Start(gekozen);
+		//	MessageBox.Show(gekozen);
 
 		}
 		else MessageBox.Show("Verkeerde map");
