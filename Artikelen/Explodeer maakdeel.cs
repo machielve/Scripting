@@ -144,7 +144,6 @@ public class RidderScript : CommandScript
 
 
 			// loop om gebruikte artikelen in te boeken
-			rsSlRegel.MoveFirst();
 			while (rsSlRegel.EOF == false)
 			{
 
