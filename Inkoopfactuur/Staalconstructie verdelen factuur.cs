@@ -115,22 +115,16 @@ public class RidderScript : CommandScript
 		{
 			ScriptRecordset rsItemI = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "PK_R_PURCHASEINVOICEDETAILITEM", "PK_R_PURCHASEINVOICEDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItemI.MoveFirst();
-
 			string IRegelID = rsItemI.Fields["PK_R_PURCHASEINVOICEDETAILITEM"].Value.ToString();
 
-
-
-            // vanaf hier aanpassen naar factuur nivo
-
-			ScriptRecordset rsItemR = this.GetRecordset("R_ITEMRESERVATION", "DESTINATIONID", "SOURCEID = " + IRegelID, "");
+			ScriptRecordset rsItemR = this.GetRecordset("R_ITEMRESERVATION", "DESTINATIONID", "FK_PURCHASEINVOICEDETAILITEM = " + IRegelID, "");
 			rsItemR.MoveFirst();
-
 			string RRegelID = rsItemR.Fields["DESTINATIONID"].Value.ToString();
 
 			ScriptRecordset rsItemB = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= " + RRegelID, "");
 			rsItemB.MoveFirst();
-
 			decimal gewicht = Convert.ToDecimal(rsItemB.Fields["WEIGHT"].Value);
+
 
 			totaal += gewicht;
 
@@ -147,28 +141,25 @@ public class RidderScript : CommandScript
 
 		foreach (IRecord record in records)
 		{
-			ScriptRecordset rsItemI = this.GetRecordset("R_PURCHASEORDERDETAILITEM", "", "PK_R_PURCHASEORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
+			ScriptRecordset rsItemI = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItemI.MoveFirst();
 			rsItemI.UseDataChanges = true;
+			string IRegelID = rsItemI.Fields["PK_R_PURCHASEINVOICEDETAILITEM"].Value.ToString();
 
-			string IRegelID = rsItemI.Fields["PK_R_PURCHASEORDERDETAILITEM"].Value.ToString();
 
-			ScriptRecordset rsItemR = this.GetRecordset("R_ITEMRESERVATION", "DESTINATIONID", "SOURCEID = " + IRegelID, "");
+			ScriptRecordset rsItemR = this.GetRecordset("R_ITEMRESERVATION", "DESTINATIONID", "FK_PURCHASEINVOICEDETAILITEM = " + IRegelID, "");
 			rsItemR.MoveFirst();
-
 			string RRegelID = rsItemR.Fields["DESTINATIONID"].Value.ToString();
+
 
 			ScriptRecordset rsItemB = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= " + RRegelID, "");
 			rsItemB.MoveFirst();
-
 			decimal gewicht = Convert.ToDecimal(rsItemB.Fields["WEIGHT"].Value);
-
 			decimal prijs = gewicht * result;
 
 			rsItemI.Fields["NETPURCHASEPRICE"].Value = prijs;
 
 			rsItemI.Update();
-
 
 
 		}
