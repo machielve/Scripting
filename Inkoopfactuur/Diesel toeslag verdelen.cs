@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden juli-2023
 
 	*/
-	
+
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
@@ -54,7 +54,7 @@ public class RidderScript : CommandScript
 		GroupBox groepprijs = new GroupBox();
 		groepprijs.Size = new System.Drawing.Size(180, 60);
 		groepprijs.Location = new System.Drawing.Point(10, 75);
-		groepprijs.Text = "Totaal prijs";
+		groepprijs.Text = "Totale diesel opslag";
 
 		System.Windows.Forms.NumericUpDown textBox1 = new NumericUpDown();
 		textBox1.Size = new System.Drawing.Size(100, 25);
@@ -105,7 +105,7 @@ public class RidderScript : CommandScript
 
 		}
 
-		decimal kgPrijs = input1 / totaal;
+		decimal kgopslag = input1 / totaal;
 
 		foreach (IRecord record in records)
 		{
@@ -113,9 +113,11 @@ public class RidderScript : CommandScript
 			rsItem1.MoveFirst();
 			rsItem1.UseDataChanges = true;
 
+			decimal huidig = Convert.ToDecimal(rsItem1.Fields["NETPURCHASEPRICE"].Value.ToString());
 			decimal aantal1 = Convert.ToDecimal(rsItem1.Fields["QUANTITY"].Value.ToString());
 
-			decimal Nieuw = aantal1 * kgPrijs;
+			decimal Opslag = aantal1 * kgopslag;
+			decimal Nieuw = huidig + Opslag;
 
 			rsItem1.Fields["NETPURCHASEPRICE"].Value = Nieuw;
 
