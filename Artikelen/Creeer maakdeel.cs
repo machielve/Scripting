@@ -119,7 +119,6 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsSlRegel = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY = " + StuklijstId, "");
 			rsSlRegel.MoveFirst();
 
-
 			// loop om aanwezige voorraad te checken
 			rsSlRegel.MoveFirst();
 			while (rsSlRegel.EOF == false)
@@ -163,6 +162,8 @@ public class RidderScript : CommandScript
 				return;
 
 			}
+
+			// 
 
 			// loop om gebruikte artikelen uit te boeken
 			rsSlRegel.MoveFirst();
