@@ -92,6 +92,7 @@ public class RidderScript : CommandScript
 		{
 			MessageBox.Show("Aantal mag geen 0 zijn");
 			return;
+			
 		}
 
 
