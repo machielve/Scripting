@@ -92,7 +92,6 @@ public class RidderScript : CommandScript
 		{
 			MessageBox.Show("Aantal mag geen 0 zijn");
 			return;
-			
 		}
 
 
@@ -120,6 +119,7 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsSlRegel = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY = " + StuklijstId, "");
 			rsSlRegel.MoveFirst();
 
+
 			// loop om aanwezige voorraad te checken
 			rsSlRegel.MoveFirst();
 			while (rsSlRegel.EOF == false)
@@ -128,8 +128,24 @@ public class RidderScript : CommandScript
 				decimal AantalNodig = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
 				ScriptRecordset rsItemCheck1 = this.GetRecordset("R_ITEM", "", "PK_R_ITEM = " + Item1, "");
 				rsItemCheck1.MoveFirst();
-
+				
 				string Item1Code = rsItemCheck1.Fields["CODE"].Value.ToString();
+				
+				/*
+				// voorraad lijst updates
+				ScriptRecordset rsArtikelUitUpdate = this.GetRecordset("R_STOCKOUT", "", "FK_ITEM = " + Item1, "");
+				rsArtikelUitUpdate.UseDataChanges = true;
+				rsArtikelUitUpdate.Update();
+				MessageBox.Show("test1");
+
+				ScriptRecordset rsArtikelInUpdate = this.GetRecordset("R_STOCKIN", "", "FK_ITEM = " + Item1, "");
+				rsArtikelInUpdate.UseDataChanges = true;
+				rsArtikelInUpdate.Update();
+				MessageBox.Show("test2");
+
+				*/
+
+				
 				string Item1Naam = rsItemCheck1.Fields["DESCRIPTION"].Value.ToString();
 				string Item1Vtype = rsItemCheck1.Fields["STOCKLINKTYPE"].Value.ToString();
 				string Item1VIn = rsItemCheck1.Fields["TOTALSTOCKIN"].Value.ToString();
@@ -163,8 +179,6 @@ public class RidderScript : CommandScript
 				return;
 
 			}
-
-			// 
 
 			// loop om gebruikte artikelen uit te boeken
 			rsSlRegel.MoveFirst();
