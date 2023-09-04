@@ -24,7 +24,7 @@ public class RidderScript : CommandScript
 	*/
 
 	private static DialogResult ShowInputDialog(ref decimal input1, ref decimal input2, ref decimal input3, ref decimal input4,
-												ref bool rb10, ref bool rb11, ref bool rb12,
+												ref bool rb10, ref bool rb11, ref bool rb12, ref bool rb13,
 												ref bool rb20, ref bool rb21, ref bool rb22,
 												ref bool cb1, ref bool cb2)
 	{
@@ -121,7 +121,7 @@ public class RidderScript : CommandScript
 
 		//groep type
 		GroupBox groeptype = new GroupBox();
-		groeptype.Size = new System.Drawing.Size(180, 125);
+		groeptype.Size = new System.Drawing.Size(180, 140);
 		groeptype.Location = new System.Drawing.Point(10, 50);
 		groeptype.Text = "Cleat type";
 
@@ -145,6 +145,19 @@ public class RidderScript : CommandScript
 		rbutton12.Checked = false;
 		rbutton12.Text = "Column cleat";
 		groeptype.Controls.Add(rbutton12);
+
+		System.Windows.Forms.RadioButton rbutton13 = new RadioButton();
+		rbutton13.Size = new System.Drawing.Size(150, 25);
+		rbutton13.Location = new System.Drawing.Point(10, 100);
+		rbutton13.Checked = false;
+		rbutton13.Text = "Sigma cleat";
+		groeptype.Controls.Add(rbutton13);
+
+
+
+
+
+
 
 		inputBox.Controls.Add(groeptype);
 
@@ -215,6 +228,7 @@ public class RidderScript : CommandScript
 		rb10 = rbutton10.Checked;
 		rb11 = rbutton11.Checked;
 		rb12 = rbutton12.Checked;
+		rb13 = rbutton13.Checked;
 
 		rb20 = rbutton20.Checked;
 		rb21 = rbutton21.Checked;
@@ -237,6 +251,7 @@ public class RidderScript : CommandScript
 		bool rb10 = true;
 		bool rb11 = false;
 		bool rb12 = false;
+		bool rb13 = false;
 
 		bool rb20 = true;
 		bool rb21 = false;
@@ -247,7 +262,7 @@ public class RidderScript : CommandScript
 
 
 		ShowInputDialog(ref input1, ref input2, ref input3, ref input4,
-							ref rb10, ref rb11, ref rb12,
+							ref rb10, ref rb11, ref rb12, ref rb13,
 							ref rb20, ref rb21, ref rb22,
 							ref cb1, ref cb2);
 
@@ -265,6 +280,7 @@ public class RidderScript : CommandScript
 		if (rb10 == true) voorzet = "Joist cleat ";
 		if (rb11 == true) voorzet = "Beam cleat ";
 		if (rb12 == true) voorzet = "Column cleat ";
+		if (rb13 == true) voorzet = "Sigma cleat ";
 
 
 		if (cb1 == true) mod1 = "multi ";
@@ -364,15 +380,15 @@ public class RidderScript : CommandScript
 
 			// Hoofdleverancier als eerst
 			rsItemSup.AddNew();
-			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
+			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
-			rsItemSup.Fields["ITEMTYPE"].Value = 6;
+			rsItemSup.Fields["ITEMTYPE"].Value = 1;
 			rsItemSup.Update();			
 			
 			// extra leveranciers erna
 			rsItemSup.AddNew();
-			rsItemSup.Fields["FK_RELATION"].Value = LaserMaxid;
+			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 6;
