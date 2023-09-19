@@ -60,7 +60,7 @@ public class RidderScript : CommandScript
 		textBox1.Size = new System.Drawing.Size(100, 25);
 		textBox1.Location = new System.Drawing.Point(5, 25);
 		textBox1.Value = input1;
-		textBox1.Minimum = 0;
+		textBox1.Minimum = -20000;
 		textBox1.Maximum = 1500000;
 		textBox1.DecimalPlaces = 2;
 		groepprijs.Controls.Add(textBox1);
@@ -106,10 +106,11 @@ public class RidderScript : CommandScript
 		}
 
 		decimal kgopslag = input1 / totaal;
+		
 
 		foreach (IRecord record in records)
 		{
-			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEORDERDETAILMISC", "", "PK_R_PURCHASEORDERDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
+			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEINVOICEDETAILMISC", "", "PK_R_PURCHASEINVOICEDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem1.MoveFirst();
 			rsItem1.UseDataChanges = true;
 
