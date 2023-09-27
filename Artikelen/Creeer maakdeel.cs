@@ -269,7 +269,7 @@ public class RidderScript : CommandScript
 					if (rsItemIn1.EOF == true)
 					{
 						checkert += 1;
-						SplitLijst.Add(Item1 + " moet gesplitst worden");
+						// SplitLijst.Add(Item1 + " moet gesplitst worden");
 					}					
 					
 				}				
