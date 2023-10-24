@@ -12,6 +12,8 @@ using Ridder.Recordset.Extensions;
 using System.Windows.Forms;
 using System.Data;
 using Ridder.Common.Script;
+using System.Net;
+using System.Net.Http;
 
 public class RidderScript : CommandScript
 {
@@ -27,7 +29,7 @@ public class RidderScript : CommandScript
 	{
 
 
-        
+
 
 
 
