@@ -28,6 +28,17 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 
+        string website = "https://portal.deruitertransportbv.nl/Portal4uClient/Login.aspx";
+
+        string user = "info@almacon.nl";
+
+        string password = "2665NN"; //nog aanpassen
+
+
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(website);
+        CookieContainer cookies = new CookieContainer();
+
+
 
 
 
