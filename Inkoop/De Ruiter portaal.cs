@@ -38,10 +38,6 @@ public class RidderScript : CommandScript
 			await LoginAsync();
 		}).Wait();
 
-		//	MessageBox.Show("Synchronous code continues here.");
-
-
-
 		MessageBox.Show("Klaar.");
 	}
 
@@ -57,37 +53,38 @@ public class RidderScript : CommandScript
 		// Create an HttpClient with the handler
 		var httpClient = new HttpClient(handler);
 
-		// Set the base address
-		httpClient.BaseAddress = new Uri("https://portal.deruitertransportbv.nl/Portal4uClient/");
-
 		// Define the login URL and form data
-		string loginUrl = "Login.aspx";
+		string loginUrl = "https://portal.deruitertransportbv.nl/Portal4uClient/Login.aspx";
 		var loginData = new FormUrlEncodedContent(new[]
 		{
 			new KeyValuePair<string, string>("tbUsername", "info@almacon.nl"),
-			new KeyValuePair<string, string>("tbPassword", "2665NE"),
+			new KeyValuePair<string, string>("tbPassword", "***"),
 		});
 
 		// Send the login POST request
 		HttpResponseMessage loginResponse = await httpClient.PostAsync(loginUrl, loginData);
-
-
 
 		if (loginResponse.IsSuccessStatusCode)
 		{
 			//	MessageBox.Show("Login successful!");
 
 			// You can now use the same HttpClient to make further requests with the established session.
-			string NewTransport = "Form.aspx"; //invul scherm
+			string NewTransport = "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
 
 			var TransportData = new FormUrlEncodedContent(new[]
 			{
 				new KeyValuePair<string, string>("Textfield2", "Inkoopordernummer"),
-				new KeyValuePair<string, string>("Textfield5", "Ophaaladres"), 
+				new KeyValuePair<string, string>("Textfield5", "OphaaladresNaam"), 
 			});
 
 
 			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);
+			
+			
+			
+			
+			
+			
 			
 			
 			if (protectedPageResponse.IsSuccessStatusCode)
@@ -98,10 +95,10 @@ public class RidderScript : CommandScript
 				
 				if (NewTransportResponse.IsSuccessStatusCode)
 				{
-					MessageBox.Show("yeah");
+					MessageBox.Show("Data send succesfully.");
 				}
 				
-				else MessageBox.Show("bummer");
+				else MessageBox.Show("Cannot send the data.");
 				
 				
 			}
@@ -112,7 +109,7 @@ public class RidderScript : CommandScript
 		}
 		else
 		{
-			MessageBox.Show("Login failed.");
+			MessageBox.Show("Login failed. Status code: " + loginResponse.StatusCode);
 		}
 
 
