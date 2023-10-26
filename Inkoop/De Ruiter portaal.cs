@@ -93,7 +93,6 @@ public class RidderScript : CommandScript
 
 		if (loginResponse.IsSuccessStatusCode)
 		{
-			// You can now use the same HttpClient to make further requests with the established session.
 			string NewTransport = "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
 
 			string inkoopnummer = "";
@@ -120,8 +119,8 @@ public class RidderScript : CommandScript
 			
 
 			instance.InkoopData(		ref inkoopnummer, 
-										ref LaadDatum, ref LaadNaam, ref LaadAdres, ref LaadPostcode, ref LaadPlaats, ref LaadLand, ref LaadContact, ref LaadTelefoon,
-										ref LosDatum, ref LosNaam, ref LosAdres, ref LosPostcode, ref LosPlaats, ref LosLand, ref LosContact, ref LosTelefoon,
+										ref LaadDatum, 	ref LaadNaam, 	ref LaadAdres, 	ref LaadPostcode, 	ref LaadPlaats, 	ref LaadLand, 	ref LaadContact, 	ref LaadTelefoon,
+										ref LosDatum, 	ref LosNaam, 	ref LosAdres, 	ref LosPostcode, 	ref LosPlaats, 		ref LosLand, 	ref LosContact, 	ref LosTelefoon,
 										ref Opmerkingen);
 
 		
@@ -146,9 +145,7 @@ public class RidderScript : CommandScript
 			if (protectedPageResponse.IsSuccessStatusCode)
 			{
 				MessageBox.Show(protectedPageResponse.ToString());
-				
-				/*
-				
+								
 				HttpResponseMessage NewTransportResponse = await httpClient.PostAsync(NewTransport, TransportData);
 				
 				if (NewTransportResponse.IsSuccessStatusCode)
@@ -158,13 +155,12 @@ public class RidderScript : CommandScript
 				
 				else MessageBox.Show("Cannot send the data.");
 
-				*/
 				
 				
 			}
 			else
 			{
-				MessageBox.Show("Failed to access the protected page.");
+				MessageBox.Show("Failed to access the form page.");
 			}
 		}
 		else
