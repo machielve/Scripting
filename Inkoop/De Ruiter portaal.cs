@@ -26,9 +26,9 @@ public class RidderScript : CommandScript
 	Uit te voeren vanuit een inkooporder met de status nieuw en de bestelwijze op webshop
 	Geschreven door: Machiel R. van Emden oktober-2023
 	*/
-	
 
-	
+
+
 	public void Execute()
 	{
 		Task.Run(async () =>
@@ -41,38 +41,76 @@ public class RidderScript : CommandScript
 
 	public static async Task LoginAsync()
 	{
-		RidderScript instance = new RidderScript();		
-		
+		RidderScript instance = new RidderScript();
+
 		// Create an HttpClientHandler with a CookieContainer to store cookies
 		CookieContainer cookieContainer = new CookieContainer();
 		var handler = new HttpClientHandler
 		{
 			UseCookies = true,
 			CookieContainer = cookieContainer,
+			AllowAutoRedirect = true,
+		
 		};
 
-		// Create an HttpClient with the handler
 		var httpClient = new HttpClient(handler);
 
 		// Define the login URL and form data
 		string loginUrl = "https://portal.deruitertransportbv.nl/Portal4uClient/Login.aspx";
+
+
+		// Send an initial GET request to the login page to capture anti-CSRF tokens
+		HttpResponseMessage initialResponse = await httpClient.GetAsync(loginUrl);
+
+		if (!initialResponse.IsSuccessStatusCode)
+		{
+			Console.WriteLine("Failed to load the login page. Status Code: " + initialResponse.StatusCode);
+			return;
+		}
+
+		// Extract the response content as a string
+		string initialResponseContent = await initialResponse.Content.ReadAsStringAsync();
+
+		// Use regular expressions to capture anti-CSRF tokens
+		string viewState = CaptureToken(initialResponseContent, "__VIEWSTATE");
+		string viewStateGenerator = CaptureToken(initialResponseContent, "__VIEWSTATEGENERATOR");
+		string eventValidation = CaptureToken(initialResponseContent, "__EVENTVALIDATION");
+		
+				
 		var loginData = new FormUrlEncodedContent(new[]
 		{
-			new KeyValuePair<string, string>("tbUsername", 		"info@almacon.nl"),
-			new KeyValuePair<string, string>("tbPassword", 		"***"),
+			new KeyValuePair<string, string>("__EVENTTARGET", ""),
+			new KeyValuePair<string, string>("__EVENTARGUMENT", ""),
+			new KeyValuePair<string, string>("__LASTFOCUS", ""),
+			new KeyValuePair<string, string>("__VIEWSTATE", viewState),
+			new KeyValuePair<string, string>("__VIEWSTATEGENERATOR", viewStateGenerator),
+			new KeyValuePair<string, string>("__SCROLLPOSITIONX", "0"),
+			new KeyValuePair<string, string>("__SCROLLPOSITIONY", "0"),
+			new KeyValuePair<string, string>("__EVENTVALIDATION", eventValidation),
+			new KeyValuePair<string, string>("tbUsername",      "***"),
+			new KeyValuePair<string, string>("tbPassword",      "***"),
+			new KeyValuePair<string, string>("ddlLanguage", "NL"),
+			new KeyValuePair<string, string>("btnLogin", "inloggen"),
+			new KeyValuePair<string, string>("hfForgotPasswordMessage", "xcc")
+
 		});
 
+		httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36");
 		// Send the login POST request
 		HttpResponseMessage loginResponse = await httpClient.PostAsync(loginUrl, loginData);
-		
-		
-		
+
+
 		
 		/*
-		
-		//check all the current cookies
+
+
+
+		// check login respons
 		MessageBox.Show(loginResponse.ToString());
 
+
+		
+		// check all the current cookies		
 		CookieCollection cookies = cookieContainer.GetCookies(new Uri("https://portal.deruitertransportbv.nl"));
 
 		foreach (Cookie cookie in cookies)
@@ -85,28 +123,30 @@ public class RidderScript : CommandScript
 			MessageBox.Show("Expires: " + cookie.Expires);
 		}
 		
-		
 		*/
-		
-		
-		
+
+
+
+
+		return;  // stop here during testing of login
+
 
 		if (loginResponse.IsSuccessStatusCode)
 		{
 			string NewTransport = "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
 
 			string inkoopnummer = "";
-			
-			string LaadDatum = "" ;
-			string LaadNaam = "" ; 
-			string LaadAdres = "" ;
-			string LaadPostcode = "" ;
-			string LaadPlaats = "" ;
-			string LaadLand = "" ;
-			string LaadContact = "" ;
-			string LaadTelefoon = "" ;
-			
-			string LosDatum = "" ;
+
+			string LaadDatum = "";
+			string LaadNaam = "";
+			string LaadAdres = "";
+			string LaadPostcode = "";
+			string LaadPlaats = "";
+			string LaadLand = "";
+			string LaadContact = "";
+			string LaadTelefoon = "";
+
+			string LosDatum = "";
 			string LosNaam = "";
 			string LosAdres = "";
 			string LosPostcode = "";
@@ -116,47 +156,54 @@ public class RidderScript : CommandScript
 			string LosTelefoon = "";
 
 			string Opmerkingen = "";
-			
 
-			instance.InkoopData(		ref inkoopnummer, 
-										ref LaadDatum, 	ref LaadNaam, 	ref LaadAdres, 	ref LaadPostcode, 	ref LaadPlaats, 	ref LaadLand, 	ref LaadContact, 	ref LaadTelefoon,
-										ref LosDatum, 	ref LosNaam, 	ref LosAdres, 	ref LosPostcode, 	ref LosPlaats, 		ref LosLand, 	ref LosContact, 	ref LosTelefoon,
+			string totaalAantal = "";
+			string totaalGewicht = "";
+
+
+			instance.InkoopData(		ref inkoopnummer,
+										ref LaadDatum, ref LaadNaam, ref LaadAdres, ref LaadPostcode, ref LaadPlaats, ref LaadLand, ref LaadContact, ref LaadTelefoon,
+										ref LosDatum, ref LosNaam, ref LosAdres, ref LosPostcode, ref LosPlaats, ref LosLand, ref LosContact, ref LosTelefoon,
 										ref Opmerkingen);
 
-		
-			
-		
-			
+
+			instance.InkoopRegels(		ref totaalAantal, ref totaalGewicht);
 			
 			
 			
 			
-			var TransportData = new FormUrlEncodedContent(new[]
+			var TransportData = new FormUrlEncodedContent(new[] // create postdata
 			{
-				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield2", 		inkoopnummer),
-				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield5", 		LaadNaam), 
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield2",      inkoopnummer),
+			
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Datefield10",     LaadDatum),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield5",      LaadNaam),
+			
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield1",    totaalAantal),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield2", 	totaalGewicht),
 			});
 
+			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);  // send post data
 
-			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);
-			
-			
-			
+
+
 			if (protectedPageResponse.IsSuccessStatusCode)
 			{
-				MessageBox.Show(protectedPageResponse.ToString());
-								
+				MessageBox.Show(protectedPageResponse.ToString()); // check response
+
+
+
+
+
 				HttpResponseMessage NewTransportResponse = await httpClient.PostAsync(NewTransport, TransportData);
-				
+
 				if (NewTransportResponse.IsSuccessStatusCode)
 				{
 					MessageBox.Show("Data send succesfully.");
 				}
-				
+
 				else MessageBox.Show("Cannot send the data.");
 
-				
-				
 			}
 			else
 			{
@@ -172,21 +219,21 @@ public class RidderScript : CommandScript
 
 	}
 
-	public void InkoopData(	ref string inkoopnummer, 
-							ref string LaadDatum, ref string LaadNaam, ref string LaadAdres, ref string LaadPostcode, 
+	public void InkoopData(ref string inkoopnummer,
+							ref string LaadDatum, ref string LaadNaam, ref string LaadAdres, ref string LaadPostcode,
 							ref string LaadPlaats, ref string LaadLand, ref string LaadContact, ref string LaadTelefoon,
 							ref string LosDatum, ref string LosNaam, ref string LosAdres, ref string LosPostcode,
 							ref string LosPlaats, ref string LosLand, ref string LosContact, ref string LosTelefoon,
 							ref string Opmerkingen)
 	{
 		inkoopnummer = "check";
-		
+
 		LaadDatum = "01-01-2025";
 		LaadNaam = "Almacon ";
 		LaadAdres = "Kristalstraat 36";
 		LaadPostcode = "2665NE";
-		LaadPlaats = "Bleiswijk" ;
-		LaadLand = "Nederland" ;
+		LaadPlaats = "Bleiswijk";
+		LaadLand = "Nederland";
 		LaadContact = "Erik";
 		LaadTelefoon = "1234";
 
@@ -200,8 +247,39 @@ public class RidderScript : CommandScript
 		LosTelefoon = "1234";
 
 		Opmerkingen = "Tralala";
-		
+
 	}
+
+	public void InkoopRegels(ref string totaalAantal, ref string totaalGewicht)
+	{
+		totaalAantal = "1";
+		totaalGewicht = "1";
+	
+		
+	
+	}
+
+	static string CaptureToken(string content, string tokenName)
+	{
+		string pattern = $"<input type=\"hidden\" name=\"{tokenName}\" id=\"{tokenName}\" value=\"(.*?)\" />";
+		Match match = Regex.Match(content, pattern);
+		if (match.Success)
+		{
+			return match.Groups[1].Value;
+		}
+		return "";
+	}
+	
+	/*
+	Als we er heen navigeren met simulated keystrokes is het:
+	van homepage naar alle opdrachten = 4 x tab en dan enter
+	van homepage naar nieuwe opdracht = 5 x tab en dan enter
+	
+
+
+*/
+	
+
 	
 	
 	
