@@ -128,7 +128,7 @@ public class RidderScript : CommandScript
 
 
 
-		return;  // stop here during testing of login
+	//	return;  // stop here during testing of login
 
 
 		if (loginResponse.IsSuccessStatusCode)
@@ -178,6 +178,17 @@ public class RidderScript : CommandScript
 			
 				new KeyValuePair<string, string>("ctl00$MainContentHolder$Datefield10",     LaadDatum),
 				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield5",      LaadNaam),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield6",      LaadAdres),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield7",      LaadPostcode),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield9",      LaadPlaats),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield25",     LaadLand),
+
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Datefield2",     	LosDatum),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield15",     LosNaam),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield16",     LosAdres),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield20",     LosPostcode),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield21",     LosPlaats),
+				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield26",     LosLand),
 			
 				new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield1",    totaalAantal),
 				new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield2", 	totaalGewicht),
@@ -189,7 +200,7 @@ public class RidderScript : CommandScript
 
 			if (protectedPageResponse.IsSuccessStatusCode)
 			{
-				MessageBox.Show(protectedPageResponse.ToString()); // check response
+				//MessageBox.Show(protectedPageResponse.ToString()); // check response
 
 
 
