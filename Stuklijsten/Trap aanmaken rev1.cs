@@ -246,7 +246,7 @@ public class RidderScript : CommandScript
 		rb4 = rbutton4.Checked;
 		rb5 = rbutton5.Checked;
 		rb6 = rbutton6.Checked;
-		rb7 = rbutton6.Checked;
+		rb7 = rbutton7.Checked;
 
 		return result;
 
@@ -428,6 +428,20 @@ public class RidderScript : CommandScript
 			else trapcode = "";
 		}
 
+		else if (rb7)
+		{
+			type = 7;
+			bevessettrap = "S100522";
+			traptype = "T7";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
+			else trapcode = "";
+		}
+
 		else
 		{
 			type = 10;
@@ -480,6 +494,7 @@ public class RidderScript : CommandScript
 		else if (type == 4) { ssm = 2; }
 		else if (type == 5) { ssm = 1; }
 		else if (type == 6) { ssm = 1; }
+		else if (type == 7) { ssm = 1; }
 
 		decimal inputdec = Convert.ToDecimal(input);
 
