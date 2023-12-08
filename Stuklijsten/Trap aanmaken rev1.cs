@@ -17,17 +17,19 @@ public class RidderScript : CommandScript
 {
 	/*
 	
-	Trap aanmaken, het  programma om de benodigde onderdelen van een almacon trap in een stuklijst te syoppen
+	Trap aanmaken, het  programma om de benodigde onderdelen van een  trap in een stuklijst te stoppen
 	Uit te voeren vanuit een stuklijst met de status engineering
-	Geschreven door: Machiel R. van Emden mei-2022
+	Geschreven door: Machiel R. van Emden jan-2023
+	Update november 2023
 
 	*/
 
-	private static DialogResult ShowInputDialog(ref string input, ref decimal input1, ref string input2, ref bool rb10, ref bool rb11,
-												ref bool rb0, ref bool rb1, ref bool rb2, ref bool rb3, ref bool rb4, ref bool rb5, ref bool rb6)
+	private static DialogResult ShowInputDialog(ref string input, ref decimal input1, ref string input2, 
+												ref bool rb10, ref bool rb11, ref bool rb20, ref bool rb21,
+												ref bool rb0, ref bool rb1, ref bool rb2, ref bool rb3, ref bool rb4, ref bool rb5, ref bool rb6, ref bool rb7)
 	{
 
-		System.Drawing.Size size = new System.Drawing.Size(300, 700);
+		System.Drawing.Size size = new System.Drawing.Size(450, 700);
 		Form inputBox = new Form();
 
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -53,8 +55,8 @@ public class RidderScript : CommandScript
 
 		//aantal trappen
 		System.Windows.Forms.TextBox textBox = new TextBox();
-		textBox.Size = new System.Drawing.Size(size.Width - 10, 25);
-		textBox.Location = new System.Drawing.Point(5, 50);
+		textBox.Size = new System.Drawing.Size(100, 25);
+		textBox.Location = new System.Drawing.Point(10, 50);
 		textBox.Text = input;
 		inputBox.Controls.Add(textBox);
 
@@ -107,67 +109,76 @@ public class RidderScript : CommandScript
 
 		//groep type
 		GroupBox groepBoxType = new GroupBox();
-		groepBoxType.Size = new System.Drawing.Size(180, 225);
+		groepBoxType.Size = new System.Drawing.Size(395, 250);
 		groepBoxType.Location = new System.Drawing.Point(10, 225);
 		groepBoxType.Text = "Trap type";
 
 
 		System.Windows.Forms.RadioButton rbutton0 = new RadioButton();
-		rbutton0.Size = new System.Drawing.Size(75, 25);
+		rbutton0.Size = new System.Drawing.Size(250, 25);
 		rbutton0.Location = new System.Drawing.Point(10, 25);
 		rbutton0.Checked = rb0;
-		rbutton0.Text = "Type 0";
+		rbutton0.Text = "Type 0 - (BG naar platform)";
 		rbutton0.Checked = true;
 		groepBoxType.Controls.Add(rbutton0);
 
 		System.Windows.Forms.RadioButton rbutton1 = new RadioButton();
-		rbutton1.Size = new System.Drawing.Size(75, 25);
+		rbutton1.Size = new System.Drawing.Size(250, 25);
 		rbutton1.Location = new System.Drawing.Point(10, 50);
 		rbutton1.Checked = rb1;
-		rbutton1.Text = "Type 1";
+		rbutton1.Text = "Type 1 - (BG naar landing)";
 		groepBoxType.Controls.Add(rbutton1);
 
 		System.Windows.Forms.RadioButton rbutton2 = new RadioButton();
-		rbutton2.Size = new System.Drawing.Size(75, 25);
+		rbutton2.Size = new System.Drawing.Size(250, 25);
 		rbutton2.Location = new System.Drawing.Point(10, 75);
 		rbutton2.Checked = rb2;
-		rbutton2.Text = "Type 2";
+		rbutton2.Text = "Type 2 - (Landing naar platform)";
 		groepBoxType.Controls.Add(rbutton2);
 
 		System.Windows.Forms.RadioButton rbutton3 = new RadioButton();
-		rbutton3.Size = new System.Drawing.Size(75, 25);
+		rbutton3.Size = new System.Drawing.Size(250, 25);
 		rbutton3.Location = new System.Drawing.Point(10, 100);
 		rbutton3.Checked = rb3;
-		rbutton3.Text = "Type 3";
+		rbutton3.Text = "Type 3 - (Landing naar landing)";
 		groepBoxType.Controls.Add(rbutton3);
 
 		System.Windows.Forms.RadioButton rbutton4 = new RadioButton();
-		rbutton4.Size = new System.Drawing.Size(75, 25);
+		rbutton4.Size = new System.Drawing.Size(250, 25);
 		rbutton4.Location = new System.Drawing.Point(10, 125);
 		rbutton4.Checked = rb4;
-		rbutton4.Text = "Type 4";
+		rbutton4.Text = "Type 4 - (Platform naar platform)";
 		groepBoxType.Controls.Add(rbutton4);
 
 		System.Windows.Forms.RadioButton rbutton5 = new RadioButton();
-		rbutton5.Size = new System.Drawing.Size(75, 25);
+		rbutton5.Size = new System.Drawing.Size(250, 25);
 		rbutton5.Location = new System.Drawing.Point(10, 150);
 		rbutton5.Checked = rb5;
-		rbutton5.Text = "Type 5";
+		rbutton5.Text = "Type 5 - (Platform naar landing)";
 		groepBoxType.Controls.Add(rbutton5);
 
 		System.Windows.Forms.RadioButton rbutton6 = new RadioButton();
-		rbutton6.Size = new System.Drawing.Size(150, 25);
+		rbutton6.Size = new System.Drawing.Size(250, 25);
 		rbutton6.Location = new System.Drawing.Point(10, 175);
 		rbutton6.Checked = rb6;
-		rbutton6.Text = "Type 6 (EuroSort)";
+		rbutton6.Text = "Type 6 - (Met stelvoet)";
 		groepBoxType.Controls.Add(rbutton6);
+
+		System.Windows.Forms.RadioButton rbutton7 = new RadioButton();
+		rbutton7.Size = new System.Drawing.Size(250, 25);
+		rbutton7.Location = new System.Drawing.Point(10, 200);
+		rbutton7.Checked = rb6;
+		rbutton7.Text = "Type 7";
+		groepBoxType.Controls.Add(rbutton7);
+		
+		
 
 		inputBox.Controls.Add(groepBoxType);
 
 		//groephoek	
 		GroupBox groepBoxHoek = new GroupBox();
 		groepBoxHoek.Size = new System.Drawing.Size(180, 100);
-		groepBoxHoek.Location = new System.Drawing.Point(10, 475);
+		groepBoxHoek.Location = new System.Drawing.Point(10, 500);
 		groepBoxHoek.Text = "Trap hoek";
 
 
@@ -186,13 +197,36 @@ public class RidderScript : CommandScript
 		rbutton11.Text = "37º";
 		groepBoxHoek.Controls.Add(rbutton11);
 
-
 		inputBox.Controls.Add(groepBoxHoek);
 
 
+		//groepschoor	
+		GroupBox groepBoxSchoor = new GroupBox();
+		groepBoxSchoor.Size = new System.Drawing.Size(180, 100);
+		groepBoxSchoor.Location = new System.Drawing.Point(225, 500);
+		groepBoxSchoor.Text = "Schoor optie";
+
+
+		System.Windows.Forms.RadioButton rbutton20 = new RadioButton();
+		rbutton20.Size = new System.Drawing.Size(150, 25);
+		rbutton20.Location = new System.Drawing.Point(10, 25);
+		rbutton20.Checked = rb20;
+		rbutton20.Text = "Zonder kruisschoor";
+		rbutton20.Checked = true;
+		groepBoxSchoor.Controls.Add(rbutton20);
+
+		System.Windows.Forms.RadioButton rbutton21 = new RadioButton();
+		rbutton21.Size = new System.Drawing.Size(150, 25);
+		rbutton21.Location = new System.Drawing.Point(10, 50);
+		rbutton21.Checked = rb21;
+		rbutton21.Text = "Met kruisschoor";
+		groepBoxSchoor.Controls.Add(rbutton21);
+
+		inputBox.Controls.Add(groepBoxSchoor);
+		
+		
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-
 
 		DialogResult result = inputBox.ShowDialog();
 		input = textBox.Text;
@@ -202,6 +236,9 @@ public class RidderScript : CommandScript
 		rb10 = rbutton10.Checked;
 		rb11 = rbutton11.Checked;
 
+		rb20 = rbutton20.Checked;
+		rb21 = rbutton21.Checked;
+
 		rb0 = rbutton0.Checked;
 		rb1 = rbutton1.Checked;
 		rb2 = rbutton2.Checked;
@@ -209,8 +246,10 @@ public class RidderScript : CommandScript
 		rb4 = rbutton4.Checked;
 		rb5 = rbutton5.Checked;
 		rb6 = rbutton6.Checked;
+		rb7 = rbutton6.Checked;
 
 		return result;
+
 	}
 
 	public void Execute()
@@ -220,6 +259,9 @@ public class RidderScript : CommandScript
 		string input2 = "Trap breedte";
 		bool rb10 = false;
 		bool rb11 = false;
+		
+		bool rb20 = false;
+		bool rb21 = false;
 
 		bool rb0 = true;
 		bool rb1 = false;
@@ -228,8 +270,11 @@ public class RidderScript : CommandScript
 		bool rb4 = false;
 		bool rb5 = false;
 		bool rb6 = false;
+		bool rb7 = false;
 
-		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5, ref rb6);
+		ShowInputDialog(ref input, ref input1, ref input2, ref rb10, ref rb11, ref rb20, ref rb21, ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5, ref rb6, ref rb7);
+
+
 
 		int hoek = 0;
 		int type = 0;
@@ -238,97 +283,134 @@ public class RidderScript : CommandScript
 		string tredecode = "";
 		string supportcode = "";
 		string trapcode = "";
+		string trapcodeRH = "";
+		string trapcodeLH = "";
 		string bevessettrap = "";
 		string bevessettrede = "S100337";
 		string bevessetweltrede = "S100337";
 		string bevessetsupplate = "S100338";
+		string traptype = "";
+		string Schoorlijst = "S100225";
 
 		decimal treden = 0;
+		decimal optrede;
 		decimal hoog = input1;
 
 		decimal optreden42 = Math.Round(hoog / 210, 0);
 		decimal optreden37 = Math.Round(hoog / 190, 0);
 		decimal breed = Int32.Parse(input2);
 
-
 		if (rb10 == true)
 		{
 			hoek = 42;
 			treden = optreden42 - 1;
-
+			optrede = optreden42;
 		}
+
 		else if (rb11 == true)
 		{
 			hoek = 37;
 			treden = optreden37 - 1;
+			optrede = optreden37;
 		}
+
 		else
 		{
 			hoek = 0;
 			treden = 0;
+			optrede = 0;
 		}
+
 		double hoekrad = hoek * (Math.PI / 180);
 		double hoogd = Convert.ToDouble(hoog);
 
 		double lang = hoogd / (Math.Sin(hoekrad));
+
+
+
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
 		{
 			type = 0;
 			bevessettrap = "S100509";
-			if (lang >= 1000 && lang < 2500) trapcode = "13699";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13700";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13701";
-			else if (lang >= 5000 && lang < 7000) trapcode = "13732";
+			traptype = "T0";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
-
 		}
 
 		else if (rb1 == true)
 		{
 			type = 1;
 			bevessettrap = "S100510";
-			if (lang >= 1000 && lang < 2500) trapcode = "13702";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13703";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13704";
+			traptype = "T1";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
+
 		else if (rb2 == true)
 		{
 			type = 2;
 			bevessettrap = "S100511";
-			if (lang >= 1000 && lang < 2500) trapcode = "13705";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13706";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13707";
+			traptype = "T2";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
+
 		else if (rb3 == true)
 		{
 			type = 3;
 			bevessettrap = "S100512";
-			if (lang >= 1000 && lang < 2500) trapcode = "13708";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13709";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13710";
+			traptype = "T3";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
+
 		else if (rb4 == true)
 		{
 			type = 4;
 			bevessettrap = "S100513";
-			if (lang >= 1000 && lang < 2500) trapcode = "13711";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13712";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13713";
-			else if (lang >= 5000 && lang < 7000) trapcode = "13733";
+			traptype = "T4";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
+
 		else if (rb5 == true)
 		{
 			type = 5;
 			bevessettrap = "S100514";
-			if (lang >= 1000 && lang < 2500) trapcode = "13714";
-			else if (lang >= 2500 && lang < 3500) trapcode = "13715";
-			else if (lang >= 3500 && lang < 5000) trapcode = "13716";
+			traptype = "T5";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 
@@ -336,9 +418,13 @@ public class RidderScript : CommandScript
 		{
 			type = 6;
 			bevessettrap = "S100522";
-			if (lang >= 1000 && lang < 2500) trapcode = "13749";
-			else if (lang >= 2500 && lang < 3500) trapcode = "";
-			else if (lang >= 3500 && lang < 5000) trapcode = "";
+			traptype = "T6";
+			if (optrede < 26)
+			{
+				trapcode = "10569";
+				trapcodeRH = "12795";
+				trapcodeLH = "12796";
+			}
 			else trapcode = "";
 		}
 
@@ -347,6 +433,7 @@ public class RidderScript : CommandScript
 			type = 10;
 			trapcode = "";
 			bevessettrap = "";
+			traptype = "";
 		}
 
 		//Selecteren tredes
@@ -378,8 +465,8 @@ public class RidderScript : CommandScript
 		{
 			if (breed == 600) { supportcode = "13750"; }
 			else if (breed == 650) { supportcode = ""; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = "13752"; }
+			else if (breed == 700) { supportcode = ""; }
+			else if (breed == 750) { supportcode = "13752"; }
 			else if (breed == 800) { supportcode = "13453"; }
 			else if (breed == 900) { supportcode = "13452"; }
 			else if (breed == 1000) { supportcode = "13451"; }
@@ -404,23 +491,23 @@ public class RidderScript : CommandScript
 		int coatingnummer = 1;
 
 
+		string trapcheck = trapcodeRH + " / " + trapcodeLH;
+		string trapcheck1 = trapcodeRH + trapcodeLH;
 
-		if (tredecode == "" || supportcode == "" || trapcode == "" || bevessettrap == "" || inputdec == 0)
+		if (tredecode == "" || supportcode == "" || trapcheck1 == "" || bevessettrap == "" || inputdec == 0)
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
-
-			MessageBox.Show("Stringer set =" + trapcode +
-							"\nTrap trede =" + tredecode +
-							"\nWeltrede code=" + supportcode
+			MessageBox.Show("Stringer set = " + trapcheck +
+							"\nTrap trede = " + tredecode +
+							"\nWeltrede code = " + supportcode
 							, "WipWapWop");
-
 			// cancel als artikelcodes niet ingevuld zijn
 			return;
 		}
 
 		else
 		{
-			MessageBox.Show(input + " trappen" +
+			MessageBox.Show(input + " trap(pen)" +
 							"\nType " + type +
 							"\n" + hoek + " graden" +
 							"\n" + input1 + " mm hoog" +
@@ -430,7 +517,8 @@ public class RidderScript : CommandScript
 							"\n" +
 							"\nArtikelcode roostertrede: " + tredecode + " - " + tottrede + " x" +
 							"\nArtikelcode weltrede: " + supportcode + " - " + totsupp + " x" +
-							"\nArtikelcode trapboom: " + trapcode + " - " + inputdec + " x"
+							"\nArtikelcode trapboom RH: " + trapcodeRH + " - " + inputdec + " x" +
+							"\nArtikelcode trapboom LH: " + trapcodeLH + " - " + inputdec + " x"
 							, "Trebuchet");
 
 
@@ -481,13 +569,13 @@ public class RidderScript : CommandScript
 				}
 			}
 
-			{   //trap invoegen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcode), "");
+			{   //trapboom RH invoegen
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcodeRH), "");
 				rsItem.MoveFirst();
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcode);
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcodeRH);
 				}
 				else
 				{
@@ -497,16 +585,35 @@ public class RidderScript : CommandScript
 
 					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-					rsAssemblyItem.Fields["CAMPARAMETER"].Value = "H= " + hoog + "mm";
+					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = traptype + " - H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
 					rsAssemblyItem.Update();
+				}
+			}
 
-					paintarea = Convert.ToDecimal(rsAssemblyItem.Fields["PAINTAREA"].Value.ToString());
-					trapnummer = Convert.ToInt32(rsAssemblyItem.Fields["PK_R_ASSEMBLYDETAILITEM"].Value.ToString());
+			{   //trapboom LH invoegen
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", trapcodeLH), "");
+				rsItem.MoveFirst();
 
+				if (rsItem != null && rsItem.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + trapcodeLH);
+				}
+				else
+				{
+					ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+					rsAssemblyItem.UseDataChanges = true;
+					rsAssemblyItem.AddNew();
 
+					rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+					rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
+					rsAssemblyItem.Fields["CAMPARAMETER"].Value = traptype + " - H= " + hoog + " mm";
+					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 
+					rsAssemblyItem.Update();
 				}
 			}
 
@@ -581,52 +688,42 @@ public class RidderScript : CommandScript
 				}
 			}
 
-			{   // poedercoaten invoegen
-				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", bevessetweltrede), "");
-				rsSub.MoveFirst();
+			{   // Kruisschoor invoegen
 
-				if (rsSub != null && rsSub.RecordCount == 0)
+				if (rb21 == true)
 				{
-					MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + bevessetweltrede);
+
+					ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "PK_R_ASSEMBLY, DESCRIPTION, CODE", string.Format("CODE= '{0}'", Schoorlijst), "");
+					rsSub.MoveFirst();
+
+					if (rsSub != null && rsSub.RecordCount == 0)
+					{
+						MessageBox.Show("Geen overeenkomstig stuklijst kunnen vinden. Stuklijst: " + Schoorlijst);
+					}
+					else
+					{
+						ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
+						rsAssemblySub.UseDataChanges = true;
+						rsAssemblySub.AddNew();
+
+						rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+						rsAssemblySub.Fields["FK_SUBASSEMBLY"].Value = rsSub.Fields["PK_R_ASSEMBLY"].Value;
+						rsAssemblySub.Fields["QUANTITY"].Value = Convert.ToDouble(input);
+
+						rsAssemblySub.Update();
+
+					}
 				}
-				else
-				{
-					ScriptRecordset rsAssemblySub = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
-					rsAssemblySub.UseDataChanges = true;
-					rsAssemblySub.AddNew();
-
-					rsAssemblySub.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
-					rsAssemblySub.Fields["FK_OUTSOURCEDACTIVITY"].Value = 21;
-					rsAssemblySub.Fields["QUANTITY"].Value = paintarea;
-
-					rsAssemblySub.Update();
-
-					coatingnummer = Convert.ToInt32(rsAssemblySub.Fields["PK_R_ASSEMBLYDETAILOUTSOURCED"].Value.ToString());
-
-
-				}
-			}
-
-			{   // poedercoaten koppelen
-				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLYITEMOUTSOURCED", "", "PK_R_ASSEMBLYITEMOUTSOURCED= -1", "");
-				rsSub.UseDataChanges = true;
-				rsSub.AddNew();
-
-
-				rsSub.Fields["FK_ASSEMBLYDETAILITEM"].Value = trapnummer;
-				rsSub.Fields["FK_ASSEMBLYDETAILOUTSOURCED"].Value = coatingnummer;
-				rsSub.Update();
-
+				
 			}
 
 
 
 			MessageBox.Show("Klaar");
-			//MessageBox.Show("Poeder coaten is ook ge-automatizeerd, met de correcte UBW: U1020");
 
 		}
 	}
 
-	// M.R.v.E - 2022
+	// M.R.v.E - 2023
 
 }
