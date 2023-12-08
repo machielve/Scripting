@@ -24,15 +24,16 @@ public class RidderScript : CommandScript
 		string SalesOrder = "";
 		string ErrorRegel = "" ;
 		string SkipRegel = "" ;
+
 		
-		/*
-
-		order nummer ophalen vanaf de bon
-
-
-
-		*/
-		
+		string bonId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
+		ScriptRecordset rsJobOrder = this.GetRecordset("R_JOBORDER", "", "PK_R_JOBORDER= " + bonId, "");
+		rsJobOrder.MoveFirst();
+		string OrderId = rsJobOrder.Fields["FK_ORDER"].ToString();		
+		ScriptRecordset rsOrder = this.GetRecordset("R_ORDER", "", "PK_R_ORDER= " + OrderId, "");
+		rsOrder.MoveFirst();
+		SalesOrder = rsOrder.Fields["ORDERNUMBER"].ToString();
+				
 		
 		SalesOrder = "6830";
 		
@@ -157,15 +158,96 @@ public class RidderScript : CommandScript
 			
 			else 
 			{
+				string ItemCode = listB[i].ToString();
+				decimal aantal = Convert.ToDecimal(listC[i].ToString());
+				string fase = listA[i].ToString();
+				string merk = listD[i].ToString();
+				decimal lengte = Convert.ToDecimal(listB[i].ToString());
+				decimal breedte = 0;
+				
+				decimal Tgewicht = Convert.ToDecimal(listH[i].ToString());
+
+
+				
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "CODE, FK_ITEMUNIT, FK_ITEMGROUP", string.Format("CODE = '{0}'", ItemCode), "");
+				rsItem.MoveFirst();
+				
+				
+
+				if (rsItem != null && rsItem.RecordCount == 0)
+				{
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + ItemCode);
+				}
+				else if (aantal == 0)
+				{
+					MessageBox.Show("Artikel: " + ItemCode + " heeft geen aantal ingevuld.");
+				}
+				
+				else
+				{					
+					decimal type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
+					decimal AGroup = Convert.ToDecimal(rsItem.Fields["FK_ITEMGROUP"].Value.ToString());
+
+					// Artikleeenheden Plaat en Rooster, lengte en breedte
+					if (type == 10 || type == 15 || type == 30)
+					{						
+						lengte = lengte / 1000;
+						breedte = breedte / 1000;
+					}
+
+					// Artikleeenheden met een lengte maat
+					else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32)
+					{
+						lengte = lengte / 1000;
+						breedte = 0;
+					}
+
+					// Artikleeenheid Trapboom
+					else if (type == 22 || type == 34)
+					{
+						lengte = lengte;
+						breedte = 0;
+					}
+
+					// Artikleenheden welke nog niet gebruikt zijn
+					else
+					{
+						lengte = 0;
+						breedte = 0;
+					}
+
+
+					ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
+					rsJoborderItem.UseDataChanges = true;
+					rsJoborderItem.AddNew();
+
+
+
+					rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
+					rsJoborderItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
+					rsJoborderItem.Fields["QUANTITY"].Value = aantal;
+					
+					rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
+					rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
+					rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
+				//	rsJoborderItem.Fields["CAMGEOMETRY"].Value = Convert.ToString(myStrValues[5]);
+					
+					rsJoborderItem.Update();
+					
+					
+					
+					
+					
+					
+					
+					
+				
+				
+				
+				
+				}
+
 				ListGood.Add(listD[i].ToString());
-				
-				
-				
-				
-				
-				
-
-
 
 			}
 		}
@@ -174,9 +256,9 @@ public class RidderScript : CommandScript
 
 
 
-		MessageBox.Show("Error regels: "+ListError.Count.ToString());
-		MessageBox.Show("Overgeslagen regels: "+ListSkip.Count.ToString());
-		MessageBox.Show("Goede regels: "+ListGood.Count.ToString());
+		MessageBox.Show("Error regels= "			+ListError.Count.ToString());
+		MessageBox.Show("Overgeslagen regels= "		+ListSkip.Count.ToString());
+		MessageBox.Show("Goede regels= "			+ListGood.Count.ToString());
 		
 
 		ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
@@ -423,7 +505,7 @@ public class RidderScript : CommandScript
 		combo1.DataSource = matchingFolders;
 		combo1.Size = new System.Drawing.Size(200, 25);
 		combo1.DropDownWidth = 500;
-		combo1.Location = new System.Drawing.Point(60, 60);
+		combo1.Location = new System.Drawing.Point(100, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
 		
@@ -465,7 +547,7 @@ public class RidderScript : CommandScript
 		combo1.DataSource = matchingFiles;
 		combo1.Size = new System.Drawing.Size(200, 25);
 		combo1.DropDownWidth = 500;
-		combo1.Location = new System.Drawing.Point(60, 60);
+		combo1.Location = new System.Drawing.Point(100, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
 
