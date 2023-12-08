@@ -373,15 +373,18 @@ public class RidderScript : CommandScript
 		inputBox.ClientSize = size;
 		inputBox.Text = "Cluedo (Tekla import 1.0)";
 
+		System.Windows.Forms.Label label = new Label();
+		label.Size = new System.Drawing.Size(95, 25);
+		label.Location = new System.Drawing.Point(5, 60);
+		label.Text = "Tekla project nummer";
+		inputBox.Controls.Add(label);
+
 		System.Windows.Forms.TextBox textBox = new TextBox();
-		textBox.Size = new System.Drawing.Size(300, 25);
-		textBox.Location = new System.Drawing.Point(60, 60);
+		textBox.Size = new System.Drawing.Size(200, 25);
+		textBox.Location = new System.Drawing.Point(100, 60);
 		textBox.Text = SalesOrder;
 		inputBox.Controls.Add(textBox);
 		
-		
-
-
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
@@ -408,18 +411,22 @@ public class RidderScript : CommandScript
 		inputBox.ClientSize = size;
 		inputBox.Text = "Cluedo (Tekla import 1.0)";
 
+		System.Windows.Forms.Label label = new Label();
+		label.Size = new System.Drawing.Size(95, 25);
+		label.Location = new System.Drawing.Point(5, 60);
+		label.Text = "Tekla project naam";
+		inputBox.Controls.Add(label);
+
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
 		combo1.ValueMember = "CODE";
 		combo1.DataSource = matchingFolders;
-		combo1.Size = new System.Drawing.Size(300, 25);
+		combo1.Size = new System.Drawing.Size(200, 25);
 		combo1.DropDownWidth = 500;
 		combo1.Location = new System.Drawing.Point(60, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
-
-
-
+		
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
@@ -446,17 +453,21 @@ public class RidderScript : CommandScript
 		inputBox.ClientSize = size;
 		inputBox.Text = "Cluedo (Tekla import 1.0)";
 
+		System.Windows.Forms.Label label = new Label();
+		label.Size = new System.Drawing.Size(95, 25);
+		label.Location = new System.Drawing.Point(5, 60);
+		label.Text = "Import lijst";
+		inputBox.Controls.Add(label);
+
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
 		combo1.DisplayMember = "TOTAAL";
 		combo1.ValueMember = "CODE";
 		combo1.DataSource = matchingFiles;
-		combo1.Size = new System.Drawing.Size(300, 25);
+		combo1.Size = new System.Drawing.Size(200, 25);
 		combo1.DropDownWidth = 500;
 		combo1.Location = new System.Drawing.Point(60, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
-
-
 
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
