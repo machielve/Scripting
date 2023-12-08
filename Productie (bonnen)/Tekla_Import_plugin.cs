@@ -22,20 +22,158 @@ public class RidderScript : CommandScript
 		string ErrorLocation = "";
 		string ImportFile = "";
 		string SalesOrder = "6830";
+		string ErrorRegel = "" ;
+		string SkipRegel = "" ;
+		
+		
+		
 		
 		ShowInputDialog1(ref SalesOrder);
 
 		MapBuilder(ref SalesOrder, ref Filelocation);
 
 		FileBuilder(ref Filelocation, ref ImportFile);
-
-		MessageBox.Show(ImportFile);
-		
+	
 		var reader = new StreamReader(File.OpenRead(ImportFile));
+		List<string> listA = new List<string>();                //Phase
+		List<string> listB = new List<string>();                //Artikelcode
+		List<string> listC = new List<string>();                //Aantal
+		List<string> listD = new List<string>();                //Merk
+		List<string> listE = new List<string>();                //Lengte
+		List<string> listF = new List<string>();                //Profiel
+		List<string> listG = new List<string>();                //Weight (stuk)
+		List<string> listH = new List<string>();                //Weight (regel)
+		List<string> listI = new List<string>();                //
+		List<string> listJ = new List<string>();                //
+
+		List<string> ListError = new List<string>();            //de error lijst
+		List<string> ListGood = new List<string>();             //de check lijst
+		List<string> ListSkip = new List<string>();             //de skip lijst
 
 
 
-		ErrorLog(ref ErrorLocation);
+		while (!reader.EndOfStream)
+		{
+			var line = reader.ReadLine();
+			var values = line.Split(';');
+
+			string check1 = line.Contains(";").ToString();
+
+			if (check1 == "True")
+			{
+				//MessageBox.Show(line.ToString());
+				
+				
+				//kolom A phase -> naar lijst A				
+				if (values[0].ToString().Substring(0, 6) == "     F")
+				{
+					listA.Add("x");
+				}
+				else listA.Add(values[0]);
+				
+				//kolom B artcode -> naar lijst B
+				if (values[1].ToString().Substring(0,1) != "1")
+				{
+					listB.Add("x");
+				}
+				else if (values[1].ToString().Substring(0,1) == "0")
+				{
+					listB.Add("x");
+				}
+				else listB.Add(values[1]);
+
+				//kolom C aantal -> naar lijst C
+				if (values[2].ToString() == "")
+				{
+					listC.Add("0");
+				}
+				else listC.Add(values[2]);
+				
+   				//kolom D merk -> naar lijst D				
+				if (values[3].ToString().Substring(0, 5) == "     ")
+				{
+					listD.Add("x");
+				}
+				else listD.Add(values[3]);  
+				
+				//kolom E lengte -> naar lijst E
+				listE.Add(values[4]); 
+				
+				//kolom F profiel -> naar lijst F				  
+				listF.Add(values[5]);   
+				
+				//kolom G weight (stuk) -> naar lijst G
+				listG.Add(values[6]); 
+				
+				//kolom H weight(regel) -> naar lijst H  
+				listH.Add(values[7]);   
+
+
+			}
+			
+		}
+		
+		int regels = listA.Count;
+
+	//	MessageBox.Show("Aantal regels = " + regels.ToString());
+
+		for (int i = 0; i < regels; i++)
+		{
+			if (listB[i].ToString() == "x")
+			{
+				if (listA[i].ToString() == "x")
+				{
+					SkipRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ListSkip.Add(SkipRegel);
+				}
+				else if (listD[i].ToString() == "x")
+				{
+					SkipRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ListSkip.Add(SkipRegel);
+				}
+				else
+				{
+					ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+
+					ListError.Add(ErrorRegel);
+				}
+				
+				
+			}
+			
+			else if (listB[i].ToString().Substring(0,4) == "Art.")
+			{
+				SkipRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+				ListSkip.Add(SkipRegel);
+			}
+			
+			
+			else 
+			{
+				ListGood.Add(listD[i].ToString());
+				
+				
+				
+				
+				
+				
+
+
+
+			}
+		}
+
+
+
+
+
+		MessageBox.Show("Error regels: "+ListError.Count.ToString());
+		MessageBox.Show("Overgeslagen regels: "+ListSkip.Count.ToString());
+		MessageBox.Show("Goede regels: "+ListGood.Count.ToString());
+		
+
+		ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
+		ErrorLog(ref ErrorLocation,ref ListError);
 
 	}
 
@@ -189,8 +327,27 @@ public class RidderScript : CommandScript
 		}
 	}
 	
-	public void ErrorLog(ref string ErrorLocation)
+	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError)
 	{
+		string datum = DateTime.Now.ToString();
+		string datum1 = datum.Replace(":", "_");
+		
+		string ErrorFile = ErrorLocation + @"\Error - (" + datum1 +@").txt";
+		try
+		{
+			// Write each item in the list to the file
+			using (StreamWriter writer = new StreamWriter(ErrorFile))
+			{
+				foreach (string item in ListError)
+				{
+					writer.WriteLine(item);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show("Error: " + ex.Message.ToString());
+		}
 
 	}  //creeeren van log voor overgeslagen regels
 	
@@ -210,8 +367,8 @@ public class RidderScript : CommandScript
 		inputBox.Text = "Cluedo (Tekla import 1.0)";
 
 		System.Windows.Forms.TextBox textBox = new TextBox();
-		textBox.Size = new System.Drawing.Size(size.Width - 75, 23);
-		textBox.Location = new System.Drawing.Point(60, 10);
+		textBox.Size = new System.Drawing.Size(300, 25);
+		textBox.Location = new System.Drawing.Point(60, 60);
 		textBox.Text = SalesOrder;
 		inputBox.Controls.Add(textBox);
 		
@@ -248,9 +405,9 @@ public class RidderScript : CommandScript
 		combo1.DisplayMember = "TOTAAL";
 		combo1.ValueMember = "CODE";
 		combo1.DataSource = matchingFolders;
-		combo1.Size = new System.Drawing.Size(275, 25);
+		combo1.Size = new System.Drawing.Size(300, 25);
 		combo1.DropDownWidth = 500;
-		combo1.Location = new System.Drawing.Point(5, 150);
+		combo1.Location = new System.Drawing.Point(60, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
 
@@ -286,9 +443,9 @@ public class RidderScript : CommandScript
 		combo1.DisplayMember = "TOTAAL";
 		combo1.ValueMember = "CODE";
 		combo1.DataSource = matchingFiles;
-		combo1.Size = new System.Drawing.Size(275, 25);
+		combo1.Size = new System.Drawing.Size(300, 25);
 		combo1.DropDownWidth = 500;
-		combo1.Location = new System.Drawing.Point(5, 150);
+		combo1.Location = new System.Drawing.Point(60, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
 
