@@ -21,17 +21,25 @@ public class RidderScript : CommandScript
 		string Filelocation = "";
 		string ErrorLocation = "";
 		string ImportFile = "";
-		string SalesOrder = "6830";
+		string SalesOrder = "";
 		string ErrorRegel = "" ;
 		string SkipRegel = "" ;
 		
+		/*
+
+		order nummer ophalen vanaf de bon
+
+
+
+		*/
 		
+		
+		SalesOrder = "6830";
 		
 		
 		ShowInputDialog1(ref SalesOrder);
 
 		MapBuilder(ref SalesOrder, ref Filelocation);
-
 		FileBuilder(ref Filelocation, ref ImportFile);
 	
 		var reader = new StreamReader(File.OpenRead(ImportFile));
@@ -115,7 +123,9 @@ public class RidderScript : CommandScript
 		
 		int regels = listA.Count;
 
-	//	MessageBox.Show("Aantal regels = " + regels.ToString());
+
+		
+		
 
 		for (int i = 0; i < regels; i++)
 		{
@@ -134,11 +144,8 @@ public class RidderScript : CommandScript
 				else
 				{
 					ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-
 					ListError.Add(ErrorRegel);
-				}
-				
-				
+				}		
 			}
 			
 			else if (listB[i].ToString().Substring(0,4) == "Art.")
