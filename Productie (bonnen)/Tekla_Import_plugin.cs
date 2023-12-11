@@ -22,28 +22,29 @@ public class RidderScript : CommandScript
 		string ErrorLocation = "";
 		string ImportFile = "";
 		string SalesOrder = "";
-		string ErrorRegel = "" ;
-		string SkipRegel = "" ;
+		string ErrorRegel = "";
+		string SkipRegel = "";
 
-		
+
 		string bonId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 		ScriptRecordset rsJobOrder = this.GetRecordset("R_JOBORDER", "", "PK_R_JOBORDER= " + bonId, "");
 		rsJobOrder.MoveFirst();
-		string OrderId = rsJobOrder.Fields["FK_ORDER"].ToString();		
+		var OrderId = rsJobOrder.Fields["FK_ORDER"].Value.ToString();
+
 		ScriptRecordset rsOrder = this.GetRecordset("R_ORDER", "", "PK_R_ORDER= " + OrderId, "");
 		rsOrder.MoveFirst();
-		SalesOrder = rsOrder.Fields["ORDERNUMBER"].ToString();
-				
-		
-		SalesOrder = "6830";
-		
-		
+		SalesOrder = rsOrder.Fields["ORDERNUMBER"].Value.ToString();
+
+
+		//	SalesOrder = "6830";
+
+
 		ShowInputDialog1(ref SalesOrder);
 
 		MapBuilder(ref SalesOrder, ref Filelocation);
 		FileBuilder(ref Filelocation, ref ImportFile);
-	
-		var reader = new StreamReader(File.OpenRead(ImportFile));
+
+		//	var reader = new StreamReader(File.OpenRead(ImportFile));
 		List<string> listA = new List<string>();                //Phase
 		List<string> listB = new List<string>();                //Artikelcode
 		List<string> listC = new List<string>();                //Aantal
@@ -59,74 +60,66 @@ public class RidderScript : CommandScript
 		List<string> ListGood = new List<string>();             //de check lijst
 		List<string> ListSkip = new List<string>();             //de skip lijst
 
-
-
-		while (!reader.EndOfStream)
+		using (StreamReader reader = new StreamReader(ImportFile))
 		{
-			var line = reader.ReadLine();
-			var values = line.Split(';');
-
-			string check1 = line.Contains(";").ToString();
-
-			if (check1 == "True")
+			while (!reader.EndOfStream)
 			{
-				//MessageBox.Show(line.ToString());
-				
-				
-				//kolom A phase -> naar lijst A				
-				if (values[0].ToString().Substring(0, 6) == "     F")
-				{
-					listA.Add("x");
-				}
-				else listA.Add(values[0]);
-				
-				//kolom B artcode -> naar lijst B
-				if (values[1].ToString().Substring(0,1) != "1")
-				{
-					listB.Add("x");
-				}
-				else if (values[1].ToString().Substring(0,1) == "0")
-				{
-					listB.Add("x");
-				}
-				else listB.Add(values[1]);
+				var line = reader.ReadLine();
+				var values = line.Split(';');
 
-				//kolom C aantal -> naar lijst C
-				if (values[2].ToString() == "")
-				{
-					listC.Add("0");
-				}
-				else listC.Add(values[2]);
-				
-   				//kolom D merk -> naar lijst D				
-				if (values[3].ToString().Substring(0, 5) == "     ")
-				{
-					listD.Add("x");
-				}
-				else listD.Add(values[3]);  
-				
-				//kolom E lengte -> naar lijst E
-				listE.Add(values[4]); 
-				
-				//kolom F profiel -> naar lijst F				  
-				listF.Add(values[5]);   
-				
-				//kolom G weight (stuk) -> naar lijst G
-				listG.Add(values[6]); 
-				
-				//kolom H weight(regel) -> naar lijst H  
-				listH.Add(values[7]);   
+				string check1 = line.Contains(";").ToString();
 
+				if (check1 == "True")
+				{
+					//kolom A phase -> naar lijst A				
+					if (values[0].ToString().Substring(0, 6) == "     F")
+					{
+						listA.Add("x");
+					}
+					else listA.Add(values[0]);
 
-			}
-			
+					//kolom B artcode -> naar lijst B
+					if (values[1].ToString().Substring(0, 1) != "1")
+					{
+						listB.Add("x");
+					}
+					else if (values[1].ToString().Substring(0, 1) == "0")
+					{
+						listB.Add("x");
+					}
+					else listB.Add(values[1]);
+
+					//kolom C aantal -> naar lijst C
+					if (values[2].ToString() == "")
+					{
+						listC.Add("0");
+					}
+					else listC.Add(values[2]);
+
+					//kolom D merk -> naar lijst D				
+					if (values[3].ToString().Substring(0, 5) == "     ")
+					{
+						listD.Add("x");
+					}
+					else listD.Add(values[3]);
+
+					//kolom E lengte -> naar lijst E
+					listE.Add(values[4]);
+
+					//kolom F profiel -> naar lijst F				  
+					listF.Add(values[5]);
+
+					//kolom G weight (stuk) -> naar lijst G
+					listG.Add(values[6]);
+
+					//kolom H weight(regel) -> naar lijst H  
+					listH.Add(values[7]);
+
+				}
+			}			
 		}
-		
+
 		int regels = listA.Count;
-
-
-		
-		
 
 		for (int i = 0; i < regels; i++)
 		{
@@ -146,51 +139,64 @@ public class RidderScript : CommandScript
 				{
 					ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
-				}		
+				}
 			}
-			
-			else if (listB[i].ToString().Substring(0,4) == "Art.")
+
+			else if (listB[i].ToString().Substring(0, 4) == "Art.")
 			{
 				SkipRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 				ListSkip.Add(SkipRegel);
 			}
-			
-			
-			else 
+
+
+			else
 			{
 				string ItemCode = listB[i].ToString();
 				decimal aantal = Convert.ToDecimal(listC[i].ToString());
 				string fase = listA[i].ToString();
 				string merk = listD[i].ToString();
-				decimal lengte = Convert.ToDecimal(listB[i].ToString());
-				decimal breedte = 0;
-				
-				decimal Tgewicht = Convert.ToDecimal(listH[i].ToString());
+				decimal lengte = Convert.ToDecimal(listE[i].ToString());
+				decimal breedte = 10;
+				decimal Tgewicht = Convert.ToDecimal(listH[i].ToString()) / 10;
 
-
-				
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "CODE, FK_ITEMUNIT, FK_ITEMGROUP", string.Format("CODE = '{0}'", ItemCode), "");
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", ItemCode), "");
 				rsItem.MoveFirst();
-				
-				
+
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + ItemCode);
+					ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ListError.Add(ErrorRegel);
 				}
 				else if (aantal == 0)
 				{
-					MessageBox.Show("Artikel: " + ItemCode + " heeft geen aantal ingevuld.");
+					ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ListError.Add(ErrorRegel);
 				}
-				
+
 				else
-				{					
+				{
 					decimal type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
 					decimal AGroup = Convert.ToDecimal(rsItem.Fields["FK_ITEMGROUP"].Value.ToString());
+					int itemId = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
+					int Leverwijze = 4;
+					int Regtraject = Convert.ToInt32(rsItem.Fields["REGISTRATIONPATH"].Value.ToString());
+					int ZaagCode = Convert.ToInt32(rsItem.Fields["DEFAULTSAWINGCODE"].Value.ToString());
+					string Omschrijving = rsItem.Fields["DESCRIPTION"].Value.ToString();
+					string groupId = rsItem.Fields["FK_ITEMGROUP"].Value.ToString();
+					string Tekening = rsItem.Fields["DRAWINGNUMBER"].Value.ToString();
+					decimal MaxL = Convert.ToDecimal(rsItem.Fields["TRADELENGTH"].Value.ToString());
+					decimal MaxB = Convert.ToDecimal(rsItem.Fields["TRADEWIDTH"].Value.ToString());
+
+					ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMWAREHOUSE", "PK_R_ITEMWAREHOUSE", "FK_ITEM= " + itemId, "");
+					rsItemSup.MoveFirst();
+
+					int magazijnId = Convert.ToInt32(rsItemSup.Fields["PK_R_ITEMWAREHOUSE"].Value.ToString());
+
 
 					// Artikleeenheden Plaat en Rooster, lengte en breedte
 					if (type == 10 || type == 15 || type == 30)
-					{						
+					{
 						lengte = lengte / 1000;
 						breedte = breedte / 1000;
 					}
@@ -209,7 +215,7 @@ public class RidderScript : CommandScript
 						breedte = 0;
 					}
 
-					// Artikleenheden welke nog niet gebruikt zijn
+					// Artikleenheden welke niet hierboven gekozen worden
 					else
 					{
 						lengte = 0;
@@ -217,52 +223,79 @@ public class RidderScript : CommandScript
 					}
 
 
-					ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
-					rsJoborderItem.UseDataChanges = true;
-					rsJoborderItem.AddNew();
 
 
+					// check voor maximale afmetingen
+					if (lengte > MaxL || breedte > MaxB)
+					{
+						ErrorRegel = "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+						ListError.Add(ErrorRegel);
+					}
 
-					rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
-					rsJoborderItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-					rsJoborderItem.Fields["QUANTITY"].Value = aantal;
-					
-					rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-					rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
-					rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
-				//	rsJoborderItem.Fields["CAMGEOMETRY"].Value = Convert.ToString(myStrValues[5]);
-					
-					rsJoborderItem.Update();
-					
-					
-					
-					
-					
-					
-					
-					
-				
-				
-				
-				
-				}
+					else
+					{
+
+						// zonder Riddder update berekeningen
+						if (groupId != "117" && groupId != "119" && groupId != "130")  //groep 117=vloerdelen(hout), 119=koud gewalste liggers, group 130= vloerdelen(staal)
+						{
+							ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
+							rsJoborderItem.AddNew();
+
+							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
+							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
+							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
+							rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
+							rsJoborderItem.Fields["DESCRIPTION"].Value = Omschrijving;
+							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
+							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
+
+							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
+							rsJoborderItem.Fields["QUANTITY"].Value = aantal;
+							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
+							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
+							rsJoborderItem.Fields["WEIGHT"].Value = Tgewicht;
+
+							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
+							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
+
+							if (Tekening == "")
+							{
+								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOrder;
+							}
+
+							rsJoborderItem.Update();
+
+						}
+
+
+						// met ridder berekeningen
+						else
+						{
+							/*
+
+							koud gewalste profielen groupId = 119
+							Vloerdelen = 117
+
+
+							*/
+						}
+					}
 
 				ListGood.Add(listD[i].ToString());
 
 			}
+
 		}
+	}
 
 
 
 
-
-		MessageBox.Show("Error regels= "			+ListError.Count.ToString());
-		MessageBox.Show("Overgeslagen regels= "		+ListSkip.Count.ToString());
-		MessageBox.Show("Goede regels= "			+ListGood.Count.ToString());
-		
+		MessageBox.Show("Error regels= " + ListError.Count.ToString());
+		MessageBox.Show("Goede regels= " + ListGood.Count.ToString());
 
 		ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
-		ErrorLog(ref ErrorLocation,ref ListError);
+		ErrorLog(ref ErrorLocation, ref ListError);
 
 	}
 
@@ -291,7 +324,7 @@ public class RidderScript : CommandScript
 		if (fullPath != null)
 		{
 			Filelocation = fullPath + @"\Lijsten";
-		//	MessageBox.Show(Filelocation);
+			//	MessageBox.Show(Filelocation);
 
 			// Now you can use 'fullPath' to access the folder.
 		}
@@ -322,8 +355,8 @@ public class RidderScript : CommandScript
 
 				ShowInputDialog2(ref matchingFolders, ref Filelocation);
 				return Filelocation;
-				
-				
+
+
 			}
 		}
 		catch (Exception ex)
@@ -338,15 +371,11 @@ public class RidderScript : CommandScript
 	{
 		string FileExtension = @".csv";
 
-
 		ImportFile = FindFiles(Filelocation, FileExtension);
 
 		if (ImportFile != null)
 		{
 			ImportFile = ImportFile;
-		//	MessageBox.Show(ImportFile);
-
-			// Now you can use 'fullPath' to access the folder.
 		}
 		else
 		{
@@ -364,8 +393,8 @@ public class RidderScript : CommandScript
 			List<string> matchingFiles = Directory.GetFiles(Filelocation)
 				.Where(file => Path.GetFileName(file).EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase))
 				.ToList();
-			
-		
+
+
 			if (matchingFiles.Count == 1)
 			{
 				return matchingFiles.First(); // Return the full path of the matching folder.
@@ -415,13 +444,13 @@ public class RidderScript : CommandScript
 
 		}
 	}
-	
+
 	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError)
 	{
 		string datum = DateTime.Now.ToString();
 		string datum1 = datum.Replace(":", "_");
-		
-		string ErrorFile = ErrorLocation + @"\Error - (" + datum1 +@").txt";
+
+		string ErrorFile = ErrorLocation + @"\Error - (" + datum1 + @").txt";
 		try
 		{
 			// Write each item in the list to the file
@@ -439,15 +468,13 @@ public class RidderScript : CommandScript
 		}
 
 	}  //creeeren van log voor overgeslagen regels
-	
-	
 
-	
-	
+
+
+
+
 	private static DialogResult ShowInputDialog1(ref string SalesOrder)
 	{
-		
-		
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
 
@@ -466,7 +493,7 @@ public class RidderScript : CommandScript
 		textBox.Location = new System.Drawing.Point(100, 60);
 		textBox.Text = SalesOrder;
 		inputBox.Controls.Add(textBox);
-		
+
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
@@ -474,9 +501,9 @@ public class RidderScript : CommandScript
 		okButton.Text = "&OK";
 		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 40);
 		inputBox.Controls.Add(okButton);
-		
+
 		inputBox.AcceptButton = okButton;
-		
+
 		DialogResult result = inputBox.ShowDialog();
 		SalesOrder = textBox.Text;
 		return result;
@@ -484,8 +511,8 @@ public class RidderScript : CommandScript
 
 	private static DialogResult ShowInputDialog2(ref List<string> matchingFolders, ref string Filelocation)
 	{
-		
-		
+
+
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
 
@@ -508,7 +535,7 @@ public class RidderScript : CommandScript
 		combo1.Location = new System.Drawing.Point(100, 60);
 		combo1.DropDownStyle = ComboBoxStyle.DropDownList;
 		inputBox.Controls.Add(combo1);
-		
+
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
@@ -526,8 +553,8 @@ public class RidderScript : CommandScript
 
 	private static DialogResult ShowInputDialog3(ref List<string> matchingFiles, ref string ImportFile)
 	{
-		
-		
+
+
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
 
@@ -565,5 +592,5 @@ public class RidderScript : CommandScript
 		ImportFile = combo1.SelectedValue.ToString();
 		return result;
 	}  // juiste bestand kiezen om te importeren vanaf de gekozen map
-	
+
 }
