@@ -500,10 +500,13 @@ public class RidderScript : CommandScript
 			// Write each item in the list to the file
 			using (StreamWriter writer = new StreamWriter(ErrorFile))
 			{
+				writer.WriteLine("Error regels:");
 				foreach (string item in ListError)
 				{
 					writer.WriteLine(item);
 				}
+				writer.WriteLine("");
+				writer.WriteLine("Overgeslagen regels:");
 			}
 		}
 		catch (Exception ex)
