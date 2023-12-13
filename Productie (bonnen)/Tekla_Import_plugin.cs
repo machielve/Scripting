@@ -20,6 +20,7 @@ public class RidderScript : CommandScript
 	{
 		string Filelocation = "";
 		string ErrorLocation = "";
+		string ErrorFile = "";
 		string ImportFile = "";
 		string SalesOrder = "";
 		string ErrorRegel = "";
@@ -326,16 +327,19 @@ public class RidderScript : CommandScript
 
 		}
 	}
+		MessageBox.Show(ListGood.Count.ToString()+ " regels geimporteerd");
 
 		if (ListError.Count > 0)
 		{
+			ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
+			ErrorLog(ref ErrorLocation, ref ListError, ref ErrorFile);
 			MessageBox.Show(ListError.Count.ToString() + " regels in error log");
+			
+			System.Diagnostics.Process.Start(ErrorFile);
 		}
 		
-		MessageBox.Show(ListGood.Count.ToString()+ " regels geimporteerd");
+		// Einde script
 
-		ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
-		ErrorLog(ref ErrorLocation, ref ListError);
 
 	}
 
@@ -479,12 +483,12 @@ public class RidderScript : CommandScript
 		}
 	}
 
-	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError)
+	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError, ref string ErrorFile)
 	{
 		string datum = DateTime.Now.ToString();
 		string datum1 = datum.Replace(":", "_");
 
-		string ErrorFile = ErrorLocation + @"\Error - (" + datum1 + @").txt";
+		ErrorFile = ErrorLocation + @"\Error - (" + datum1 + @").txt";
 		try
 		{
 			// Write each item in the list to the file
