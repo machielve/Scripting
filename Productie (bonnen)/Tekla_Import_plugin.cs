@@ -173,6 +173,7 @@ public class RidderScript : CommandScript
 				decimal breedte = Convert.ToDecimal(listK[i].ToString());
 				decimal extraInfo = Convert.ToDecimal(listL[i].ToString());
 				decimal Tgewicht = Convert.ToDecimal(listH[i].ToString()) / 10;
+				string extraDim = "";
 				
 				
 				
@@ -228,8 +229,10 @@ public class RidderScript : CommandScript
 					// Artikleeenheid Trapboom
 					else if (type == 22 || type == 34)
 					{
+						extraDim = "L= "+lengte.ToString()+" mm";
 						lengte = extraInfo;
 						breedte = 0;
+						
 					}
 
 					// Artikleenheden welke niet hierboven gekozen worden
@@ -278,6 +281,7 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
 							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
 							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
+							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
 
 							if (Tekening == "")
 							{
@@ -305,12 +309,14 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
 							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);							
 							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
+							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
+							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
+							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
 							
 							rsJoborderItem.UseDataChanges = true;							
 							
 							rsJoborderItem.Fields["QUANTITY"].Value = aantal;							
-							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
+							
 
 							if (Tekening == "")
 							{
