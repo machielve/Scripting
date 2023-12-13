@@ -146,7 +146,7 @@ public class RidderScript : CommandScript
 				}
 				else
 				{
-					ErrorRegel = "Geen code        -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ErrorRegel = "Geen Acode       -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
 				}
 				
@@ -247,7 +247,7 @@ public class RidderScript : CommandScript
 					}
 
 					// check voor maximale Lengte
-					if (lengte > MaxL)
+					if (lengte > MaxL ) // && ItemCode != "10370" && ItemCode != "10367")
 					{
 						ErrorRegel = "Lengte te groot  -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 						ListError.Add(ErrorRegel);
@@ -257,15 +257,13 @@ public class RidderScript : CommandScript
 
 					else
 					{
-
 						// zonder Riddder update berekeningen
 						if (groupId != "117" && groupId != "119" && groupId != "130")  //groep 117=vloerdelen(hout), 119=koud gewalste liggers, group 130= vloerdelen(staal)
 						{
 							ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
 							rsJoborderItem.AddNew();
 							
-							rsJoborderItem.Fields["WEIGHT"].Value = Tgewicht;
-							
+							rsJoborderItem.Fields["WEIGHT"].Value = Tgewicht;							
 							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
 							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
 							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
@@ -304,11 +302,10 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
 							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
 							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
-							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
-							
+							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);							
 							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
-							rsJoborderItem.UseDataChanges = true;
 							
+							rsJoborderItem.UseDataChanges = true;							
 							
 							rsJoborderItem.Fields["QUANTITY"].Value = aantal;							
 							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
@@ -320,10 +317,7 @@ public class RidderScript : CommandScript
 							}
 
 							rsJoborderItem.Update();
-						}
-						
-							
-						
+						}						
 					}
 
 				ListGood.Add(listD[i].ToString());
@@ -333,7 +327,11 @@ public class RidderScript : CommandScript
 		}
 	}
 
-		MessageBox.Show("Error regels= " + ListError.Count.ToString());
+		if (ListError.Count > 0)
+		{
+			MessageBox.Show(ListError.Count.ToString() + " regels in error log");
+		}
+		
 		MessageBox.Show(ListGood.Count.ToString()+ " regels geimporteerd");
 
 		ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
