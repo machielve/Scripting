@@ -132,22 +132,22 @@ public class RidderScript : CommandScript
 			{
 				if (listA[i].ToString() == "x")
 				{
-					SkipRegel = "Geen fase        -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Geen fase          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else if (listD[i].ToString() == "x")
 				{
-					SkipRegel = "Geen merk        -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Geen merk          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else if (listD[i].ToString().Substring(0, 3) == "DUM")
 				{
-					SkipRegel = "Dummy           -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Dummy             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else
 				{
-					ErrorRegel = "Geen Acode       -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ErrorRegel = "Geen Acode         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
 				}
 				
@@ -158,7 +158,7 @@ public class RidderScript : CommandScript
 
 			else if (listB[i].ToString().Substring(0, 4) == "Art.")
 			{
-				SkipRegel = "Header           -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+				SkipRegel = "Header             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 				ListSkip.Add(SkipRegel);
 			}
 
@@ -183,12 +183,12 @@ public class RidderScript : CommandScript
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-					ErrorRegel = "Artikel onbekend -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ErrorRegel = "Artikel onbekend   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
 				}
 				else if (aantal == 0)
 				{
-					ErrorRegel = "Aantal is 0      -" + "Header    -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ErrorRegel = "Aantal is 0        -" + "Header    -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
 				}
 
@@ -244,16 +244,16 @@ public class RidderScript : CommandScript
 					
 
 					// check voor maximale Breedte
-					if (breedte > MaxB)
+					if (breedte > MaxB )
 					{
-						ErrorRegel = "Breedte te groot -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+						ErrorRegel = "Breedte te groot   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 						ListError.Add(ErrorRegel);
 					}
 
 					// check voor maximale Lengte
-					if (lengte > MaxL ) // && ItemCode != "10370" && ItemCode != "10367")
+					 else if (lengte > MaxL ) // && ItemCode != "10370" && ItemCode != "10367")
 					{
-						ErrorRegel = "Lengte te groot  -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+						ErrorRegel = "Lengte te groot    -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 						ListError.Add(ErrorRegel);
 					}
 					
