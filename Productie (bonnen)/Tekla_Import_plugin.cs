@@ -132,22 +132,22 @@ public class RidderScript : CommandScript
 			{
 				if (listA[i].ToString() == "x")
 				{
-					SkipRegel = "Geen fase          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Geen fase          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + 	"         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else if (listD[i].ToString() == "x")
 				{
-					SkipRegel = "Geen merk          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Geen merk          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + 	"         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else if (listD[i].ToString().Substring(0, 3) == "DUM")
 				{
-					SkipRegel = "Dummy             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					SkipRegel = "Dummy             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + 	"         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListSkip.Add(SkipRegel);
 				}
 				else
 				{
-					ErrorRegel = "Geen Acode         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
+					ErrorRegel = "Geen Acode         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 					ListError.Add(ErrorRegel);
 				}
 				
