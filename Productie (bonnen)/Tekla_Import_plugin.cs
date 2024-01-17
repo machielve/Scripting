@@ -324,10 +324,10 @@ public class RidderScript : CommandScript
 	}
 		MessageBox.Show(ListGood.Count.ToString()+ " regels geimporteerd");
 
-		if (ListError.Count > 0)
+		if (ListError.Count > 0 || ListSkip.Count > 0)
 		{
 			ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
-			ErrorLog(ref ErrorLocation, ref ListError, ref ErrorFile);
+			ErrorLog(ref ErrorLocation, ref ListError, ref ListSkip,ref ErrorFile);
 			MessageBox.Show(ListError.Count.ToString() + " regels in error log");
 			
 			System.Diagnostics.Process.Start(ErrorFile);
@@ -477,7 +477,7 @@ public class RidderScript : CommandScript
 		}
 	}
 
-	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError, ref string ErrorFile)
+	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError, ref List<String> ListSkip, ref string ErrorFile)
 	{
 		string datum = DateTime.Now.ToString();
 		string datum1 = datum.Replace(":", "_");
@@ -495,6 +495,12 @@ public class RidderScript : CommandScript
 				}
 				writer.WriteLine("");
 				writer.WriteLine("Overgeslagen regels:");
+				foreach (string item in ListSkip)
+				{
+					writer.WriteLine(item);
+				}
+				writer.WriteLine("");
+				writer.WriteLine("Done");
 			}
 		}
 		catch (Exception ex)
