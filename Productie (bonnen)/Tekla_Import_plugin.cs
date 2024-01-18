@@ -388,7 +388,6 @@ public class RidderScript : CommandScript
 			else if (matchingFolders.Count > 1)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
-				Console.WriteLine("Multiple folders with the same prefix found. Handle this scenario as needed.");
 
 				ShowInputDialog2(ref matchingFolders, ref Filelocation);
 				return Filelocation;
@@ -429,11 +428,17 @@ public class RidderScript : CommandScript
 				.Where(file => Path.GetFileName(file).EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase))
 				.ToList();
 
+				/*
+
 			if (matchingFiles.Count == 1)
 			{
 				return matchingFiles.First(); // Return the full path of the matching folder.
 			}
-			else if (matchingFiles.Count > 1)
+			else 
+
+			*/
+			
+			if (matchingFiles.Count > 1)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
