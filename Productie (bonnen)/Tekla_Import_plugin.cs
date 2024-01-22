@@ -438,7 +438,7 @@ public class RidderScript : CommandScript
 
 			*/
 			
-			if (matchingFiles.Count > 1)
+			if (matchingFiles.Count > 0)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
