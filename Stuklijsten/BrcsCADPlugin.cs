@@ -26,7 +26,8 @@ public class RidderScript : CommandScript
 
 	*/
 
-	private static DialogResult ShowInputDialog(ref string input, ref string input2, ref string input3, ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6)
+	private static DialogResult ShowInputDialog(	ref string input, ref string input2, ref string input3, 
+													ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6, ref bool cb7)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(250, 300);
 		Form inputBox = new Form();
@@ -109,6 +110,13 @@ public class RidderScript : CommandScript
 		cbox5.Text = "Opzetplekken";
 		inputBox.Controls.Add(cbox5);
 
+		System.Windows.Forms.CheckBox cbox7 = new CheckBox();
+		cbox7.Location = new System.Drawing.Point(5, 230);
+		cbox7.Size = new System.Drawing.Size(200, 25);
+		cbox7.Checked = cb6;
+		cbox7.Text = "Kolom beschermers";
+		inputBox.Controls.Add(cbox7);
+
 
 
 		Button okButton = new Button();
@@ -140,6 +148,7 @@ public class RidderScript : CommandScript
 		cb4 = cbox4.Checked;
 		cb5 = cbox5.Checked;
 		cb6 = cbox6.Checked;
+		cb7 = cbox7.Checked;
 		return result;
 
 	}
@@ -353,6 +362,7 @@ public class RidderScript : CommandScript
 		bool cb4;
 		bool cb5;
 		bool cb6;
+		bool cb7;
 		string groepnmr;
 
 		string hoofdlijst = FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
@@ -383,6 +393,7 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = false;
 			cb6 = false;
+			cb7 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100218/")
 		{
@@ -392,6 +403,7 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = false;
 			cb6 = false;
+			cb7 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100215/")
 		{
@@ -401,6 +413,7 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = false;
 			cb6 = false;
+			cb7 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100219/")
 		{
@@ -410,6 +423,7 @@ public class RidderScript : CommandScript
 			cb4 = true;
 			cb5 = false;
 			cb6 = false;
+			cb7 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100220/")
 		{
@@ -419,6 +433,7 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = true;
 			cb6 = false;
+			cb7 = false;
 		}
 		else if (hoofdlijstCode.Substring(0, 8) == "S100542/")
 		{
@@ -428,6 +443,17 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = false;
 			cb6 = true;
+			cb7 = false;
+		}
+		else if (hoofdlijstCode.Substring(0, 8) == "S100343/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = true;
 		}
 		else
 		{
@@ -437,13 +463,14 @@ public class RidderScript : CommandScript
 			cb4 = false;
 			cb5 = false;
 			cb6 = false;
+			cb7 = false;
 		}
 
 		string input = tekeningnmr1;
 		string input2 = "";
 		string input3 = groepnmr;
 
-		ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6);
+		ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7);
 
 		string input4;
 
@@ -463,8 +490,8 @@ public class RidderScript : CommandScript
 
 		var reader = new StreamReader(File.OpenRead(bestand1 + bestand2 + bestand3));
 		List<string> listA = new List<string>();                //Count
-		List<string> listB = new List<string>();                //TAG
-		List<string> listC = new List<string>();                //Name
+		List<string> listB = new List<string>();                //Name
+		List<string> listC = new List<string>();                //TAG
 		List<string> listD = new List<string>();                //Afmeting
 		List<string> listE = new List<string>();                //Afmeting 2
 		List<string> listF = new List<string>();                //Artikelcode
@@ -491,142 +518,224 @@ public class RidderScript : CommandScript
 		List<string> listAA = new List<string>();               //Area polyline
 		List<string> listAB = new List<string>();               //Length polyline
 
+		int Count = 0;
+		int Name = 0;
+		int Tag = 0;
+		int Afmeting = 0;
+		int Afmeting2 = 0;
+		int Artikelcode = 0;
+		int Breedte = 0;
+		int Groep = 0;
+		int Hoek = 0;
+		int Hoogte = 0;
+		int Kwaliteit = 0;
+		int Lengte = 0;
+		int LengteB = 0;
+		int Optie1 = 0;
+		int Option1 = 0;
+		int Sterkte = 0;
+		int Stuklijst = 0;
+		int Stuklijst1 = 0;
+		int Stuklijst2 = 0;
+		int Stuklijst3 = 0;
+		int Type = 0;
+		int Verdiepingen = 0;
+		int Voet = 0;
+		int W = 0;
+		int W1 = 0;
+		int Layer = 0;
+		int Area = 0;
+		int Length = 0;
+
+
+		var Header = new StreamReader(File.OpenRead(bestand1 + bestand2 + bestand3));
+		{
+			var header = Header.ReadLine();
+			var Namen = header.Split(';');
+
+			Count = Array.IndexOf(Namen, "Count");
+			Name = Array.IndexOf(Namen, "Name");
+			Tag = Array.IndexOf(Namen, "TAG");
+			Afmeting = Array.IndexOf(Namen, "Afmeting");
+			Afmeting2 = Array.IndexOf(Namen, "Afmeting 2");
+			Artikelcode = Array.IndexOf(Namen, "Artikelcode");
+			Breedte = Array.IndexOf(Namen, "Breedte");
+			Groep = Array.IndexOf(Namen, "Groep");
+			Hoek = Array.IndexOf(Namen, "Hoek");
+			Hoogte = Array.IndexOf(Namen, "Hoogte");
+			Kwaliteit = Array.IndexOf(Namen, "Kwaliteit");
+			Lengte = Array.IndexOf(Namen, "Lengte");
+			LengteB = Array.IndexOf(Namen, "Lengte B");
+			Optie1 = Array.IndexOf(Namen, "Optie 1");
+			Option1 = Array.IndexOf(Namen, "Option 1");
+			Sterkte = Array.IndexOf(Namen, "Sterkte");
+			Stuklijst = Array.IndexOf(Namen, "Stuklijst");
+			Stuklijst1 = Array.IndexOf(Namen, "Stuklijst 1");
+			Stuklijst2 = Array.IndexOf(Namen, "Stuklijst 2");
+			Stuklijst3 = Array.IndexOf(Namen, "Stuklijst 3");
+			Type = Array.IndexOf(Namen, "Type");
+			Verdiepingen = Array.IndexOf(Namen, "Verdiepingen");
+			Voet = Array.IndexOf(Namen, "Voet");
+			W = Array.IndexOf(Namen, "W");
+			W1 = Array.IndexOf(Namen, "W1");
+			Layer = Array.IndexOf(Namen, "Layer");
+			Area = Array.IndexOf(Namen, "Area");
+			Length = Array.IndexOf(Namen, "Length");
+
+
+
+		}
+
+
 		while (!reader.EndOfStream)
 		{
-			//	var header = reader.ReadLine();
+
 			var line = reader.ReadLine();
 			var values = line.Split(';');
 
-			listA.Add(values[0]);
-			listB.Add(values[1]);
-			listC.Add(values[2]);
-			listD.Add(values[3]);
-			listE.Add(values[4]);
+			// benodigde info eerst
 
-			if (values[5] == "") { listF.Add("-"); }
-			else if (values[5].Substring(0, 1) != "1" && values[5].Substring(0, 1) != "2" && values[5].Substring(0, 3) != "Art")
+			listA.Add(values[Count]);
+
+
+			// artikelcode lijst
+			if (values[Artikelcode] == "") { listF.Add("-"); }
+			else if (values[Artikelcode].Substring(0, 1) != "1" && values[Artikelcode].Substring(0, 1) != "2" && values[Artikelcode].Substring(0, 3) != "Art")
 			{
-				string naam = values[1];
-				string maat = values[3];
-				string type = values[20];
+				string naam = values[Name];
+				string maat = values[Afmeting];
+				string type = values[Type];
 				string wiewatwaar = naam + " - " + type + " - " + maat;
 
 				artfix(ref listF, ref wiewatwaar);
 			}
-			else { listF.Add(values[5]); }
+			else { listF.Add(values[Artikelcode]); }
 
-
-			if (values[6] == "") { listG.Add("0"); }
-			else if (values[6] != "Breedte")
+			// breedte dimensie
+			if (values[Breedte] == "") { listG.Add("0"); }
+			else if (values[Breedte] != "Breedte")
 			{
-				decimal aan = Convert.ToDecimal(values[6]) / 1000000;
+				decimal aan = Convert.ToDecimal(values[Breedte]) / 1000000;
 				listG.Add(Convert.ToString(aan));
 			}
-			else listG.Add(values[6]);
+			else listG.Add(values[Breedte]);
 
+			// groep
+			if (values[Groep] == "" && values[Layer] == "ALM_HANDRAIL") { listH.Add("Leuning"); }
+			else if (values[Groep] == "" && values[Layer] == "ALM_FLOOR") { listH.Add("Vloer"); }
+			else if (values[Groep] == "") { listH.Add("-"); }
+			else { listH.Add(values[Groep]); }
 
-			if (values[7] == "" && values[25] == "ALM_HANDRAIL") { listH.Add("Leuning"); }
-			else if (values[7] == "") { listH.Add("-"); }
-			else { listH.Add(values[7]); }
-
-			listI.Add(values[8]);
-			listJ.Add(values[9]);
-
-			if (values[10] == "") { listK.Add("-"); }
-			else { listK.Add(values[10]); }
-
-			if (values[11] == "") { listL.Add("0"); }
-			else if (values[11] != "Lengte")
+			// lengte dimensie
+			if (values[Lengte] == "") { listL.Add("0"); }
+			else if (values[Lengte] != "Lengte")
 			{
 				decimal aan1 = Convert.ToDecimal(values[11]) / 1000000;
 				listL.Add(Convert.ToString(aan1));
 			}
-			else listL.Add(values[11]);
+			else listL.Add(values[Lengte]);
 
-			listM.Add(values[12]);
-			listN.Add(values[13]);
-			listO.Add(values[14]);
-			listP.Add(values[15]);
-
-			if (values[16] == "") { listQ.Add("-"); }
-			else if (values[16].Substring(0, 2) != "S1" && values[16].Substring(0, 3) != "Stu")
+			// stuklijstnummer
+			if (values[Stuklijst] == "") { listQ.Add("-"); }
+			else if (values[Stuklijst].Substring(0, 2) != "S1" && values[Stuklijst].Substring(0, 3) != "Stu")
 			{
-				string naam = values[1];
-				string maat = values[3];
-				string type = values[20];
+				string naam = values[Name];
+				string maat = values[Afmeting];
+				string type = values[Type];
 				string watdan = naam + " - " + maat + " - " + type;
 				sub1fix(ref listQ, ref watdan);
 			}
-			else { listQ.Add(values[16]); }
+			else { listQ.Add(values[Stuklijst]); }
 
-
-			if (values[17] == "") { listR.Add("-"); }
-			else if (values[17].Substring(0, 2) != "S1" && values[17].Substring(0, 3) != "Stu")
+			// stuklijstnummer
+			if (values[Stuklijst1] == "") { listR.Add("-"); }
+			else if (values[Stuklijst1].Substring(0, 2) != "S1" && values[Stuklijst1].Substring(0, 3) != "Stu")
 			{
-				string naam = values[1];
-				string maat = values[3];
-				string type = values[20];
+				string naam = values[Name];
+				string maat = values[Afmeting];
+				string type = values[Type];
 				string watdan = naam + " - " + maat + " - " + type;
 				sub2fix(ref listR, ref watdan);
 			}
-			else { listR.Add(values[17]); }
+			else { listR.Add(values[Stuklijst1]); }
 
-
-			if (values[18] == "") { listS.Add("-"); }
-			else if (values[18].Substring(0, 2) != "S1" && values[18].Substring(0, 3) != "Stu")
+			// stuklijstnummer
+			if (values[Stuklijst2] == "") { listS.Add("-"); }
+			else if (values[Stuklijst2].Substring(0, 2) != "S1" && values[Stuklijst2].Substring(0, 3) != "Stu")
 			{
-				string naam = values[1];
-				string maat = values[3];
-				string type = values[20];
+				string naam = values[Name];
+				string maat = values[Afmeting];
+				string type = values[Type];
 				string watdan = naam + " - " + maat + " - " + type;
 				sub3fix(ref listS, ref watdan);
 			}
-			else { listS.Add(values[18]); }
+			else { listS.Add(values[Stuklijst2]); }
 
-
-			if (values[19] == "") { listT.Add("-"); }
-			else if (values[19].Substring(0, 2) != "S1" && values[19].Substring(0, 3) != "Stu")
+			// stuklijstnummer
+			if (values[Stuklijst3] == "") { listT.Add("-"); }
+			else if (values[Stuklijst3].Substring(0, 2) != "S1" && values[Stuklijst3].Substring(0, 3) != "Stu")
 			{
-				string naam = values[1];
-				string maat = values[3];
-				string type = values[20];
+				string naam = values[Name];
+				string maat = values[Afmeting];
+				string type = values[Type];
 				string watdan = naam + " - " + maat + " - " + type;
 				sub4fix(ref listT, ref watdan);
 			}
-			else { listT.Add(values[19]); }
+			else { listT.Add(values[Stuklijst3]); }
 
-
-			listU.Add(values[20]);
-			listV.Add(values[21]);
-			listW.Add(values[22]);
-			listX.Add(values[23]);
-			listY.Add(values[24]);
-			listZ.Add(values[25]);
-
-			if (values[26] == "") { listAA.Add("0"); }
-			else if (values[26] != "Area")
+			// polyline oppervlak
+			if (values[Area] == "") { listAA.Add("0"); }
+			else if (values[Area] != "Area")
 			{
-				decimal aan2 = Convert.ToDecimal(values[26]) / 1000000;
+				decimal aan2 = Convert.ToDecimal(values[Area]) / 1000000000000;
 				listAA.Add(Convert.ToString(aan2));
 			}
-			else listAA.Add(values[26]);
+			else listAA.Add(values[Area]);
 
-			if (values[27] == "") { listAB.Add("0"); }
-			else if (values[27] != "Length")
+			// polyline lengte
+			if (values[Length] == "") { listAB.Add("0"); }
+			else if (values[Length] != "Length")
 			{
-				decimal aan2 = Convert.ToDecimal(values[27]) / 1000000;
+				decimal aan2 = Convert.ToDecimal(values[Length]) / 1000000;
 				listAB.Add(Convert.ToString(aan2));
 			}
-			else listAB.Add(values[27]);
+			else listAB.Add(values[Length]);
+
+
+			// extra spul hieronder
+
+			listB.Add(values[Name]);
+			listC.Add(values[Tag]);
+			listD.Add(values[Afmeting]);
+			listE.Add(values[Afmeting2]);
+			listI.Add(values[Hoek]);
+			listJ.Add(values[Hoogte]);
+
+			if (values[Kwaliteit] == "") { listK.Add("-"); }
+			else { listK.Add(values[Kwaliteit]); }
+
+			listM.Add(values[LengteB]);
+			//	listN.Add(values[Optie1]);
+			//	listO.Add(values[Option1]);
+			listP.Add(values[Sterkte]);
+			listU.Add(values[Type]);
+			listV.Add(values[Verdiepingen]);
+			listW.Add(values[Voet]);
+			listX.Add(values[W]);
+			listY.Add(values[W1]);
+			listZ.Add(values[Layer]);
 
 
 		}
+
+
+
 
 		int regels = listA.Count;
 
 		if (cb1 == true)    //staalconstructie injectie	
 		{
-			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAA);
 		}
 
 		if (cb2 == true) //vloer injectie
@@ -652,6 +761,11 @@ public class RidderScript : CommandScript
 		if (cb6 == true) //Ladder injectie
 		{
 			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+		}
+
+		if (cb7 == true) //Bescherm injectie
+		{
+			Bescherminput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		subcombine(ref hoofdlijstNmr);
@@ -1029,8 +1143,10 @@ public class RidderScript : CommandScript
 							ref List<string> listQ,
 							ref List<string> listR,
 							ref List<string> listS,
-							ref List<string> listT)
+							ref List<string> listT,
+							ref List<string> listAA)
 	{
+		decimal totaalvloer = 0;
 
 		for (int i = 1; i < regels; i++)
 		{
@@ -1039,7 +1155,36 @@ public class RidderScript : CommandScript
 				knalErin(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
 
 			}
+			if (listB[i] == "Polyline" && listH[i] == "Vloer")
+			{
+				int aantalR = Convert.ToInt32(listA[i]);
+				decimal vloerOpp = Convert.ToDecimal(listAA[i]) / 1000 / 1000;
+
+				decimal EXOpp = aantalR * vloerOpp;
+
+				totaalvloer += EXOpp;
+
+			}
 		}
+		
+		/*
+
+		decimal LL1 = Math.Ceiling(totaalvloer);
+
+		string LL = Convert.ToString(LL1);
+
+		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
+		rsAssemblyItem.MoveFirst();
+		rsAssemblyItem.UseDataChanges = true;
+
+		rsAssemblyItem.Fields["KEYWORDS"].Value = LL + " m² oppervlakte";
+
+		rsAssemblyItem.Update();
+
+		*/
+		
+		
+		
 		// MessageBox.Show("staal klaar");
 
 	}                                           //importeren van alle regels met groep staalconstructie
@@ -1130,7 +1275,7 @@ public class RidderScript : CommandScript
 	{
 		decimal leuninglengte = 0;
 
-		for (int i = 1; i < regels; i++)
+		for (int i = 2; i < regels; i++)
 		{
 			if (listH[i] == "Leuning")
 			{
@@ -1160,7 +1305,16 @@ public class RidderScript : CommandScript
 
 		string LL = Convert.ToString(LL1);
 
-		MessageBox.Show(LL+" meter leuning toegevoegd");
+		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
+		rsAssemblyItem.MoveFirst();
+		rsAssemblyItem.UseDataChanges = true;
+
+		rsAssemblyItem.Fields["KEYWORDS"].Value = LL + " meter leuning";
+
+		rsAssemblyItem.Update();
+
+
+		MessageBox.Show(LL + " meter leuning toegevoegd");
 
 		// MessageBox.Show("leuning klaar");
 	}                                           //importeren van alle regels met groep leuning
@@ -1188,6 +1342,29 @@ public class RidderScript : CommandScript
 		// MessageBox.Show("POP klaar");
 	}                                           //importeren van alle regels met groep POP
 
+	public void Bescherminput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+							ref List<string> listD,
+							ref List<string> listU,
+							ref List<string> listL,
+							ref List<string> listG,
+							ref List<string> listF,
+							ref List<string> listQ,
+							ref List<string> listR,
+							ref List<string> listS,
+							ref List<string> listT)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			if (listH[i] == "Kolom bescherming")
+			{
+				knalErin(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+
+			}
+		}
+
+		// MessageBox.Show("Ladders klaar");
+
+	}                                           //importeren van alle regels met groep Ladders
 	public void knalErin(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
 							ref List<string> listD,
 							ref List<string> listU,
