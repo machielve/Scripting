@@ -72,9 +72,9 @@ public class RidderScript : CommandScript
 		string initialResponseContent = await initialResponse.Content.ReadAsStringAsync();
 
 		// Use regular expressions to capture anti-CSRF tokens
-		string viewState = CaptureToken(initialResponseContent, "__VIEWSTATE");
-		string viewStateGenerator = CaptureToken(initialResponseContent, "__VIEWSTATEGENERATOR");
-		string eventValidation = CaptureToken(initialResponseContent, "__EVENTVALIDATION");
+		string viewState = 				CaptureToken(initialResponseContent, "__VIEWSTATE");
+		string viewStateGenerator = 	CaptureToken(initialResponseContent, "__VIEWSTATEGENERATOR");
+		string eventValidation = 		CaptureToken(initialResponseContent, "__EVENTVALIDATION");
 		
 				
 		var loginData = new FormUrlEncodedContent(new[]
@@ -123,34 +123,27 @@ public class RidderScript : CommandScript
 
 
 			// capture anti-CSRF tokens
-			HttpResponseMessage FillResponse = await httpClient.GetAsync(NewTransport);
-			
+			HttpResponseMessage FillResponse = await httpClient.GetAsync(NewTransport);			
 			
 			// Extract the response content as a string
 			string FillResponseContent = await FillResponse.Content.ReadAsStringAsync();
-
 
 			// Use regular expressions to capture anti-CSRF tokens
 			string FillviewState = 				CaptureToken(FillResponseContent, "__VIEWSTATE");
 			string FillviewStateGenerator = 	CaptureToken(FillResponseContent, "__VIEWSTATEGENERATOR");
 			string FillviewStateEncrypted = 	CaptureToken(FillResponseContent, "__VIEWSTATEENCRYPTED");
 			string FilleventValidation = 		CaptureToken(FillResponseContent, "__EVENTVALIDATION");
-			string FilleventRefresh = 			CaptureToken(FillResponseContent, "hfRefreshTicket");
-			
+			string FilleventRefresh = 			CaptureToken(FillResponseContent, "hfRefreshTicket");			
 			
 			string FilleventTarget = 			CaptureToken(FillResponseContent, "__EVENTTARGET");
 			string FilleventArgument = 			CaptureToken(FillResponseContent, "__EVENTARGUMENT");
 			string FilleventFocus = 			CaptureToken(FillResponseContent, "__LASTFOCUS");
-			
-
-			
-			
 
 		//	return;
-			
-			
 
 			string inkoopnummer = "";
+			
+			//Laad info velden
 
 			string LaadDatum = "";
 			string LaadTijd = "";
@@ -163,6 +156,8 @@ public class RidderScript : CommandScript
 			string LaadLand = "";
 			string LaadContact = "";
 			string LaadTelefoon = "";
+			
+			//Los info velden
 
 			string LosDatum = "";
 			string LosTijd = "";
@@ -177,12 +172,15 @@ public class RidderScript : CommandScript
 			string LosTelefoon = "";
 			string LosMail = "";
 			string LosMobiel = "";
+			
+			//Aanvullende info velden
 
 			string Opmerkingen = "";
 
 			string totaalAantal = "0" ;
 			string totaalGewicht = "0" ;
 
+			// info ophalen
 
 			instance.InkoopData(		ref inkoopnummer,
 										ref LaadDatum, ref LaadTijd, ref LaadNaam, ref LaadAdres, ref LaadPostcode, ref LaadPlaats, ref LaadLand, ref LaadContact, ref LaadTelefoon,
@@ -192,10 +190,9 @@ public class RidderScript : CommandScript
 
 			instance.InkoopRegels(		ref totaalAantal, ref totaalGewicht);
 			
+			// Postdata maken
 			
-			
-			
-			var TransportData = new FormUrlEncodedContent(new[] 			// create postdata
+			var TransportData = new FormUrlEncodedContent(new[] 		
 			{
 				new KeyValuePair<string, string>("__LASTFOCUS",                 ""),
 				new KeyValuePair<string, string>("__EVENTTARGET",               FilleventTarget),
@@ -207,9 +204,6 @@ public class RidderScript : CommandScript
 				new KeyValuePair<string, string>("__SCROLLPOSITIONY",           "0"),
 				new KeyValuePair<string, string>("__VIEWSTATEENCRYPTED",        FillviewStateEncrypted),
 				new KeyValuePair<string, string>("__EVENTVALIDATION",           FilleventValidation),
-			
-			
-			
 			
 				new KeyValuePair<string, string>("ctl00$MainContentHolder$Textfield2",      inkoopnummer),
 			
@@ -245,7 +239,6 @@ public class RidderScript : CommandScript
 			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);  // check response
 
 			MessageBox.Show(protectedPageResponse.ToString());
-			
 			
 		
 			if (protectedPageResponse.IsSuccessStatusCode)
