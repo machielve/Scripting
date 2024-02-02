@@ -115,12 +115,12 @@ public class RidderScript : CommandScript
 			// lijst met benodigde artikelen maken
 			ScriptRecordset rsSlRegel = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY = " + StuklijstId, "POSITION");
 			rsSlRegel.MoveFirst();
-			
+
 			List<string> FoutLijst = new List<string>();
 
 			// loop om totaal aanwezige voorraad te checken			
-			Totalcheck(ref rsSlRegel, ref input1, ref FoutLijst );
-			
+			Totalcheck(ref rsSlRegel, ref input1, ref FoutLijst);
+
 			// bericht met de fouten
 			if (FoutLijst.Count > 0)
 			{
@@ -129,15 +129,15 @@ public class RidderScript : CommandScript
 				return;
 
 			}
-			
-			
+
+
 
 			// loop om te checken of er gesplitst moet worden
-			int checkert = 0;
-			Splitcheck(ref rsSlRegel, ref input1, ref checkert );
-			
-			
-			
+			decimal checkert = 0;
+			Splitcheck(ref rsSlRegel, ref input1, ref checkert);
+
+
+
 
 			if (checkert == 0) // uit en in boeken zonder te splitten
 			{
@@ -147,8 +147,8 @@ public class RidderScript : CommandScript
 				// maakdeel aanvullen
 				AddNew(ref rsItem, ref ItemNmr, ref input1);
 			}
-			
-			
+
+
 
 			else if (checkert > 0) //uit en in boeken met splitten
 			{
@@ -157,15 +157,15 @@ public class RidderScript : CommandScript
 
 				// maakdeel aanvullen
 				AddNew(ref rsItem, ref ItemNmr, ref input1);
-			}			
-			
+			}
+
 
 			else // error
 			{
 				MessageBox.Show("Geen idee");
 				return;
-			}		
-			
+			}
+
 
 			MessageBox.Show("Done");
 
@@ -173,14 +173,14 @@ public class RidderScript : CommandScript
 		}
 	}
 
-	public void Totalcheck(ref ScriptRecordset rsSlRegel, ref decimal input1, ref List<string> FoutLijst )
+	public void Totalcheck(ref ScriptRecordset rsSlRegel, ref decimal input1, ref List<string> FoutLijst)
 	{
-		
+
 		rsSlRegel.MoveFirst();
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
 			ScriptRecordset rsItemCheck1 = this.GetRecordset("R_ITEM", "", "PK_R_ITEM = " + Item1, "");
 			rsItemCheck1.MoveFirst();
 
@@ -191,10 +191,10 @@ public class RidderScript : CommandScript
 			string Item1VIn = rsItemCheck1.Fields["TOTALSTOCKIN"].Value.ToString();
 			string Item1VOut = rsItemCheck1.Fields["TOTALSTOCKOUT"].Value.ToString();
 			string Item1VVast = rsItemCheck1.Fields["TOTALSTOCKRESERVATION"].Value.ToString();
-			int Item1VIn1 = Convert.ToInt32(Item1VIn);
-			int Item1VOut1 = Convert.ToInt32(Item1VOut);
-			int Item1VVast1 = Convert.ToInt32(Item1VVast);
-			int Item1VVrij = Item1VIn1 - Item1VOut1 - Item1VVast1;
+			decimal Item1VIn1 = Convert.ToDecimal(Item1VIn);
+			decimal Item1VOut1 = Convert.ToDecimal(Item1VOut);
+			decimal Item1VVast1 = Convert.ToDecimal(Item1VVast);
+			decimal Item1VVrij = Item1VIn1 - Item1VOut1 - Item1VVast1;
 
 			if (AantalNodig > Item1VVrij)
 			{
@@ -210,18 +210,18 @@ public class RidderScript : CommandScript
 
 		}
 
-		
+
 	}
 
-	public void Splitcheck(ref ScriptRecordset rsSlRegel, ref decimal input1, ref int checkert)
+	public void Splitcheck(ref ScriptRecordset rsSlRegel, ref decimal input1, ref decimal checkert)
 	{
 		List<string> SplitLijst = new List<string>();
-		
+
 		rsSlRegel.MoveFirst();
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
 
 			ScriptRecordset rsItemIn1 = this.GetRecordset("R_STOCKIN", "", "FK_ITEM = " + Item1, "");
 			rsItemIn1.MoveFirst();
@@ -229,17 +229,17 @@ public class RidderScript : CommandScript
 			while (rsItemIn1.EOF == false)
 			{
 				string stockinID = rsItemIn1.Fields["PK_R_STOCKIN"].Value.ToString();
-				int stockinNumber = Convert.ToInt32(rsItemIn1.Fields["QUANTITY"].Value.ToString());
-				int stockuitNumber = 0;
-				int stockReservNumber = 0;
+				decimal stockinNumber = Convert.ToDecimal(rsItemIn1.Fields["QUANTITY"].Value.ToString());
+				decimal stockuitNumber = 0;
+				decimal stockReservNumber = 0;
 
 				ScriptRecordset rsItemUit1 = this.GetRecordset("R_STOCKOUT", "", "FK_STOCKIN = " + stockinID, "");
-				rsItemUit1.MoveFirst();				
+				rsItemUit1.MoveFirst();
 
 				while (rsItemUit1.EOF == false)
 				{
-					int stockuit = Convert.ToInt32(rsItemUit1.Fields["QUANTITY"].Value.ToString());
-					stockuitNumber += stockuit;					
+					decimal stockuit = Convert.ToDecimal(rsItemUit1.Fields["QUANTITY"].Value.ToString());
+					stockuitNumber += stockuit;
 					rsItemUit1.MoveNext();
 				}
 
@@ -248,21 +248,21 @@ public class RidderScript : CommandScript
 
 				while (rsItemReserv1.EOF == false)
 				{
-					int stockreserv = Convert.ToInt32(rsItemReserv1.Fields["QUANTITY"].Value.ToString());
+					decimal stockreserv = Convert.ToDecimal(rsItemReserv1.Fields["QUANTITY"].Value.ToString());
 					stockReservNumber += stockreserv;
 					rsItemReserv1.MoveNext();
-				}				
+				}
 
-				int stockfree = stockinNumber - stockuitNumber- stockReservNumber;
-				
+				decimal stockfree = stockinNumber - stockuitNumber - stockReservNumber;
+
 
 				if (stockfree >= AantalNodig)
 				{
-					break;				
-				
+					break;
+
 				}
 
-				else 
+				else
 				{
 					rsItemIn1.MoveNext();
 
@@ -270,31 +270,31 @@ public class RidderScript : CommandScript
 					{
 						checkert += 1;
 						// SplitLijst.Add(Item1 + " moet gesplitst worden");
-					}					
-					
-				}				
-								
-			}		
+					}
+
+				}
+
+			}
 
 
 			rsSlRegel.MoveNext();
 
 
 		}
-		
-
-			// resultaat bericht
-			var message = string.Join(Environment.NewLine, SplitLijst);
-			MessageBox.Show(message, "Nodig te splitten");
 
 
-		
-	}	
+		// resultaat bericht
+		var message = string.Join(Environment.NewLine, SplitLijst);
+		MessageBox.Show(message, "Nodig te splitten");
+
+
+
+	}
 
 	public void TotalRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1)
 	{
 		List<string> UitLijst = new List<string>();
-		
+
 		rsSlRegel.MoveFirst();
 		while (rsSlRegel.EOF == false)
 		{
@@ -302,13 +302,13 @@ public class RidderScript : CommandScript
 			rsArtikelUit.UseDataChanges = true;
 			rsArtikelUit.AddNew();
 
-			decimal aantaleruit = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal aantaleruit = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
 			string EruitAantal = aantaleruit.ToString();
 			string EruitNaam = rsSlRegel.Fields["DESCRIPTION"].Value.ToString();
 
 			rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 			rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
-			rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+			rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 			rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 			rsArtikelUit.Update();
@@ -327,12 +327,12 @@ public class RidderScript : CommandScript
 	public void PartRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1)
 	{
 		List<string> UitLijst = new List<string>();
-		
+
 		rsSlRegel.MoveFirst();
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToInt32(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
 
 			ScriptRecordset rsItemIn1 = this.GetRecordset("R_STOCKIN", "", "FK_ITEM = " + Item1, "");
 			rsItemIn1.MoveFirst();
@@ -340,16 +340,16 @@ public class RidderScript : CommandScript
 			while (rsItemIn1.EOF == false)
 			{
 				string stockinID = rsItemIn1.Fields["PK_R_STOCKIN"].Value.ToString();
-				int stockinNumber = Convert.ToInt32(rsItemIn1.Fields["QUANTITY"].Value.ToString());
-				int stockuitNumber = 0;
-				int stockReservNumber = 0;
+				decimal stockinNumber = Convert.ToDecimal(rsItemIn1.Fields["QUANTITY"].Value.ToString());
+				decimal stockuitNumber = 0;
+				decimal stockReservNumber = 0;
 
 				ScriptRecordset rsItemUit1 = this.GetRecordset("R_STOCKOUT", "", "FK_STOCKIN = " + stockinID, "");
 				rsItemUit1.MoveFirst();
 
 				while (rsItemUit1.EOF == false)
 				{
-					int stockuit = Convert.ToInt32(rsItemUit1.Fields["QUANTITY"].Value.ToString());
+					decimal stockuit = Convert.ToDecimal(rsItemUit1.Fields["QUANTITY"].Value.ToString());
 					stockuitNumber += stockuit;
 					rsItemUit1.MoveNext();
 				}
@@ -359,12 +359,12 @@ public class RidderScript : CommandScript
 
 				while (rsItemReserv1.EOF == false)
 				{
-					int stockreserv = Convert.ToInt32(rsItemReserv1.Fields["QUANTITY"].Value.ToString());
+					decimal stockreserv = Convert.ToDecimal(rsItemReserv1.Fields["QUANTITY"].Value.ToString());
 					stockReservNumber += stockreserv;
 					rsItemReserv1.MoveNext();
-				}		
+				}
 
-				int stockfree = stockinNumber - stockuitNumber - stockReservNumber;
+				decimal stockfree = stockinNumber - stockuitNumber - stockReservNumber;
 
 				if (stockfree >= AantalNodig)
 				{
@@ -378,20 +378,20 @@ public class RidderScript : CommandScript
 
 					rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 					rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
-					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["FK_STOCKIN"].Value = rsItemIn1.Fields["PK_R_STOCKIN"].Value;
 
 					rsArtikelUit.Update();
 
 					UitLijst.Add(EruitAantal + "x - " + EruitNaam + " - uit geboekt");
-					
+
 					break;
 				}
-				
-				
 
-				else if (stockfree < AantalNodig && stockfree !=0)
+
+
+				else if (stockfree < AantalNodig && stockfree != 0)
 				{
 					ScriptRecordset rsArtikelUit = this.GetRecordset("R_STOCKOUT", "", "PK_R_STOCKOUT= -1", "");
 					rsArtikelUit.UseDataChanges = true;
@@ -403,21 +403,21 @@ public class RidderScript : CommandScript
 
 					rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 					rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
-					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
-					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - ";// + rsItem.Fields["DESCRIPTION"].Value.ToString();
+					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["FK_STOCKIN"].Value = rsItemIn1.Fields["PK_R_STOCKIN"].Value;
-					
+
 					rsArtikelUit.Update();
 
 					AantalNodig -= stockfree;
 
-					UitLijst.Add(EruitAantal + "x - " + EruitNaam + " - uit geboekt");				
-					
-					
+					UitLijst.Add(EruitAantal + "x - " + EruitNaam + " - uit geboekt");
+
+
 					rsItemIn1.MoveNext();
 
 				}
-				
+
 				else rsItemIn1.MoveNext();
 
 
@@ -435,8 +435,8 @@ public class RidderScript : CommandScript
 		// resultaat bericht
 		var message = string.Join(Environment.NewLine, UitLijst);
 		MessageBox.Show(message, "Totaal uitgeboekt");
-		
-	}	
+
+	}
 
 	public void AddNew(ref ScriptRecordset rsItem, ref string ItemNmr, ref decimal input1)
 	{
@@ -446,13 +446,13 @@ public class RidderScript : CommandScript
 
 		rsArtikelIn.Fields["FK_ITEM"].Value = Convert.ToInt32(ItemNmr);
 		rsArtikelIn.Fields["QUANTITY"].Value = input1;
-		rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
-		rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
+		rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
+		rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 		rsArtikelIn.Update();
 		MessageBox.Show("Voorraad van maakdeel aangevult");
 	}
-	
+
 
 	// M.R.v.E - 2023
 
