@@ -43,15 +43,14 @@ public class RidderScript : CommandScript
 	public static async Task LoginAsync()
 	{
 		RidderScript instance = new RidderScript();
-
+		
 		// Create an HttpClientHandler with a CookieContainer to store cookies
 		CookieContainer cookieContainer = new CookieContainer();
 		var handler = new HttpClientHandler
 		{
 			UseCookies = true,
 			CookieContainer = cookieContainer,
-			AllowAutoRedirect = true,
-		
+			AllowAutoRedirect = true,		
 		};
 
 		var httpClient = new HttpClient(handler);
@@ -96,39 +95,28 @@ public class RidderScript : CommandScript
 		});
 
 		httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36");
+		
 		// Send the login POST request
 		HttpResponseMessage loginResponse = await httpClient.PostAsync(loginUrl, loginData);
 
-		CookieCollection cookies = cookieContainer.GetCookies(new Uri("https://portal.deruitertransportbv.nl"));
-		
-		
-		/*
-		foreach (Cookie cookie in cookies)
-		{
-			MessageBox.Show("Cookie Name: " + cookie.Name);
-			MessageBox.Show("Cookie Value: " + cookie.Value);
-			MessageBox.Show("Domain: " + cookie.Domain);
-			MessageBox.Show("Path: " + cookie.Path);
-			MessageBox.Show("Secure: " + cookie.Secure);
-			MessageBox.Show("Expires: " + cookie.Expires);
-		}
-		
-		*/
+		// login faal
+		if (!loginResponse.IsSuccessStatusCode) MessageBox.Show("Login failed. Status code: " + loginResponse.StatusCode);
 
-		if (loginResponse.IsSuccessStatusCode)
-		{
+		// login succes
+		else 
+		{			
+			string NewTransportForm 	= "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx"; 										//?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
+			string NewTransport 		= "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; 		// invul form
+		//	string AllTransport 		= "https://portal.deruitertransportbv.nl/Portal4uClient/Page.aspx?PageId=1&GroupId=2&SubGroupId=1#menu"; 	//overzicht scherm
+
+
+		// 	capture anti-CSRF tokens
+			HttpResponseMessage FillResponse = await httpClient.GetAsync(NewTransport);		
 			
-			string NewTransport = "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
-		//	string AllTransport = "https://portal.deruitertransportbv.nl/Portal4uClient/Page.aspx?PageId=1&GroupId=2&SubGroupId=1#menu"; //overzicht scherm
-
-
-			// capture anti-CSRF tokens
-			HttpResponseMessage FillResponse = await httpClient.GetAsync(NewTransport);			
-			
-			// Extract the response content as a string
+		// 	Extract the response content as a string
 			string FillResponseContent = await FillResponse.Content.ReadAsStringAsync();
 
-			// Use regular expressions to capture anti-CSRF tokens
+		// 	Use regular expressions to capture anti-CSRF tokens
 			string FillviewState = 				CaptureToken(FillResponseContent, "__VIEWSTATE");
 			string FillviewStateGenerator = 	CaptureToken(FillResponseContent, "__VIEWSTATEGENERATOR");
 			string FillviewStateEncrypted = 	CaptureToken(FillResponseContent, "__VIEWSTATEENCRYPTED");
@@ -139,11 +127,9 @@ public class RidderScript : CommandScript
 			string FilleventArgument = 			CaptureToken(FillResponseContent, "__EVENTARGUMENT");
 			string FilleventFocus = 			CaptureToken(FillResponseContent, "__LASTFOCUS");
 
-		//	return;
-
 			string inkoopnummer = "";
 			
-			//Laad info velden
+		// 	Laad info velden
 
 			string LaadDatum = "";
 			string LaadTijd = "";
@@ -157,7 +143,7 @@ public class RidderScript : CommandScript
 			string LaadContact = "";
 			string LaadTelefoon = "";
 			
-			//Los info velden
+		// Los info velden
 
 			string LosDatum = "";
 			string LosTijd = "";
@@ -173,24 +159,23 @@ public class RidderScript : CommandScript
 			string LosMail = "";
 			string LosMobiel = "";
 			
-			//Aanvullende info velden
+		// Aanvullende info velden
 
 			string Opmerkingen = "";
 
 			string totaalAantal = "0" ;
 			string totaalGewicht = "0" ;
 
-			// info ophalen
+		// info ophalen
 
 			instance.InkoopData(		ref inkoopnummer,
 										ref LaadDatum, ref LaadTijd, ref LaadNaam, ref LaadAdres, ref LaadPostcode, ref LaadPlaats, ref LaadLand, ref LaadContact, ref LaadTelefoon,
 										ref LosDatum, ref LosTijd, ref LosNaam, ref LosAdres, ref LosPostcode, ref LosPlaats, ref LosLand, ref LosContact, ref LosTelefoon,
 										ref Opmerkingen);
 
-
 			instance.InkoopRegels(		ref totaalAantal, ref totaalGewicht);
 			
-			// Postdata maken
+		// Postdata maken
 			
 			var TransportData = new FormUrlEncodedContent(new[] 		
 			{
@@ -233,16 +218,14 @@ public class RidderScript : CommandScript
 			
 			//	new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield1",    totaalAantal),
 			//	new KeyValuePair<string, string>("ctl00$MainContentHolder$Numberfield2", 	totaalGewicht),
+			
 			});
 			
 			
-			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);  // check response
-
-			MessageBox.Show(protectedPageResponse.ToString());
-			
+			HttpResponseMessage protectedPageResponse = await httpClient.GetAsync(NewTransport);  // check response			
 		
 			if (protectedPageResponse.IsSuccessStatusCode)
-			{				
+			{								
 				HttpResponseMessage NewTransportResponse = await httpClient.PostAsync(NewTransport, TransportData);  //send postdata
 				
 				if (NewTransportResponse.IsSuccessStatusCode)
@@ -252,16 +235,19 @@ public class RidderScript : CommandScript
 
 				else MessageBox.Show("Cannot send the data.");
 
+				
+				MessageBox.Show("puh");
 			}
 			else
 			{
 				MessageBox.Show("Failed to access the form page.");
 			}
+			
+			
+			
 		}
-		else
-		{
-			MessageBox.Show("Login failed. Status code: " + loginResponse.StatusCode);
-		}
+		
+
 
 
 
