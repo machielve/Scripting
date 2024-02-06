@@ -105,9 +105,9 @@ public class RidderScript : CommandScript
 		// login succes
 		else 
 		{			
-			string NewTransportForm 	= "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx"; 										//?PageId=1&GroupId=2&SubGroupId=6"; //invul scherm
+			string NewTransportForm 	= "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx"; 										// invul scherm
 			string NewTransport 		= "https://portal.deruitertransportbv.nl/Portal4uClient/Form.aspx?PageId=1&GroupId=2&SubGroupId=6"; 		// invul form
-		//	string AllTransport 		= "https://portal.deruitertransportbv.nl/Portal4uClient/Page.aspx?PageId=1&GroupId=2&SubGroupId=1#menu"; 	//overzicht scherm
+		//	string AllTransport 		= "https://portal.deruitertransportbv.nl/Portal4uClient/Page.aspx?PageId=1&GroupId=2&SubGroupId=1#menu"; 	// overzicht scherm
 
 
 		// 	capture anti-CSRF tokens
