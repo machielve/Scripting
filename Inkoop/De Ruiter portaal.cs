@@ -179,7 +179,6 @@ public class RidderScript : CommandScript
 			
 			var TransportData = new FormUrlEncodedContent(new[] 		
 			{
-				new KeyValuePair<string, string>("__LASTFOCUS",                 ""),
 				new KeyValuePair<string, string>("__EVENTTARGET",               FilleventTarget),
 				new KeyValuePair<string, string>("__EVENTARGUMENT",             FilleventArgument),
 				new KeyValuePair<string, string>("hfRefreshTicket",             FilleventRefresh),				
@@ -228,20 +227,15 @@ public class RidderScript : CommandScript
 			{								
 				HttpResponseMessage NewTransportResponse = await httpClient.PostAsync(NewTransport, TransportData);  //send postdata
 				
-				if (NewTransportResponse.IsSuccessStatusCode)
-				{
-					MessageBox.Show("Data send succesfully.");
-				}
+				if (NewTransportResponse.IsSuccessStatusCode) MessageBox.Show("Data send succesfully.");
 
 				else MessageBox.Show("Cannot send the data.");
 
 				
 				MessageBox.Show("puh");
 			}
-			else
-			{
-				MessageBox.Show("Failed to access the form page.");
-			}
+			else MessageBox.Show("Failed to access the form page.");
+
 			
 			
 			
