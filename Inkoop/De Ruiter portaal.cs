@@ -28,8 +28,6 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden oktober-2023
 	*/
 
-
-
 	public void Execute()
 	{
 		Task.Run(async () =>
