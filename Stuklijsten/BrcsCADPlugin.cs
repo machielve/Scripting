@@ -1314,7 +1314,7 @@ public class RidderScript : CommandScript
 		rsAssemblyItem.Update();
 
 
-		MessageBox.Show(LL + " meter leuning toegevoegd");
+	//	MessageBox.Show(LL + " meter leuning toegevoegd");
 
 		// MessageBox.Show("leuning klaar");
 	}                                           //importeren van alle regels met groep leuning
