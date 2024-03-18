@@ -269,7 +269,7 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
 							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
 							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
+							rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
 							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
 
 							if (Tekening == "")
@@ -300,7 +300,7 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
 							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
 							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-							rsJoborderItem.Fields["MACHINENAMECAM"].Value = fase;
+							rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
 							
 							rsJoborderItem.UseDataChanges = true;							
 							
