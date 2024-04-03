@@ -335,8 +335,8 @@ public class RidderScript : CommandScript
 		rb31 = rbutton31.Checked;
 		input30 = textBox30.Text;
 
-		rb40 = rbutton30.Checked;
-		rb41 = rbutton31.Checked;
+		rb40 = rbutton40.Checked;
+		rb41 = rbutton41.Checked;
 		input40 = textBox40.Text;
 
 		rb0 = rbutton0.Checked;
@@ -488,11 +488,11 @@ public class RidderScript : CommandScript
 		{
 			inloopL = Int32.Parse(input30);
 			inloopT = Math.Ceiling(inloopL / inloopB);
-
+			
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
 		}
-
+		
 		if (rb41 == true)
 		{
 			uitloopL = Int32.Parse(input40);
@@ -501,7 +501,6 @@ public class RidderScript : CommandScript
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
 		}
-
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
@@ -674,7 +673,7 @@ public class RidderScript : CommandScript
 
 		decimal tottrede = inputdec * treden;
 		decimal totsupp = inputdec * ssm;
-
+		
 		string trapcheck = trapcodeRH + " / " + trapcodeLH;
 		string trapcheck1 = trapcodeRH + trapcodeLH;
 
