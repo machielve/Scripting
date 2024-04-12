@@ -313,7 +313,6 @@ public class RidderScript : CommandScript
 
 
 
-
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
@@ -484,15 +483,22 @@ public class RidderScript : CommandScript
 		double hoogd = Convert.ToDouble(hoog);
 		double lang = hoogd / (Math.Sin(hoekrad));
 
+		string inloop = "";
+		string uitloop = "";
+
+		string loop = "";
+
 		if (rb31 == true)
 		{
 			inloopL = Int32.Parse(input30);
 			inloopT = Math.Ceiling(inloopL / inloopB);
-			
+
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
+			
+			inloop = "Inclusief inloop L= " + inloopL.ToString() +" mm. ";
 		}
-		
+
 		if (rb41 == true)
 		{
 			uitloopL = Int32.Parse(input40);
@@ -500,7 +506,11 @@ public class RidderScript : CommandScript
 
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
+			
+			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() +" mm.";
 		}
+
+		loop = inloop + uitloop;
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
@@ -673,7 +683,7 @@ public class RidderScript : CommandScript
 
 		decimal tottrede = inputdec * treden;
 		decimal totsupp = inputdec * ssm;
-		
+
 		string trapcheck = trapcodeRH + " / " + trapcodeLH;
 		string trapcheck1 = trapcodeRH + trapcodeLH;
 
@@ -798,7 +808,8 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
 					rsAssemblyItem.Fields["CAMPARAMETER"].Value = traptype + " - H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
-
+					rsAssemblyItem.Fields["MEMO"].Value = loop;
+					
 					rsAssemblyItem.Update();
 				}
 			}
@@ -822,6 +833,7 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["LENGTH"].Value = optrede;
 					rsAssemblyItem.Fields["CAMPARAMETER"].Value = traptype + " - H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
+					rsAssemblyItem.Fields["MEMO"].Value = loop;
 
 					rsAssemblyItem.Update();
 				}
