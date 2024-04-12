@@ -510,7 +510,7 @@ public class RidderScript : CommandScript
 			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() +" mm.";
 		}
 
-		loop = inloop + uitloop;
+		loop = inloop +"\n"+ uitloop;
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
