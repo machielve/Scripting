@@ -630,6 +630,7 @@ public class RidderScript : CommandScript
 
 			// groep
 			if (values[Groep] == "" && values[Layer] == "ALM_HANDRAIL") { listH.Add("Leuning"); }
+			else if (values[Groep] == "" && values[Layer] == "ALM_KICKRAIL") { listH.Add("Leuning"); }
 			else if (values[Groep] == "" && values[Layer] == "ALM_FLOOR") { listH.Add("Vloer"); }
 			else if (values[Groep] == "") { listH.Add("-"); }
 			else { listH.Add(values[Groep]); }
@@ -655,7 +656,7 @@ public class RidderScript : CommandScript
 			}
 			else { listQ.Add(values[Stuklijst]); }
 
-			// stuklijstnummer
+			// stuklijstnummer1
 			if (values[Stuklijst1] == "") { listR.Add("-"); }
 			else if (values[Stuklijst1].Substring(0, 2) != "S1" && values[Stuklijst1].Substring(0, 3) != "Stu")
 			{
@@ -667,7 +668,7 @@ public class RidderScript : CommandScript
 			}
 			else { listR.Add(values[Stuklijst1]); }
 
-			// stuklijstnummer
+			// stuklijstnummer2
 			if (values[Stuklijst2] == "") { listS.Add("-"); }
 			else if (values[Stuklijst2].Substring(0, 2) != "S1" && values[Stuklijst2].Substring(0, 3) != "Stu")
 			{
@@ -679,7 +680,7 @@ public class RidderScript : CommandScript
 			}
 			else { listS.Add(values[Stuklijst2]); }
 
-			// stuklijstnummer
+			// stuklijstnummer3
 			if (values[Stuklijst3] == "") { listT.Add("-"); }
 			else if (values[Stuklijst3].Substring(0, 2) != "S1" && values[Stuklijst3].Substring(0, 3) != "Stu")
 			{
@@ -708,6 +709,11 @@ public class RidderScript : CommandScript
 				listAB.Add(Convert.ToString(aan2));
 			}
 			else listAB.Add(values[Length]);
+			
+			
+			
+			
+			
 
 
 			// extra spul hieronder
@@ -758,7 +764,7 @@ public class RidderScript : CommandScript
 
 		if (cb4 == true) //leuning injectie
 		{
-			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAB);
+			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listZ, ref listAB);
 		}
 
 		if (cb5 == true) //POP injectie
@@ -1279,9 +1285,11 @@ public class RidderScript : CommandScript
 							ref List<string> listR,
 							ref List<string> listS,
 							ref List<string> listT,
+							ref List<string> listZ,
 							ref List<string> listAB)
 	{
 		decimal leuninglengte = 0;
+		decimal schoprandlengte = 0;
 
 		for (int i = 2; i < regels; i++)
 		{
@@ -1291,7 +1299,7 @@ public class RidderScript : CommandScript
 
 			}
 
-			if (listB[i] == "Polyline" && listH[i] == "Leuning")
+			if (listB[i] == "Polyline" && listH[i] == "Leuning" && listZ[i] == "ALM_HANDRAIL")
 			{
 				int aantalR = Convert.ToInt32(listA[i]);
 				decimal lengteR = Convert.ToDecimal(listAB[i]) / 1000 / 2;
@@ -1299,18 +1307,38 @@ public class RidderScript : CommandScript
 				decimal EXlengte = aantalR * lengteR;
 
 				leuninglengte += EXlengte;
-
 			}
 
+			if (listB[i] == "Polyline" && listH[i] == "Leuning" && listZ[i] == "ALM_KICKRAIL")
+			{
+				int aantalR = Convert.ToInt32(listA[i]);
+				decimal lengteR = Convert.ToDecimal(listAB[i]) / 1000 / 2;
+
+				decimal EXlengte = aantalR * lengteR;
+
+				schoprandlengte += EXlengte;
+			}
+			
 		}
 		decimal calc = leuninglengte / 6;
 		decimal calc1 = Math.Ceiling(calc);
 		int aantalT = Convert.ToInt32(calc1);
-		String sub0 = "S100223";
+		string sub0 = "S100223";
 		sub1input(ref hoofdlijstNmr, ref aantalT, ref sub0);
 
-		decimal LL1 = Math.Ceiling(leuninglengte);
 
+		decimal KRcalc = schoprandlengte / 6;
+		decimal KRcalc1 = Math.Ceiling(KRcalc);
+		int aantal = Convert.ToInt32(KRcalc1);
+		string Acode = "10370";
+		string watser = "";
+		decimal lengte = 6000;
+		decimal breedte = 0;
+		
+		if(aantal>0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
+		
+
+		decimal LL1 = Math.Ceiling(leuninglengte);
 		string LL = Convert.ToString(LL1);
 
 		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
@@ -1320,6 +1348,9 @@ public class RidderScript : CommandScript
 		rsAssemblyItem.Fields["KEYWORDS"].Value = LL + " meter leuning";
 
 		rsAssemblyItem.Update();
+		
+		
+		
 
 
 	//	MessageBox.Show(LL + " meter leuning toegevoegd");
