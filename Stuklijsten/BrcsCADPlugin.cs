@@ -23,10 +23,11 @@ public class RidderScript : CommandScript
 	Zeeslag, het Super programma om Schaakmat te vervangen
 	Uit te voeren vanuit een stuklijst met de status engineering
 	Geschreven door: Machiel R. van Emden mei-2022
+	laatste wijziging april - 2024
 
 	*/
 
-	private static DialogResult ShowInputDialog(	ref string input, ref string input2, ref string input3, 
+	private static DialogResult ShowInputDialog(ref string input, ref string input2, ref string input3,
 													ref bool cb1, ref bool cb2, ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6, ref bool cb7)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(250, 300);
@@ -113,7 +114,7 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.CheckBox cbox7 = new CheckBox();
 		cbox7.Location = new System.Drawing.Point(5, 230);
 		cbox7.Size = new System.Drawing.Size(200, 25);
-		cbox7.Checked = cb6;
+		cbox7.Checked = cb7;
 		cbox7.Text = "Kolom beschermers";
 		inputBox.Controls.Add(cbox7);
 
@@ -455,6 +456,16 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = true;
 		}
+		else if (hoofdlijstCode.Substring(0, 8) == "S100569/")
+		{
+			cb1 = true;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+		}
 		else
 		{
 			cb1 = false;
@@ -581,9 +592,6 @@ public class RidderScript : CommandScript
 			Layer = Array.IndexOf(Namen, "Layer");
 			Area = Array.IndexOf(Namen, "Area");
 			Length = Array.IndexOf(Namen, "Length");
-
-
-
 		}
 
 
@@ -1166,7 +1174,7 @@ public class RidderScript : CommandScript
 
 			}
 		}
-		
+
 		/*
 
 		decimal LL1 = Math.Ceiling(totaalvloer);
@@ -1182,9 +1190,9 @@ public class RidderScript : CommandScript
 		rsAssemblyItem.Update();
 
 		*/
-		
-		
-		
+
+
+
 		// MessageBox.Show("staal klaar");
 
 	}                                           //importeren van alle regels met groep staalconstructie
