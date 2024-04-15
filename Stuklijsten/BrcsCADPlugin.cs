@@ -1341,11 +1341,31 @@ public class RidderScript : CommandScript
 		decimal LL1 = Math.Ceiling(leuninglengte);
 		string LL = Convert.ToString(LL1);
 
+		decimal KR1 = Math.Ceiling(schoprandlengte);
+		string KR = Convert.ToString(KR1);
+
+		string bericht1 = LL + " meter leuning.";
+		string bericht2 = KR + " meter schoprand.";
+
+		string bericht = "";
+
+		if (aantal == 0)
+		{
+			bericht = bericht1;
+		}
+
+		else
+		{
+			bericht = bericht1 + " En " + bericht2;
+		}
+		
+		
+
 		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
 		rsAssemblyItem.MoveFirst();
 		rsAssemblyItem.UseDataChanges = true;
 
-		rsAssemblyItem.Fields["KEYWORDS"].Value = LL + " meter leuning";
+		rsAssemblyItem.Fields["KEYWORDS"].Value = bericht;
 
 		rsAssemblyItem.Update();
 		
