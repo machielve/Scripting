@@ -1379,7 +1379,8 @@ public class RidderScript : CommandScript
 		decimal calc1 = Math.Ceiling(calc);
 		int aantalT = Convert.ToInt32(calc1);
 		string sub0 = "S100223";
-		sub1input(ref hoofdlijstNmr, ref aantalT, ref sub0);
+		
+		if (aantalT > 0) sub1input(ref hoofdlijstNmr, ref aantalT, ref sub0);
 
 
 		decimal KRcalc = schoprandlengte / 6;
@@ -1390,7 +1391,7 @@ public class RidderScript : CommandScript
 		decimal lengte = 6000;
 		decimal breedte = 0;
 		
-		if(aantal>0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
+		if(aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
 		
 
 		decimal LL1 = Math.Ceiling(leuninglengte);
@@ -1404,16 +1405,12 @@ public class RidderScript : CommandScript
 
 		string bericht = "";
 
-		if (aantal == 0)
-		{
-			bericht = bericht1;
-		}
-
-		else
-		{
-			bericht = bericht1 + " En " + bericht2;
-		}
 		
+		if( aantal == 0 && aantalT == 0) bericht = bericht;		
+		
+		else if (aantal == 0 && aantalT != 0) bericht = bericht1;
+
+		else bericht = bericht1 + " En " + bericht2;
 		
 
 		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
