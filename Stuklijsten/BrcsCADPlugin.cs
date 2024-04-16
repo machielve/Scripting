@@ -565,33 +565,88 @@ public class RidderScript : CommandScript
 			var Namen = header.Split(';');
 
 			Count = Array.IndexOf(Namen, "Count");
+			if ( Count == -1) Count = 150;
+			
 			Name = Array.IndexOf(Namen, "Name");
+			if ( Name == -1) Name = 151;
+			
 			Tag = Array.IndexOf(Namen, "TAG");
+			if ( Tag == -1) Tag = 152;
+			
 			Afmeting = Array.IndexOf(Namen, "Afmeting");
+			if ( Afmeting == -1) Afmeting = 153;
+			
 			Afmeting2 = Array.IndexOf(Namen, "Afmeting 2");
+			if ( Afmeting2 == -1) Afmeting2 = 154;
+			
 			Artikelcode = Array.IndexOf(Namen, "Artikelcode");
+			if ( Artikelcode == -1) Artikelcode = 155;
+			
 			Breedte = Array.IndexOf(Namen, "Breedte");
+			if ( Breedte == -1) Breedte = 156;
+			
 			Groep = Array.IndexOf(Namen, "Groep");
+			if ( Groep == -1) Groep = 157;
+			
 			Hoek = Array.IndexOf(Namen, "Hoek");
+			if ( Hoek == -1) Hoek = 158;
+			
 			Hoogte = Array.IndexOf(Namen, "Hoogte");
+			if ( Hoogte == -1) Hoogte = 159;
+			
 			Kwaliteit = Array.IndexOf(Namen, "Kwaliteit");
+			if ( Kwaliteit == -1) Kwaliteit = 160;
+			
 			Lengte = Array.IndexOf(Namen, "Lengte");
+			if ( Lengte == -1) Lengte = 161;
+			
 			LengteB = Array.IndexOf(Namen, "Lengte B");
+			if ( LengteB == -1) LengteB = 162;
+			
 			Optie1 = Array.IndexOf(Namen, "Optie 1");
+			if ( Optie1 == -1) Optie1 = 163;
+			
 			Option1 = Array.IndexOf(Namen, "Option 1");
+			if ( Option1 == -1) Option1 = 164;
+			
 			Sterkte = Array.IndexOf(Namen, "Sterkte");
+			if ( Sterkte == -1) Sterkte = 165;
+			
 			Stuklijst = Array.IndexOf(Namen, "Stuklijst");
+			if ( Stuklijst == -1) Stuklijst = 166;
+			
 			Stuklijst1 = Array.IndexOf(Namen, "Stuklijst 1");
+			if ( Stuklijst1 == -1) Stuklijst1 = 167;
+			
 			Stuklijst2 = Array.IndexOf(Namen, "Stuklijst 2");
+			if ( Stuklijst2 == -1) Stuklijst2 = 168;
+			
 			Stuklijst3 = Array.IndexOf(Namen, "Stuklijst 3");
+			if ( Stuklijst3 == -1) Stuklijst3 = 169;
+			
 			Type = Array.IndexOf(Namen, "Type");
+			if ( Type == -1) Type = 170;
+			
 			Verdiepingen = Array.IndexOf(Namen, "Verdiepingen");
+			if ( Verdiepingen == -1) Verdiepingen = 171;
+			
 			Voet = Array.IndexOf(Namen, "Voet");
+			if ( Voet == -1) Voet = 172;
+			
 			W = Array.IndexOf(Namen, "W");
+			if ( W == -1) W = 173;
+			
 			W1 = Array.IndexOf(Namen, "W1");
+			if ( W1 == -1) W1 = 174;
+			
 			Layer = Array.IndexOf(Namen, "Layer");
+			if ( Layer == -1) Layer = 175;
+			
 			Area = Array.IndexOf(Namen, "Area");
+			if ( Area == -1) Area = 176;
+			
 			Length = Array.IndexOf(Namen, "Length");
+			if ( Length == -1) Length = 177;
 		}
 
 
