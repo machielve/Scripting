@@ -32,7 +32,7 @@ public class RidderScript : CommandScript
 		textBox1.Maximum = 1500000;
 		textBox1.DecimalPlaces = 0;
 		inputBox.Controls.Add(textBox1);
-        
+
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 		okButton.Name = "okButton";
@@ -51,9 +51,9 @@ public class RidderScript : CommandScript
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
-		
-		
-		
+
+
+
 
 		DialogResult result = inputBox.ShowDialog();
 		input = textBox1.Value;
@@ -63,7 +63,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input = 1;
-		ShowInputDialog(ref input);
+		DialogResult result = ShowInputDialog(ref input);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Maak pakbonregel afgebroken");
+			return;
+		}
 
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
@@ -73,17 +79,17 @@ public class RidderScript : CommandScript
 			MessageBox.Show("Geen regels geselecteerd");
 			return;
 		}
-		
-	
+
+
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem.MoveFirst();
 
 			decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
-			string bonS =  rsItem.Fields["FK_JOBORDER"].Value.ToString();
+			string bonS = rsItem.Fields["FK_JOBORDER"].Value.ToString();
 			int bon = Convert.ToInt32(bonS);
-			string orderS = rsItem.Fields["FK_ORDER"].Value.ToString();			
+			string orderS = rsItem.Fields["FK_ORDER"].Value.ToString();
 			string bonregelS = rsItem.Fields["PK_R_JOBORDERDETAILITEM"].Value.ToString();
 			int bonregel = Convert.ToInt32(bonregelS);
 
@@ -93,8 +99,8 @@ public class RidderScript : CommandScript
 			{
 				MessageBox.Show("Pakbonregel uitgevinkt. Regel is overgeslagen.");
 				continue;
-			}	
-			
+			}
+
 			// achterhalen van pakbon id nummer
 			int pakboner = 0;
 
@@ -102,17 +108,17 @@ public class RidderScript : CommandScript
 			rsPakbon.MoveFirst();
 
 			while (rsPakbon.EOF == false)
-			{ 
+			{
 				if (rsPakbon.Fields["PACKLISTNUMBER"].Value.ToString() == input.ToString())
 				{
 					pakboner += Convert.ToInt32(rsPakbon.Fields["PK_U_PACKLIST"].Value.ToString());
 					rsPakbon.MoveNext();
 				}
-				else rsPakbon.MoveNext();	
+				else rsPakbon.MoveNext();
 			}
 
 			// toevoegen als pakbon niet bestaat
-			if( pakboner == 0)
+			if (pakboner == 0)
 			{
 				MessageBox.Show("Pakbon bestaat (nog) niet");
 				rsPakbon.AddNew();
@@ -129,16 +135,16 @@ public class RidderScript : CommandScript
 
 
 			// uitrekenen hoeveel per regel al gebruikt is
-			int totaal = 0;
-			
+			decimal totaal = 0;
+
 			ScriptRecordset rsAanwezig = this.GetRecordset("U_PACKLISTDETAILITEM", "", "FK_BONREGELART = " + (int)bonregel, "");
 			rsAanwezig.MoveFirst();
 
 			while (rsAanwezig.EOF == false)
 			{
-				totaal += Convert.ToInt32(rsAanwezig.Fields["QUANTITY"].Value.ToString());
+				totaal += Convert.ToDecimal(rsAanwezig.Fields["QUANTITY"].Value.ToString());
 				rsAanwezig.MoveNext();
-			}	
+			}
 
 			// uitrekenen hoeveel op de regel toe gevoegd word en aanmaken van pakbon regel
 			decimal mogelijk = aantal - totaal;

@@ -15,16 +15,13 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
-	/*
-	
-	Meter prijs aanpassen, het  programma om voor de geselecteerde regels de bruto prijs aan te passen
-	Uit te voeren vanuit een inkooporder op niet ontvangen regels
-	Geschreven door: Machiel R. van Emden mei-2022
-
-	*/
-	
+	//	public myForm(){
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
+		System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+		customCulture.NumberFormat.NumberDecimalSeparator = ",";
+
+		System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
 		System.Drawing.Size size = new System.Drawing.Size(300, 400);
 		Form inputBox = new Form();
@@ -56,16 +53,19 @@ public class RidderScript : CommandScript
 		groepprijs.Location = new System.Drawing.Point(10, 75);
 		groepprijs.Text = "Prijs / meter";
 
-		System.Windows.Forms.NumericUpDown textBox1 = new NumericUpDown();
-		textBox1.Size = new System.Drawing.Size(100, 25);
-		textBox1.Location = new System.Drawing.Point(5, 25);
-		textBox1.Value = input1;
-		textBox1.Minimum = 0;
-		textBox1.Maximum = 1500000;
-		textBox1.DecimalPlaces = 2;
-		groepprijs.Controls.Add(textBox1);
+		System.Windows.Forms.NumericUpDown numericUpDown1 = new NumericUpDown();
+		numericUpDown1.Size = new System.Drawing.Size(100, 25);
+		numericUpDown1.Location = new System.Drawing.Point(5, 25);
+		numericUpDown1.Value = input1;
+		numericUpDown1.Minimum = 0;
+		numericUpDown1.Maximum = 1500000;
+		numericUpDown1.DecimalPlaces = 2;
+		numericUpDown1.Controls[0].Visible = false;
+		groepprijs.Controls.Add(numericUpDown1);
 
 		inputBox.Controls.Add(groepprijs);
+
+
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
@@ -73,7 +73,10 @@ public class RidderScript : CommandScript
 
 		DialogResult result = inputBox.ShowDialog();
 
-		input1 = textBox1.Value;
+		input1 = numericUpDown1.Value;
+
+
+
 
 		return result;
 	}
@@ -83,7 +86,16 @@ public class RidderScript : CommandScript
 
 		decimal input1 = 1;
 
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Meterprijs aanpassen afgebroken");
+			return;
+		}
+
+
+
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -102,9 +114,10 @@ public class RidderScript : CommandScript
 
 			rsItem.Update();
 
+
+
 		}
 	}
-	
-	// M.R.v.E - 2022
+
 
 }

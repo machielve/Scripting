@@ -91,7 +91,14 @@ public class RidderScript : CommandScript
 
 
 		string input1 = "";
-		ShowInputDialog(ref input1, ref dtItems);
+		DialogResult result = ShowInputDialog(ref input1, ref dtItems);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Artikel wissel afgebroken");
+			return;
+		}
+		
 
 		ScriptRecordset rsItemNew = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", input1), "");
 		rsItemNew.MoveFirst();

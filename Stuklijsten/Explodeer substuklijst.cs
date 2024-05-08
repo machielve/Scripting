@@ -91,12 +91,14 @@ Geschreven door: Machiel R. van Emden mei-2022
 				double totaalItem = itemAantal * aantal;
 				double lengte = Convert.ToDouble(rsSubStuklijstItem.Fields["LENGTH"].Value.ToString());
 
+				rsStuklijstItemNew.UseDataChanges = true;
 				rsStuklijstItemNew.AddNew();
 				rsStuklijstItemNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
 				rsStuklijstItemNew.Fields["FK_ITEM"].Value = itemCode;
 				rsStuklijstItemNew.Fields["QUANTITY"].Value = totaalItem;
 				rsStuklijstItemNew.Fields["LENGTH"].Value = lengte;
 				rsStuklijstItemNew.Fields["DESCRIPTION"].Value = rsItem.Fields["DESCRIPTION"].Value.ToString();
+				
 				rsStuklijstItemNew.Update();
 
 				rsSubStuklijstItem.MoveNext();
@@ -113,6 +115,7 @@ Geschreven door: Machiel R. van Emden mei-2022
 
 				double totaalSub = SubAantal * aantal;
 
+				rsStuklijstSubNew.UseDataChanges = true;
 				rsStuklijstSubNew.AddNew();
 				rsStuklijstSubNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
 				rsStuklijstSubNew.Fields["FK_SUBASSEMBLY"].Value = SubCode;
@@ -135,6 +138,7 @@ Geschreven door: Machiel R. van Emden mei-2022
 				
 				double totaalDiv = DivAantal * aantal;
 				
+				rsStuklijstDivNew.UseDataChanges = true;
 				rsStuklijstDivNew.AddNew();
 				rsStuklijstDivNew.Fields["FK_ASSEMBLY"].Value = stuklijstdoel;
 				rsStuklijstDivNew.Fields["FK_MISC"].Value = DivCode;
@@ -168,8 +172,6 @@ Geschreven door: Machiel R. van Emden mei-2022
 				
 				rsSubStuklijstUBW.MoveNext();
 			}
-
-			
 			
 			
 

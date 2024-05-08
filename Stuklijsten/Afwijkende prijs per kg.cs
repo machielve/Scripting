@@ -78,7 +78,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input1 = 0;
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Afwijkende kiloprijs afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 

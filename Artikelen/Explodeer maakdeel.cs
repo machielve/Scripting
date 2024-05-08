@@ -81,7 +81,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input1 = 0;
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Explodeer maakdeel afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -144,6 +150,7 @@ public class RidderScript : CommandScript
 
 
 			// loop om gebruikte artikelen in te boeken
+			rsSlRegel.MoveFirst();
 			while (rsSlRegel.EOF == false)
 			{
 

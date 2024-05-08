@@ -15,14 +15,7 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
-	/*
-	
-	Gemengd transport, het  programma om een totaal inkoop bedrag te verdelen per kg over de geselecteerde regels
-	Uit te voeren vanuit een inkooporder op niet ontvangen regels
-	Geschreven door: Machiel R. van Emden mei-2022
-
-	*/
-	
+	//	public myForm(){
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
@@ -85,7 +78,13 @@ public class RidderScript : CommandScript
 
 		decimal input1 = 1;
 
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Gemengde transport prijs afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -121,12 +120,9 @@ public class RidderScript : CommandScript
 
 			rsItem1.Update();
 
-
-
 		}
 
 	}
 
-	// M.R.v.E - 2022
 
 }

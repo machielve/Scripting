@@ -82,7 +82,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input1 = 0;
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Maakdeel maken afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -404,7 +410,7 @@ public class RidderScript : CommandScript
 					rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 					rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
 					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - ";// + rsItem.Fields["DESCRIPTION"].Value.ToString();
-					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "+ rsItem.Fields["DESCRIPTION"].Value.ToString();
+					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["FK_STOCKIN"].Value = rsItemIn1.Fields["PK_R_STOCKIN"].Value;
 
 					rsArtikelUit.Update();
@@ -447,7 +453,7 @@ public class RidderScript : CommandScript
 		rsArtikelIn.Fields["FK_ITEM"].Value = Convert.ToInt32(ItemNmr);
 		rsArtikelIn.Fields["QUANTITY"].Value = input1;
 		rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
-		rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "+ rsItem.Fields["DESCRIPTION"].Value.ToString();
+		rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
 		rsArtikelIn.Update();
 		MessageBox.Show("Voorraad van maakdeel aangevult");

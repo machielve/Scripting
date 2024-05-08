@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden juli-2023
 
 	*/
-	
+
 	private static DialogResult ShowInputDialog(ref decimal input1)
 	{
 
@@ -85,7 +85,13 @@ public class RidderScript : CommandScript
 
 		decimal input1 = 1;
 
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Gemengd transport verdelen afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -109,7 +115,7 @@ public class RidderScript : CommandScript
 
 		foreach (IRecord record in records)
 		{
-			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEORDERDETAILMISC", "", "PK_R_PURCHASEORDERDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
+			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEINVOICEDETAILMISC", "", "PK_R_PURCHASEINVOICEDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem1.MoveFirst();
 			rsItem1.UseDataChanges = true;
 

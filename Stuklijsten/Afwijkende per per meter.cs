@@ -78,7 +78,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input1 = 0;
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+		
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Afwijkende meterprijs afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -92,10 +98,9 @@ public class RidderScript : CommandScript
 			rsItem.UseDataChanges = true;
 
 			decimal Lengte = Convert.ToDecimal(rsItem.Fields["LENGTH"].Value.ToString());
-			decimal Breedte = Convert.ToDecimal(rsItem.Fields["WIDTH"].Value.ToString());
 			decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
 
-			decimal prijs = Lengte * Breedte * input1;
+			decimal prijs = Lengte * input1;
 
 
 

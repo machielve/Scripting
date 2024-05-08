@@ -57,8 +57,14 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		string input = "Afwijkende leverancier";
-		ShowInputDialog(ref input);
+		DialogResult result = ShowInputDialog(ref input);
 
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Leverancier aanpassen afgebroken");
+			return;
+		}
+		
 		string input1 = "'" + input + "'";
 		
 
@@ -137,7 +143,7 @@ public class RidderScript : CommandScript
 
 				if (check1 > 0 )
 				{
-					return;
+					
 				}
 
 				else

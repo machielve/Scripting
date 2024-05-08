@@ -261,10 +261,16 @@ public class RidderScript : CommandScript
 		bool cb2 = false;
 
 
-		ShowInputDialog(ref input1, ref input2, ref input3, ref input4,
+		DialogResult result = ShowInputDialog(ref input1, ref input2, ref input3, ref input4,
 							ref rb10, ref rb11, ref rb12, ref rb13,
 							ref rb20, ref rb21, ref rb22,
 							ref cb1, ref cb2);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Cleat generator afgebroken");
+			return;
+		}
 
 
 		string sinput1 = input1.ToString();
@@ -313,8 +319,8 @@ public class RidderScript : CommandScript
 			oppervlak = (input1 + input2) * input4 * 2;
 			volume = (input1 + input2) * input4 * input3;
 		}
-		
-		
+
+
 
 		decimal gewicht = volume / 1000000000 * 7850;
 		decimal spuitvlak = oppervlak / 1000000;
@@ -367,7 +373,7 @@ public class RidderScript : CommandScript
 			rsItem.Fields["FK_ITEMSALESPRICETEMPLATEGROUP"].Value = versjabloon;
 			rsItem.Fields["WEIGHT"].Value = gewicht;
 			rsItem.Fields["REGISTRATIONPATH"].Value = rTraject;
-			rsItem.Fields["PAINTAREA"].Value = spuitvlak;			
+			rsItem.Fields["PAINTAREA"].Value = spuitvlak;
 
 			rsItem.Update();
 
@@ -384,8 +390,8 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 1;
-			rsItemSup.Update();			
-			
+			rsItemSup.Update();
+
 			// extra leveranciers erna
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = Laserid;
@@ -407,6 +413,8 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 5;
 			rsItemSup.Update();
+			
+			/*
 
 			rsItemSup.AddNew();
 			rsItemSup.Fields["FK_RELATION"].Value = BCBid;
@@ -415,7 +423,8 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["ITEMTYPE"].Value = 2;
 			rsItemSup.Update();
 
-			
+*/
+
 		}
 	}
 }

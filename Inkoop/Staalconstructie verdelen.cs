@@ -15,16 +15,13 @@ using Ridder.Common.Script;
 
 public class RidderScript : CommandScript
 {
-	/*
-	
-	Staalconstuctie verdelen, het  programma om een totaal inkoop bedrag te verdelen per kg over de geselecteerde regels
-	Uit te voeren vanuit een inkooporder op niet ontvangen regels
-	Geschreven door: Machiel R. van Emden mei-2022
-
-	*/
-
+	//	public myForm(){
 	private static DialogResult ShowInputDialog(ref decimal input1, ref decimal input4)
 	{
+		System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+		customCulture.NumberFormat.NumberDecimalSeparator = ",";
+
+		System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
 
 		System.Drawing.Size size = new System.Drawing.Size(300, 400);
 		Form inputBox = new Form();
@@ -67,6 +64,40 @@ public class RidderScript : CommandScript
 
 		inputBox.Controls.Add(groepstaal);
 
+		//groep zagen
+		//		GroupBox groepzaag = new GroupBox();
+		//		groepzaag.Size = new System.Drawing.Size(180, 60);
+		//		groepzaag.Location = new System.Drawing.Point(10, 150);
+		//		groepzaag.Text = "Zagen totaal prijs";
+
+		//		System.Windows.Forms.NumericUpDown textBox2 = new NumericUpDown();
+		//		textBox2.Size = new System.Drawing.Size(100, 25);
+		//		textBox2.Location = new System.Drawing.Point(5, 25);
+		//		textBox2.Value = input2;
+		//		textBox2.Minimum = 0;
+		//		textBox2.Maximum = 1500000;
+		//		textBox2.DecimalPlaces = 2;
+		//		groepzaag.Controls.Add(textBox2);
+
+		//		inputBox.Controls.Add(groepzaag);
+
+		//groep groeven
+		//		GroupBox groepgroef = new GroupBox();
+		//		groepgroef.Size = new System.Drawing.Size(180, 60);
+		//		groepgroef.Location = new System.Drawing.Point(10, 225);
+		//		groepgroef.Text = "Groeven totaal prijs";
+
+		//		System.Windows.Forms.NumericUpDown textBox3 = new NumericUpDown();
+		//		textBox3.Size = new System.Drawing.Size(100, 25);
+		//		textBox3.Location = new System.Drawing.Point(5, 25);
+		//		textBox3.Value = input3;
+		//		textBox3.Minimum = 0;
+		//		textBox3.Maximum = 1500000;
+		//		textBox3.DecimalPlaces = 2;
+		//		groepgroef.Controls.Add(textBox3);
+
+		//		inputBox.Controls.Add(groepgroef);
+
 		//groep transport
 		GroupBox groeptransport = new GroupBox();
 		groeptransport.Size = new System.Drawing.Size(180, 60);
@@ -98,6 +129,17 @@ public class RidderScript : CommandScript
 
 	public void Execute()
 	{
+
+		string RIQVersie = Application.ProductVersion.ToString();
+
+/*		if (!RIQVersie.Contains("R5.4"))
+		{
+
+			MessageBox.Show("Huidige RidderIQ versie word niet ondersteund", "Error");
+			return;
+
+		}
+*/
 
 		decimal input1 = 1;
 		decimal input4 = 0;
@@ -132,11 +174,20 @@ public class RidderScript : CommandScript
 
 		}
 
-		ShowInputDialog(ref input1, ref input4);
+		DialogResult result1 = ShowInputDialog(ref input1, ref input4);
+
+		if (result1 != DialogResult.OK)
+		{
+			MessageBox.Show("Totaalprijs verdelen afgebroken");
+			return;
+		}
 
 		decimal input11 = Math.Round(input1, 2);
 
 		decimal result = input1 / totaal;
+
+		//	MessageBox.Show("Totaal "+totaal.ToString()+" kg");
+		//	MessageBox.Show("Totaal € "+Math.Round(input11, 2));
 
 		MessageBox.Show("Totaal € " + Math.Round(result, 2) + " / kg");
 
@@ -161,16 +212,24 @@ public class RidderScript : CommandScript
 
 			decimal prijs = gewicht * result;
 
+			//	MessageBox.Show("kg prijs " + result + " €/kg");
+			//	MessageBox.Show("Prijs voor regel € "+prijs+" .");
+
 			rsItemI.Fields["NETPURCHASEPRICE"].Value = prijs;
 
 			rsItemI.Update();
 
 
 
+
 		}
+
+
+
+
+
 
 	}
 
-	// M.R.v.E - 2022
 
 }

@@ -57,7 +57,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		string input = "Afwerking";
-		ShowInputDialog(ref input);
+		DialogResult result = ShowInputDialog(ref input);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Afwerking invullen afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -68,12 +74,11 @@ public class RidderScript : CommandScript
 		{
 			ScriptRecordset rsItem = this.GetRecordset("R_JOBORDERDETAILITEM", "AFWERKING", "PK_R_JOBORDERDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem.MoveFirst();
-			rsItem.UseDataChanges = true;
-
+		//	rsItem.UseDataChanges = true;
 
 			rsItem.Fields["AFWERKING"].Value = input;
 
-			rsItem.Update(null, null);
+			rsItem.Update();
 
 
 		}

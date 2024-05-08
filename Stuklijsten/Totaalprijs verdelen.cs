@@ -51,7 +51,7 @@ public class RidderScript : CommandScript
 		GroupBox groepstaal = new GroupBox();
 		groepstaal.Size = new System.Drawing.Size(180, 60);
 		groepstaal.Location = new System.Drawing.Point(10, 75);
-		
+
 		groepstaal.Text = "Project totaal prijs";
 
 		System.Windows.Forms.NumericUpDown textBox1 = new NumericUpDown();
@@ -62,7 +62,7 @@ public class RidderScript : CommandScript
 		textBox1.Maximum = 1500000;
 		textBox1.DecimalPlaces = 2;
 		groepstaal.Controls.Add(textBox1);
-		
+
 
 		inputBox.Controls.Add(groepstaal);
 
@@ -70,7 +70,7 @@ public class RidderScript : CommandScript
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
-		DialogResult result = inputBox.ShowDialog();		
+		DialogResult result = inputBox.ShowDialog();
 
 		input1 = textBox1.Value;
 
@@ -82,15 +82,15 @@ public class RidderScript : CommandScript
 
 		string RIQVersie = Application.ProductVersion.ToString();
 
-/*		if (!RIQVersie.Contains("R5.4"))
-		{
+		/*		if (!RIQVersie.Contains("R5.4"))
+				{
 
-			MessageBox.Show("Huidige RidderIQ versie word niet ondersteund", "Error");
-			return;
+					MessageBox.Show("Huidige RidderIQ versie word niet ondersteund", "Error");
+					return;
 
-		}
-*/
-		
+				}
+		*/
+
 		decimal input1 = 1;
 		decimal input4 = 0;
 
@@ -111,8 +111,14 @@ public class RidderScript : CommandScript
 			totaal += gewicht;
 		}
 
-		ShowInputDialog(ref input1, ref input4);	
-		
+		DialogResult result1 = ShowInputDialog(ref input1, ref input4);
+
+		if (result1 != DialogResult.OK)
+		{
+			MessageBox.Show("Totaalprijs verdelen afgebroken");
+			return;
+		}
+
 
 		decimal input11 = Math.Round(input1, 2);
 
@@ -130,7 +136,7 @@ public class RidderScript : CommandScript
 			decimal gewicht = Convert.ToDecimal(rsItemI.Fields["WEIGHT"].Value);
 			decimal aantal = Convert.ToDecimal(rsItemI.Fields["QUANTITY"].Value);
 
-			decimal prijs = gewicht * result/aantal;
+			decimal prijs = gewicht * result / aantal;
 
 			rsItemI.Fields["ODDCOSTPRICE"].Value = prijs;
 

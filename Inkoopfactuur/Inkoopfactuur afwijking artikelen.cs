@@ -85,7 +85,13 @@ public class RidderScript : CommandScript
 
 		decimal input1 = 1;
 
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Factuur afwijking afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -114,7 +120,7 @@ public class RidderScript : CommandScript
 			rsItem1.UseDataChanges = true;
 
 			decimal huidig = Convert.ToDecimal(rsItem1.Fields["NETPURCHASEPRICE"].Value.ToString());
-			
+
 			decimal Nieuw = huidig * percentageOpslag;
 
 			rsItem1.Fields["NETPURCHASEPRICE"].Value = Nieuw;

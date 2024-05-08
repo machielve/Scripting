@@ -85,7 +85,13 @@ public class RidderScript : CommandScript
 
 		decimal input1 = 1;
 
-		ShowInputDialog(ref input1);
+		DialogResult result = ShowInputDialog(ref input1);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Diesel toeslag verdelen afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 

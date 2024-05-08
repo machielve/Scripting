@@ -22,15 +22,15 @@ public class RidderScript : CommandScript
 	Geschreven door: Machiel R. van Emden mei-2022
 
 	*/
-	
-	private static DialogResult ShowInputDialog(	ref decimal input1, 
-													ref decimal input2, 
-													ref decimal input3, 
+
+	private static DialogResult ShowInputDialog(ref decimal input1,
+													ref decimal input2,
+													ref decimal input3,
 													ref decimal input4,
-													ref decimal input5, 
-													ref decimal fixed1, 
-													ref decimal fixed2, 
-													ref decimal fixed3, 
+													ref decimal input5,
+													ref decimal fixed1,
+													ref decimal fixed2,
+													ref decimal fixed3,
 													ref decimal fixed4,
 													ref decimal fixed5)
 	{
@@ -38,19 +38,19 @@ public class RidderScript : CommandScript
 		System.Drawing.Size size = new System.Drawing.Size(350, 300);
 		Form inputBox = new Form();
 
-		int c0 = 5;				//labelin
-		int c1 = c0 + 100;		//input
-		int c2 = c1 + 80;		//input unit
-		int c3 = c2 + 50;		//delen of vermenigvuldigen
-		int c4 = c3 + 10;     	//fixed
-		int c5 = c4 + 40;		//=...
-		
+		int c0 = 5;             //labelin
+		int c1 = c0 + 100;      //input
+		int c2 = c1 + 80;       //input unit
+		int c3 = c2 + 50;       //delen of vermenigvuldigen
+		int c4 = c3 + 10;       //fixed
+		int c5 = c4 + 40;       //=...
+
 		int r1 = 55;
 		int r2 = r1 + 35;
 		int r3 = r2 + 35;
-		int r4 = r3	+ 35;
-		int r5 = r4	+ 35;
-		
+		int r4 = r3 + 35;
+		int r5 = r4 + 35;
+
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.Icon = new System.Drawing.Icon(@"W:\Machiel\Ridder\Scripting\icons\werkman.ico");
 		inputBox.ClientSize = size;
@@ -72,8 +72,8 @@ public class RidderScript : CommandScript
 		cancelButton.Location = new System.Drawing.Point(100, 10);
 		inputBox.Controls.Add(cancelButton);
 
-		
-		
+
+
 		// kolom 1 - omschrijvingen
 
 		System.Windows.Forms.Label labelin1 = new Label();
@@ -157,9 +157,9 @@ public class RidderScript : CommandScript
 
 
 		// kolom 3 - eenheid van input
-		
+
 		System.Windows.Forms.Label labelunit1 = new Label();
-		labelunit1.Size = new System.Drawing.Size(50, 25);		
+		labelunit1.Size = new System.Drawing.Size(50, 25);
 		labelunit1.Location = new System.Drawing.Point(c2, r1 + 2);
 		labelunit1.Text = "m²";
 		inputBox.Controls.Add(labelunit1);
@@ -188,7 +188,7 @@ public class RidderScript : CommandScript
 		labelunit5.Text = "m";
 		inputBox.Controls.Add(labelunit5);
 
-		
+
 		// kolom 4 - delen of vermenigvuldigen
 
 		System.Windows.Forms.Label labelexp1 = new Label();
@@ -223,7 +223,7 @@ public class RidderScript : CommandScript
 
 
 		// kolom 5 - vaste rekenwaardes 
-		
+
 		System.Windows.Forms.NumericUpDown textBox21 = new NumericUpDown();
 		textBox21.Size = new System.Drawing.Size(40, 25);
 		textBox21.Location = new System.Drawing.Point(c4, r1);
@@ -311,7 +311,7 @@ public class RidderScript : CommandScript
 		labeleq5.Location = new System.Drawing.Point(c5, r5 + 2);
 		labeleq5.Text = @"= ....";
 		inputBox.Controls.Add(labeleq5);
-		
+
 
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
@@ -331,11 +331,11 @@ public class RidderScript : CommandScript
 		fixed5 = textBox25.Value;
 
 		return result;
-		
-		
+
+
 	}
-	
-	
+
+
 	public void Execute()
 	{
 		decimal input1 = 10;
@@ -348,18 +348,22 @@ public class RidderScript : CommandScript
 		decimal fixed2 = 1;
 		decimal fixed3 = 1;
 		decimal fixed4 = 20;
-		decimal fixed5 = 20;		
-		
-		ShowInputDialog(ref input1, ref input2, ref input3, ref input4, ref input5, ref fixed1, ref fixed2, ref fixed3, ref fixed4, ref fixed5);
+		decimal fixed5 = 20;
 
-		
-	
+		DialogResult result = ShowInputDialog(ref input1, ref input2, ref input3, ref input4, ref input5, ref fixed1, ref fixed2, ref fixed3, ref fixed4, ref fixed5);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Mandag calculator afgebroken");
+			return;
+		}
+
 		decimal output1 = (input1 / fixed1) + (input2 * fixed2) + (input3 * fixed3) + (input4 / fixed4) + (input5 / fixed5);
-		
+
 		decimal output2 = Math.Ceiling(output1);
 
-		double output3 = Convert.ToDouble(output2);	
-		
+		double output3 = Convert.ToDouble(output2);
+
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
 		if (records.Length == 0)
@@ -370,7 +374,7 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsOffer = this.GetRecordset("R_OFFER", "", "PK_R_OFFER = " + (int)record.GetPrimaryKeyValue(), "");
 			rsOffer.MoveFirst();
 			rsOffer.UseDataChanges = true;
-			rsOffer.Fields["GESCHATMONTAGETIJD"].Value = output3*24*60*60*10000000;
+			rsOffer.Fields["GESCHATMONTAGETIJD"].Value = output3 * 24 * 60 * 60 * 10000000;
 
 			rsOffer.Update();
 
@@ -379,5 +383,5 @@ public class RidderScript : CommandScript
 	}
 
 	// M.R.v.E - 2022
-	
+
 }

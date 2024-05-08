@@ -130,7 +130,13 @@ public class RidderScript : CommandScript
 
 		}
 
-		ShowInputDialog(ref input1, ref input4);
+		DialogResult result1 = ShowInputDialog(ref input1, ref input4);
+
+		if (result1 != DialogResult.OK)
+		{
+			MessageBox.Show("Staalconstructie verdelen afgebroken");
+			return;
+		}
 
 		decimal input11 = Math.Round(input1, 2);
 

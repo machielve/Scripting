@@ -57,7 +57,14 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		string input = "Aantal regels";
-		ShowInputDialog(ref input);
+		DialogResult result = ShowInputDialog(ref input);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Deel pakbonregel afgebroken");
+			return;
+		}
+		
 		int input1 = Convert.ToInt32(input);
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
@@ -83,6 +90,7 @@ public class RidderScript : CommandScript
 
 			rsItem.Fields["QUANTITY"].Value = nieuwaantal;
 
+
 			for (int i = 0; i < input1-1; i++)
 			{
 			//	MessageBox.Show(nieuwaantal.ToString());
@@ -95,9 +103,16 @@ public class RidderScript : CommandScript
 				rsPakRegel.Fields["FK_PACKLIST"].Value = rsItem.Fields["FK_PACKLIST"].Value;
 				rsPakRegel.Update();
 				
-			}		
+			}
+			
+			
+		
 
 			rsItem.Update(null, null);
+
+
 		}
+
+
 	}
 }

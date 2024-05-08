@@ -323,7 +323,7 @@ public class RidderScript : CommandScript
 
 		rb10 = rbutton10.Checked;
 		rb11 = rbutton11.Checked;
-		rb12 = rbutton11.Checked;
+		rb12 = rbutton12.Checked;
 		input10 = textBox10.Text;
 		input11 = textBox11.Text;
 
@@ -383,12 +383,18 @@ public class RidderScript : CommandScript
 		bool rb6 = false;
 		bool rb7 = false;
 
-		ShowInputDialog(ref input, ref input1, ref input2,
+		DialogResult result = ShowInputDialog(ref input, ref input1, ref input2,
 							ref rb10, ref rb11, ref rb12, ref input10, ref input11,
 							ref rb20, ref rb21,
 							ref rb30, ref rb31, ref input30,
 							ref rb40, ref rb41, ref input40,
 							ref rb0, ref rb1, ref rb2, ref rb3, ref rb4, ref rb5, ref rb6, ref rb7);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Trap import afgebroken");
+			return;
+		}
 
 
 
@@ -495,8 +501,8 @@ public class RidderScript : CommandScript
 
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
-			
-			inloop = "Inclusief inloop L= " + inloopL.ToString() +" mm. ";
+
+			inloop = "Inclusief inloop L= " + inloopL.ToString() + " mm. ";
 		}
 
 		if (rb41 == true)
@@ -506,11 +512,11 @@ public class RidderScript : CommandScript
 
 			treden = treden + inloopT;
 			optrede = optrede + inloopT;
-			
-			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() +" mm.";
+
+			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() + " mm.";
 		}
 
-		loop = inloop +"\n"+ uitloop;
+		loop = inloop + "\n" + uitloop;
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
@@ -809,7 +815,7 @@ public class RidderScript : CommandScript
 					rsAssemblyItem.Fields["CAMPARAMETER"].Value = traptype + " - H= " + hoog + " mm";
 					rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
 					rsAssemblyItem.Fields["MEMO"].Value = loop;
-					
+
 					rsAssemblyItem.Update();
 				}
 			}

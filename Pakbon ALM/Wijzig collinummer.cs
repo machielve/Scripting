@@ -57,7 +57,13 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		string input = "Colli nummer";
-		ShowInputDialog(ref input);
+		DialogResult result = ShowInputDialog(ref input);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Wijzig colliunummer afgebroken");
+			return;
+		}
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -73,6 +79,10 @@ public class RidderScript : CommandScript
 			rsItem.Fields["COLLINUMBER"].Value = input;
 
 			rsItem.Update(null, null);
+
+
 		}
+
+
 	}
 }
