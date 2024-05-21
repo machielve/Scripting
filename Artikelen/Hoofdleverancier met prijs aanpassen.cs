@@ -16,7 +16,7 @@ using Ridder.Common.Script;
 public class RidderScript : CommandScript
 {
 	//	public myForm(){
-	private static DialogResult ShowInputDialog(ref decimal input1)
+	private static DialogResult ShowInputDialog(ref decimal input1, ref decimal input2)
 	{
 		System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
 		customCulture.NumberFormat.NumberDecimalSeparator = ",";
@@ -49,9 +49,9 @@ public class RidderScript : CommandScript
 
 		//groep prijs
 		GroupBox groepprijs = new GroupBox();
-		groepprijs.Size = new System.Drawing.Size(180, 60);
+		groepprijs.Size = new System.Drawing.Size(225, 125);
 		groepprijs.Location = new System.Drawing.Point(10, 75);
-		groepprijs.Text = "Prijs / kg";
+		groepprijs.Text = "nieuwe prijzen";
 
 		System.Windows.Forms.NumericUpDown numericUpDown1 = new NumericUpDown();
 		numericUpDown1.Size = new System.Drawing.Size(100, 25);
@@ -62,6 +62,32 @@ public class RidderScript : CommandScript
 		numericUpDown1.DecimalPlaces = 2;
 		numericUpDown1.Controls[0].Visible = false;
 		groepprijs.Controls.Add(numericUpDown1);
+
+		System.Windows.Forms.NumericUpDown numericUpDown2 = new NumericUpDown();
+		numericUpDown2.Size = new System.Drawing.Size(100, 25);
+		numericUpDown2.Location = new System.Drawing.Point(5, 75);
+		numericUpDown2.Value = input2;
+		numericUpDown2.Minimum = 0;
+		numericUpDown2.Maximum = 1500000;
+		numericUpDown2.DecimalPlaces = 2;
+		numericUpDown2.Controls[0].Visible = false;
+		groepprijs.Controls.Add(numericUpDown2);
+
+		System.Windows.Forms.Label label1 = new Label();
+		label1.Size = new System.Drawing.Size(40, 25);
+		label1.Location = new System.Drawing.Point(105, 25);
+		label1.Text = "kg prijs";
+		groepprijs.Controls.Add(label1);
+
+		System.Windows.Forms.Label label2 = new Label();
+		label2.Size = new System.Drawing.Size(60, 25);
+		label2.Location = new System.Drawing.Point(105, 75);
+		label2.Text = "vaste prijs";
+		groepprijs.Controls.Add(label2);
+		
+		
+		
+		
 
 		inputBox.Controls.Add(groepprijs);
 
@@ -83,15 +109,17 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 		decimal input1 = 0;
-		DialogResult result = ShowInputDialog(ref input1);
+		decimal input2 = 0;
+		DialogResult result = ShowInputDialog(ref input1, ref input2);
 
 		if (result != DialogResult.OK)
 		{
-			MessageBox.Show("Afwijkende kiloprijs afgebroken");
+			MessageBox.Show("Nieuwe kiloprijs afgebroken");
 			return;
 		}
 
 		decimal kgprice = input1;
+		decimal fixedprijs = input2;
 		
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
@@ -108,6 +136,7 @@ public class RidderScript : CommandScript
 			string naam = rsItems.Fields["DESCRIPTION"].Value.ToString();
 			decimal gewicht = Convert.ToDecimal(rsItems.Fields["WEIGHT"].Value.ToString());
 			string pricename = @"'8b85c821-4b2a-4c6f-96e1-d5202355dd6a'";
+			string vasteprijs = @"'3b8b9362-4879-48e1-a082-7d221be6a9d6'";
 			string datum = DateTime.Now.ToShortDateString();
 		
 			
@@ -139,13 +168,20 @@ public class RidderScript : CommandScript
 					decimal newprice = gewicht * kgprice;
 
 					rsItemPrice.Fields["VALUE"].Value = newprice;
+					rsItemPrice.Update();
+
+					ScriptRecordset rsItemPrice2 = this.GetRecordset("R_ITEMPURCHASEPRICE", "", "FK_ITEMSUPPLIER = " + Itemsup + " AND FK_PRICENAME = " + vasteprijs, "");
+					rsItemPrice2.MoveFirst();
+					
+					rsItemPrice2.Fields["VALUE"].Value = fixedprijs;
+					rsItemPrice2.Update();
 
 					string message = "Prijs voor Kampstaal berekend op: " + datum + " met: " + kgprice.ToString() + " €/kg.";
 
 					rsItems.Fields["MEMO"].Value = message;
 
 					rsItems.Update();
-					rsItemPrice.Update();
+					
 					rsItemSup.Update();
 					
 					
