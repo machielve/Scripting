@@ -176,7 +176,7 @@ public class RidderScript : CommandScript
 					rsItemPrice2.Fields["VALUE"].Value = fixedprijs;
 					rsItemPrice2.Update();
 
-					string message = "Prijs voor Kampstaal berekend op: " + datum + " met: " + kgprice.ToString() + " €/kg.";
+					string message = "Prijs voor Kampstaal berekend op: " + datum + " met: " + kgprice.ToString() + " €/kg. En vast " + fixedprijs.ToString() + " €";
 
 					rsItems.Fields["MEMO"].Value = message;
 
