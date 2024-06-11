@@ -97,6 +97,7 @@ public class RidderScript : CommandScript
 		DialogResult result = inputBox.ShowDialog();
 
 		input1 = numericUpDown1.Value;
+		input2 = numericUpDown2.Value;
 
 		return result;
 	}
