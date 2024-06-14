@@ -244,20 +244,23 @@ public class RidderScript : CommandScript
 				}
 				
 				*/
-
-
-
+				
+				
+				// artikel info uit ridder ophalen
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", ItemCode), "");
+				rsItem.MoveFirst();
+				decimal AGroup = Convert.ToDecimal(rsItem.Fields["FK_ITEMGROUP"].Value.ToString());
 
 				if (ItemCode == "14166") // totaal aantal joist spacers tellen
 				{
 					spacerQnty = spacerQnty + aantal;
 				}
+				
+				
+				
+				
 
-
-				// artikel info uit ridder ophalen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", ItemCode), "");
-				rsItem.MoveFirst();
-
+				
 				if (rsItem != null && rsItem.RecordCount == 0) // check op onbekend artikel
 				{
 					ErrorRegel = "Artikel onbekend   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
@@ -273,7 +276,6 @@ public class RidderScript : CommandScript
 				else
 				{
 					decimal type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
-					decimal AGroup = Convert.ToDecimal(rsItem.Fields["FK_ITEMGROUP"].Value.ToString());
 					int itemId = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
 					int Leverwijze = 4;
 					int Regtraject = Convert.ToInt32(rsItem.Fields["REGISTRATIONPATH"].Value.ToString());
@@ -298,7 +300,7 @@ public class RidderScript : CommandScript
 					}
 
 					// Artikleeenheden met een lengte maat
-					else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32)
+					else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32 || type == 36)
 					{
 						lengte = lengte / 1000;
 						breedte = 0;
@@ -346,12 +348,12 @@ public class RidderScript : CommandScript
 					else
 					{
 						// zonder Riddder update berekeningen
-						if (groupId != "116" &&     // accessoires constructie
-								groupId != "117" &&     // vloerdelen hout
-								groupId != "119" &&     // koud gewalste liggers
-								groupId != "120" &&     // bevestiging materiaal
-								groupId != "125" &&     // accessoires
-								groupId != "130")       // vloerdelen staal
+						if (	groupId != "116" &&     // NIET accessoires constructie
+								groupId != "117" &&     // NIET vloerdelen hout
+								groupId != "119" &&     // NIET koud gewalste liggers
+								groupId != "120" &&     // NIET bevestiging materiaal
+								groupId != "125" &&     // NIET accessoires
+								groupId != "130")       // NIET vloerdelen staal
 						{
 							ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
 							rsJoborderItem.AddNew();
@@ -442,6 +444,10 @@ public class RidderScript : CommandScript
 
 		if (spacerQnty > 0)
 		{
+			ScriptRecordset rsUBWOrigin = this.GetRecordset("R_OUTSOURCEDACTIVITY", "", "PK_R_OUTSOURCEDACTIVITY= 25", "");
+			rsUBWOrigin.MoveFirst();
+			
+			
 			ScriptRecordset rsJoborderUBW = this.GetRecordset("R_JOBORDERDETAILOUTSOURCED", "", "PK_R_JOBORDERDETAILOUTSOURCED= -1", "");
 			rsJoborderUBW.AddNew();
 
@@ -450,21 +456,20 @@ public class RidderScript : CommandScript
 			rsJoborderUBW.Fields["FK_OUTSOURCEDACTIVITY"].Value = 25;
 			rsJoborderUBW.Fields["QUANTITY"].Value = spacerQnty;
 			rsJoborderUBW.Fields["DELIVERYMETHOD"].Value = 4;
+			rsJoborderUBW.Fields["REGISTRATIONPATH"].Value = rsUBWOrigin.Fields["REGISTRATIONPATH"].Value;
+			rsJoborderUBW.Fields["DESCRIPTION"].Value = rsUBWOrigin.Fields["DESCRIPTION"].Value;
 
 			rsJoborderUBW.Update();
 
 			int UBWnummer = Convert.ToInt32(rsJoborderUBW.Fields["PK_R_JOBORDERDETAILOUTSOURCED"].Value.ToString());
 
-			MessageBox.Show("U1503 toegevoegd met " + spaceraantal + " stuks. Nu koppelen aan artikelen.");
+		//	MessageBox.Show("U1503 toegevoegd met " + spaceraantal + " stuks. Nu koppelen aan artikelen.");
 
-			// koppeling tabel vullen			
-
+			// koppeling tabel vullen
 			// alle joist spacer ophalen van de bon
 			ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "FK_JOBORDER= " + bonId + " AND FK_ITEM= 4204", "");
 			rsJoborderItem.MoveFirst();
-
-		//	MessageBox.Show(rsJoborderItem.RecordCount.ToString() + " regels te koppelen");
-
+			
 			while (rsJoborderItem.EOF == false)
 			{
 				ScriptRecordset rsJoborderKMB = this.GetRecordset("R_JOBORDERITEMOUTSOURCED", "", "PK_R_JOBORDERITEMOUTSOURCED= -1", "");
