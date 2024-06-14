@@ -84,10 +84,10 @@ public class RidderScript : CommandScript
 		label2.Location = new System.Drawing.Point(105, 75);
 		label2.Text = "vaste prijs";
 		groepprijs.Controls.Add(label2);
-		
-		
-		
-		
+
+
+
+
 
 		inputBox.Controls.Add(groepprijs);
 
@@ -101,12 +101,12 @@ public class RidderScript : CommandScript
 
 		return result;
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	public void Execute()
 	{
 		decimal input1 = 0;
@@ -121,7 +121,7 @@ public class RidderScript : CommandScript
 
 		decimal kgprice = input1;
 		decimal fixedprijs = input2;
-		
+
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
 		if (records.Length == 0)
@@ -130,7 +130,7 @@ public class RidderScript : CommandScript
 		foreach (IRecord record in records)
 		{
 			int aNummer = (int)record.GetPrimaryKeyValue();
-			
+
 			ScriptRecordset rsItems = this.GetRecordset("R_ITEM", "", "PK_R_ITEM = " + aNummer, "");
 			rsItems.MoveFirst();
 
@@ -139,11 +139,13 @@ public class RidderScript : CommandScript
 			string pricename = @"'8b85c821-4b2a-4c6f-96e1-d5202355dd6a'";
 			string vasteprijs = @"'3b8b9362-4879-48e1-a082-7d221be6a9d6'";
 			string datum = DateTime.Now.ToShortDateString();
-		
-			
-			ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMSUPPLIER", "", "FK_ITEM = " + aNummer, "");
 
-			if (rsItems.RecordCount == 0)
+
+			ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMSUPPLIER", "", "FK_RELATION = 548 AND FK_ITEM = " + aNummer, "");
+
+			
+
+			if (rsItemSup.RecordCount == 0)
 			{
 				rsItemSup.AddNew();
 
@@ -152,6 +154,7 @@ public class RidderScript : CommandScript
 				rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam;
 				rsItemSup.Fields["ITEMTYPE"].Value = 8;
 				rsItemSup.Update();
+				
 			}
 			rsItemSup.MoveFirst();
 
@@ -173,7 +176,7 @@ public class RidderScript : CommandScript
 
 					ScriptRecordset rsItemPrice2 = this.GetRecordset("R_ITEMPURCHASEPRICE", "", "FK_ITEMSUPPLIER = " + Itemsup + " AND FK_PRICENAME = " + vasteprijs, "");
 					rsItemPrice2.MoveFirst();
-					
+
 					rsItemPrice2.Fields["VALUE"].Value = fixedprijs;
 					rsItemPrice2.Update();
 
@@ -182,23 +185,23 @@ public class RidderScript : CommandScript
 					rsItems.Fields["MEMO"].Value = message;
 
 					rsItems.Update();
-					
+
 					rsItemSup.Update();
-					
-					
+
+
 					break;
 				}
-				
+
 				else rsItemSup.MoveNext();
-				
+
 			}
 		}
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 
 
 
