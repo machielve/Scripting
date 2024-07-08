@@ -99,23 +99,22 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 
-		decimal input1 = 1;
-		decimal input4 = 0;
-
+		decimal input1 = 1; // Totaal prijs
+		decimal input4 = 0; // Totaal Transport
+		decimal totaal = 0; // Totaal gewicht
 
 		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
 
 		if (records.Length == 0)
 			return;
 
-
-		decimal totaal = 0;
-
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsItemI = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "PK_R_PURCHASEINVOICEDETAILITEM", "PK_R_PURCHASEINVOICEDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItemI.MoveFirst();
 			string IRegelID = rsItemI.Fields["PK_R_PURCHASEINVOICEDETAILITEM"].Value.ToString();
+			
+			decimal prijs = Convert.ToDecimal(rsItemI.Fields["NETPURCHASEPRICE"].Value);
 
 			ScriptRecordset rsItemR = this.GetRecordset("R_ITEMRESERVATION", "DESTINATIONID", "FK_PURCHASEINVOICEDETAILITEM = " + IRegelID, "");
 			rsItemR.MoveFirst();
@@ -125,10 +124,10 @@ public class RidderScript : CommandScript
 			rsItemB.MoveFirst();
 			decimal gewicht = Convert.ToDecimal(rsItemB.Fields["WEIGHT"].Value);
 
-
 			totaal += gewicht;
-
+			input1 += prijs;
 		}
+		
 
 		DialogResult result1 = ShowInputDialog(ref input1, ref input4);
 
@@ -166,7 +165,6 @@ public class RidderScript : CommandScript
 			rsItemI.Fields["NETPURCHASEPRICE"].Value = prijs;
 
 			rsItemI.Update();
-
 
 		}
 
