@@ -76,7 +76,52 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 
-		decimal input1 = 1;
+		decimal input1 = 1; // Totaal prijs
+		decimal totaal = 0; // Totaal gewicht
+		decimal check1 = 0; // Check op afwijkende div eenheid		
+
+		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
+
+		if (records.Length == 0)
+			return;
+
+		foreach (IRecord record in records)
+		{
+			ScriptRecordset rsItem = this.GetRecordset("R_PURCHASEORDERDETAILMISC", "", "PK_R_PURCHASEORDERDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
+			rsItem.MoveFirst();
+
+			decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
+			totaal += aantal;
+			
+			/*
+
+			if (rsItem.Fields["FK_PURCHASEUNIT"].Value.ToString() == "3")
+			{
+				decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
+				totaal += aantal;
+			}
+			
+			else if (rsItem.Fields["FK_PURCHASEUNIT"].Value.ToString() != "3")
+			{
+				decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
+				check1 += aantal;
+			}
+
+			else
+			{
+				decimal aantal = 0;
+
+			}
+
+			*/
+			
+		}
+		
+		
+		
+		
+		
+		// start pop-up
 
 		DialogResult result = ShowInputDialog(ref input1);
 
@@ -85,24 +130,8 @@ public class RidderScript : CommandScript
 			MessageBox.Show("Gemengde transport prijs afgebroken");
 			return;
 		}
-
-		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
-
-		if (records.Length == 0)
-			return;
-
-		decimal totaal = 0;
-
-		foreach (IRecord record in records)
-		{
-			ScriptRecordset rsItem = this.GetRecordset("R_PURCHASEORDERDETAILMISC", "", "PK_R_PURCHASEORDERDETAILMISC = " + (int)record.GetPrimaryKeyValue(), "");
-			rsItem.MoveFirst();
-
-			decimal aantal = Convert.ToDecimal(rsItem.Fields["QUANTITY"].Value.ToString());
-
-			totaal += aantal;
-
-		}
+		
+		//verwerk resultaat
 
 		decimal kgPrijs = input1 / totaal;
 
