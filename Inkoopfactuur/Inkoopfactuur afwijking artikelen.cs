@@ -83,7 +83,25 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 
-		decimal input1 = 1;
+		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
+
+		if (records.Length == 0)
+			return;
+
+		decimal totaal = 0; // Totaal prijs
+		decimal input1 = 0; // Totaal gewicht
+
+		foreach (IRecord record in records)
+		{
+			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
+			rsInvoice.MoveFirst();
+
+			decimal aantal = Convert.ToDecimal(rsInvoice.Fields["NETPURCHASEPRICE"].Value.ToString());
+
+			input1 += aantal;
+		}
+		
+		
 
 		DialogResult result = ShowInputDialog(ref input1);
 
@@ -93,19 +111,17 @@ public class RidderScript : CommandScript
 			return;
 		}
 
-		IRecord[] records = this.FormDataAwareFunctions.GetSelectedRecords();
-
-		if (records.Length == 0)
-			return;
-
-		decimal totaal = 0;
-
 		foreach (IRecord record in records)
 		{
-			ScriptRecordset rsItem = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
-			rsItem.MoveFirst();
+			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
+			rsInvoice.MoveFirst();
 
-			decimal aantal = Convert.ToDecimal(rsItem.Fields["NETPURCHASEPRICE"].Value.ToString());
+			int ontvangst = Convert.ToInt32(rsInvoice.Fields["FK_GOODSRECEIPTDETAILITEM"].Value.ToString());
+
+			ScriptRecordset rsReceive = this.GetRecordset("R_GOODSRECEIPTDETAILITEM", "", "PK_R_GOODSRECEIPTDETAILITEM= " + ontvangst, "");
+			rsReceive.MoveFirst();			
+
+			decimal aantal = Convert.ToDecimal(rsReceive.Fields["NETPURCHASEPRICE"].Value.ToString());
 
 			totaal += aantal;
 		}
