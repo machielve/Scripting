@@ -83,7 +83,8 @@ public class RidderScript : CommandScript
 	public void Execute()
 	{
 
-		decimal input1 = 1;
+		decimal input1 = 1; // Totaal prijs
+		decimal totaal = 0; // Totaal gewicht
 
 		DialogResult result = ShowInputDialog(ref input1);
 
@@ -97,8 +98,6 @@ public class RidderScript : CommandScript
 
 		if (records.Length == 0)
 			return;
-
-		decimal totaal = 0;
 
 		foreach (IRecord record in records)
 		{
