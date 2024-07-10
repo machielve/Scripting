@@ -59,9 +59,11 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.NumericUpDown textBox1 = new NumericUpDown();
 		textBox1.Size = new System.Drawing.Size(100, 25);
 		textBox1.Location = new System.Drawing.Point(5, 25);
-		textBox1.Value = input1;
+
+		textBox1.DecimalPlaces = 2;
 		textBox1.Minimum = -20000;
 		textBox1.Maximum = 1500000;
+		textBox1.Value = input1;
 		textBox1.DecimalPlaces = 2;
 		groepprijs.Controls.Add(textBox1);
 
@@ -100,6 +102,23 @@ public class RidderScript : CommandScript
 
 			input1 += aantal;
 		}
+
+		foreach (IRecord record in records)
+		{
+			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
+			rsInvoice.MoveFirst();
+
+			int ontvangst = Convert.ToInt32(rsInvoice.Fields["FK_GOODSRECEIPTDETAILITEM"].Value.ToString());
+
+			ScriptRecordset rsReceive = this.GetRecordset("R_GOODSRECEIPTDETAILITEM", "", "PK_R_GOODSRECEIPTDETAILITEM= " + ontvangst, "");
+			rsReceive.MoveFirst();
+
+			decimal aantal = Convert.ToDecimal(rsReceive.Fields["NETPURCHASEPRICE"].Value.ToString());
+
+			totaal += aantal;
+		}
+		
+		decimal percentageOpslag = input1 / totaal;
 		
 		
 
@@ -111,22 +130,9 @@ public class RidderScript : CommandScript
 			return;
 		}
 
-		foreach (IRecord record in records)
-		{
-			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
-			rsInvoice.MoveFirst();
+		
 
-			int ontvangst = Convert.ToInt32(rsInvoice.Fields["FK_GOODSRECEIPTDETAILITEM"].Value.ToString());
-
-			ScriptRecordset rsReceive = this.GetRecordset("R_GOODSRECEIPTDETAILITEM", "", "PK_R_GOODSRECEIPTDETAILITEM= " + ontvangst, "");
-			rsReceive.MoveFirst();			
-
-			decimal aantal = Convert.ToDecimal(rsReceive.Fields["NETPURCHASEPRICE"].Value.ToString());
-
-			totaal += aantal;
-		}
-
-		decimal percentageOpslag = input1 / totaal;
+		
 
 
 		foreach (IRecord record in records)
@@ -134,8 +140,13 @@ public class RidderScript : CommandScript
 			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
 			rsItem1.MoveFirst();
 			rsItem1.UseDataChanges = true;
+			
+			int ontvangst = Convert.ToInt32(rsItem1.Fields["FK_GOODSRECEIPTDETAILITEM"].Value.ToString());
 
-			decimal huidig = Convert.ToDecimal(rsItem1.Fields["NETPURCHASEPRICE"].Value.ToString());
+			ScriptRecordset rsReceive = this.GetRecordset("R_GOODSRECEIPTDETAILITEM", "", "PK_R_GOODSRECEIPTDETAILITEM= " + ontvangst, "");
+			rsReceive.MoveFirst();
+
+			decimal huidig = Convert.ToDecimal(rsReceive.Fields["NETPURCHASEPRICE"].Value.ToString());
 
 			decimal Nieuw = huidig * percentageOpslag;
 
@@ -144,8 +155,10 @@ public class RidderScript : CommandScript
 			rsItem1.Update();
 
 
-
 		}
+
+		MessageBox.Show("Klaar");
+		
 
 	}
 
