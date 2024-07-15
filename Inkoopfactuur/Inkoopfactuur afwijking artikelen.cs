@@ -23,9 +23,8 @@ public class RidderScript : CommandScript
 
 	*/
 
-	private static DialogResult ShowInputDialog(ref decimal input1)
+	private static DialogResult ShowInputDialog(ref decimal input1, ref string totaal1)
 	{
-
 		System.Drawing.Size size = new System.Drawing.Size(300, 400);
 		Form inputBox = new Form();
 
@@ -50,14 +49,14 @@ public class RidderScript : CommandScript
 		inputBox.Controls.Add(cancelButton);
 
 
-		//groep prijs
+		//groep factuur prijs
 		GroupBox groepprijs = new GroupBox();
-		groepprijs.Size = new System.Drawing.Size(180, 60);
+		groepprijs.Size = new System.Drawing.Size(250, 60);
 		groepprijs.Location = new System.Drawing.Point(10, 75);
-		groepprijs.Text = "Totale factur prijs";
+		groepprijs.Text = "Totale factur prijs artikelen";
 
 		System.Windows.Forms.NumericUpDown textBox1 = new NumericUpDown();
-		textBox1.Size = new System.Drawing.Size(100, 25);
+		textBox1.Size = new System.Drawing.Size(150, 25);
 		textBox1.Location = new System.Drawing.Point(5, 25);
 
 		textBox1.DecimalPlaces = 2;
@@ -68,6 +67,28 @@ public class RidderScript : CommandScript
 		groepprijs.Controls.Add(textBox1);
 
 		inputBox.Controls.Add(groepprijs);
+
+		//groep ontvangst prijs
+		GroupBox receiveprijs = new GroupBox();
+		receiveprijs.Size = new System.Drawing.Size(250, 90);
+		receiveprijs.Location = new System.Drawing.Point(10, 140);
+		receiveprijs.Text = "Totale ontvangst prijs artikelen";
+		
+		System.Windows.Forms.Label label1 = new Label();
+		label1.Size = new System.Drawing.Size(200, 25);
+		label1.Location = new System.Drawing.Point(5, 25);
+		label1.Text = totaal1;
+		receiveprijs.Controls.Add(label1);
+		
+		
+		
+
+		inputBox.Controls.Add(receiveprijs);
+		
+		
+		
+		
+		
 
 
 		inputBox.AcceptButton = okButton;
@@ -90,9 +111,11 @@ public class RidderScript : CommandScript
 		if (records.Length == 0)
 			return;
 
-		decimal totaal = 0; // Totaal prijs
-		decimal input1 = 0; // Totaal gewicht
-
+		decimal totaal = 0; // Totaal ontvangst bedrag
+		decimal input1 = 0; // Totaal factuur bedrag
+		
+		
+		// Factuur bedrag uitrekenen
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
@@ -103,6 +126,8 @@ public class RidderScript : CommandScript
 			input1 += aantal;
 		}
 
+		
+		// Ontvangst bedrag uitrekenen
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsInvoice = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM= " + (int)record.GetPrimaryKeyValue(), "");
@@ -117,12 +142,18 @@ public class RidderScript : CommandScript
 
 			totaal += aantal;
 		}
+
+		string totaal1 = "totaal ontvangen = € " + Convert.ToString(totaal);
+
+
 		
+		// Afwijking berekenen
 		decimal percentageOpslag = input1 / totaal;
 		
 		
 
-		DialogResult result = ShowInputDialog(ref input1);
+		//pop-up
+		DialogResult result = ShowInputDialog(ref input1, ref totaal1);
 
 		if (result != DialogResult.OK)
 		{
@@ -135,6 +166,7 @@ public class RidderScript : CommandScript
 		
 
 
+		// Nieuwe regels berekenen
 		foreach (IRecord record in records)
 		{
 			ScriptRecordset rsItem1 = this.GetRecordset("R_PURCHASEINVOICEDETAILITEM", "", "PK_R_PURCHASEINVOICEDETAILITEM = " + (int)record.GetPrimaryKeyValue(), "");
