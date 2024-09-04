@@ -40,15 +40,29 @@ public class RidderScript : CommandScript
 		rsOrder.MoveFirst();
 		SalesOrder = rsOrder.Fields["ORDERNUMBER"].Value.ToString();
 
-		ShowInputDialog1(ref SalesOrder);
-		
-		
+		DialogResult result = ShowInputDialog1(ref SalesOrder);
+
+		if (result != DialogResult.OK)
+		{
+			MessageBox.Show("Project keuze afgebroken");
+			return;
+		}
+
 
 		MapBuilder(ref SalesOrder, ref Filelocation);
+		if (Filelocation == "")
+		{
+			return;
+		}
+		
 		FileBuilder(ref Filelocation, ref ImportFile);
-		
-		
-		
+		if (ImportFile == "")
+		{
+			return;
+		}
+
+
+
 
 		List<string> listA = new List<string>();                //Phase
 		List<string> listB = new List<string>();                //Artikelcode
@@ -244,8 +258,8 @@ public class RidderScript : CommandScript
 				}
 				
 				*/
-				
-				
+
+
 				// artikel info uit ridder ophalen
 				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", ItemCode), "");
 				rsItem.MoveFirst();
@@ -255,12 +269,12 @@ public class RidderScript : CommandScript
 				{
 					spacerQnty = spacerQnty + aantal;
 				}
-				
-				
-				
-				
 
-				
+
+
+
+
+
 				if (rsItem != null && rsItem.RecordCount == 0) // check op onbekend artikel
 				{
 					ErrorRegel = "Artikel onbekend   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
@@ -348,7 +362,7 @@ public class RidderScript : CommandScript
 					else
 					{
 						// zonder Riddder update berekeningen
-						if (	groupId != "116" &&     // NIET accessoires constructie
+						if (groupId != "116" &&     // NIET accessoires constructie
 								groupId != "117" &&     // NIET vloerdelen hout
 								groupId != "119" &&     // NIET koud gewalste liggers
 								groupId != "120" &&     // NIET bevestiging materiaal
@@ -446,8 +460,8 @@ public class RidderScript : CommandScript
 		{
 			ScriptRecordset rsUBWOrigin = this.GetRecordset("R_OUTSOURCEDACTIVITY", "", "PK_R_OUTSOURCEDACTIVITY= 25", "");
 			rsUBWOrigin.MoveFirst();
-			
-			
+
+
 			ScriptRecordset rsJoborderUBW = this.GetRecordset("R_JOBORDERDETAILOUTSOURCED", "", "PK_R_JOBORDERDETAILOUTSOURCED= -1", "");
 			rsJoborderUBW.AddNew();
 
@@ -463,13 +477,13 @@ public class RidderScript : CommandScript
 
 			int UBWnummer = Convert.ToInt32(rsJoborderUBW.Fields["PK_R_JOBORDERDETAILOUTSOURCED"].Value.ToString());
 
-		//	MessageBox.Show("U1503 toegevoegd met " + spaceraantal + " stuks. Nu koppelen aan artikelen.");
+			//	MessageBox.Show("U1503 toegevoegd met " + spaceraantal + " stuks. Nu koppelen aan artikelen.");
 
 			// koppeling tabel vullen
 			// alle joist spacer ophalen van de bon
 			ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "FK_JOBORDER= " + bonId + " AND FK_ITEM= 4204", "");
 			rsJoborderItem.MoveFirst();
-			
+
 			while (rsJoborderItem.EOF == false)
 			{
 				ScriptRecordset rsJoborderKMB = this.GetRecordset("R_JOBORDERITEMOUTSOURCED", "", "PK_R_JOBORDERITEMOUTSOURCED= -1", "");
@@ -519,20 +533,19 @@ public class RidderScript : CommandScript
 
 		string rootFolder = BaseFolder + OrderGroup;
 
-		string partialFolderName = SalesOrder; // Replace with the first 5 characters you know.
+		string partialFolderName = SalesOrder;
 
 		string fullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
 
 		if (fullPath != null)
 		{
 			Filelocation = fullPath + @"\Lijsten";
-			//	MessageBox.Show(Filelocation);
 
-			// Now you can use 'fullPath' to access the folder.
 		}
 		else
 		{
 			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOrder);
+			Filelocation = "";
 
 		}
 	}
@@ -554,8 +567,14 @@ public class RidderScript : CommandScript
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
-				ShowInputDialog2(ref matchingFolders, ref Filelocation);
-				return Filelocation;
+				DialogResult result = ShowInputDialog2(ref matchingFolders, ref Filelocation);
+				if (result != DialogResult.OK)
+				{
+					MessageBox.Show("Map keuze afgebroken");
+
+				}
+				
+				else return Filelocation;
 			}
 		}
 		catch (Exception ex)
@@ -579,6 +598,7 @@ public class RidderScript : CommandScript
 		else
 		{
 			MessageBox.Show("Geen bestanden gevonden op: " + Filelocation);
+			ImportFile = "";
 
 		}
 	}
@@ -593,23 +613,18 @@ public class RidderScript : CommandScript
 				.Where(file => Path.GetFileName(file).EndsWith(FileExtension, StringComparison.OrdinalIgnoreCase))
 				.ToList();
 
-			/*
-
-		if (matchingFiles.Count == 1)
-		{
-			return matchingFiles.First(); // Return the full path of the matching folder.
-		}
-		else 
-
-		*/
 
 			if (matchingFiles.Count > 0)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
-				ShowInputDialog3(ref matchingFiles, ref ImportFile);
-
-				return ImportFile;
+				DialogResult result = ShowInputDialog3(ref matchingFiles, ref ImportFile);
+				if (result != DialogResult.OK)
+				{
+					MessageBox.Show("Bestands keuze afgebroken");
+					
+				}
+				else return ImportFile;
 
 			}
 		}
@@ -713,18 +728,28 @@ public class RidderScript : CommandScript
 
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-		okButton.Name = "okButton";
-		okButton.Size = new System.Drawing.Size(75, 23);
+		okButton.Name = "Accept";
 		okButton.Text = "&OK";
-		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 40);
+		okButton.Size = new System.Drawing.Size(75, 25);
+		okButton.Location = new System.Drawing.Point(25, 10);
 		inputBox.Controls.Add(okButton);
 
+		Button cancelButton = new Button();
+		cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+		cancelButton.Name = "ABORT";
+		cancelButton.Text = "&Cancel";
+		cancelButton.Size = new System.Drawing.Size(75, 25);
+		cancelButton.Location = new System.Drawing.Point(125, 10);
+		inputBox.Controls.Add(cancelButton);
+
 		inputBox.AcceptButton = okButton;
+		inputBox.CancelButton = cancelButton;
 
 		DialogResult result = inputBox.ShowDialog();
+		
 		SalesOrder = textBox.Text;
 		return result;
-		
+
 	} // bevestigen of wijzigen van het ordernummer
 
 	private static DialogResult ShowInputDialog2(ref List<string> matchingFolders, ref string Filelocation)
@@ -754,18 +779,28 @@ public class RidderScript : CommandScript
 
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-		okButton.Name = "okButton";
-		okButton.Size = new System.Drawing.Size(75, 23);
+		okButton.Name = "Accept";
 		okButton.Text = "&OK";
-		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 40);
+		okButton.Size = new System.Drawing.Size(75, 25);
+		okButton.Location = new System.Drawing.Point(25, 10);
 		inputBox.Controls.Add(okButton);
 
+		Button cancelButton = new Button();
+		cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+		cancelButton.Name = "ABORT";
+		cancelButton.Text = "&Cancel";
+		cancelButton.Size = new System.Drawing.Size(75, 25);
+		cancelButton.Location = new System.Drawing.Point(125, 10);
+		inputBox.Controls.Add(cancelButton);
+
 		inputBox.AcceptButton = okButton;
+		inputBox.CancelButton = cancelButton;
 
 		DialogResult result = inputBox.ShowDialog();
+		
 		Filelocation = combo1.SelectedValue.ToString();
 		return result;
-		
+
 	}  // juiste map kiezen als er meerdere mappen zijn welke beginnen met het ordernummer
 
 	private static DialogResult ShowInputDialog3(ref List<string> matchingFiles, ref string ImportFile)
@@ -795,18 +830,28 @@ public class RidderScript : CommandScript
 
 		Button okButton = new Button();
 		okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-		okButton.Name = "okButton";
-		okButton.Size = new System.Drawing.Size(75, 23);
+		okButton.Name = "Accept";
 		okButton.Text = "&OK";
-		okButton.Location = new System.Drawing.Point(size.Width - 80 - 80, size.Height - 40);
+		okButton.Size = new System.Drawing.Size(75, 25);
+		okButton.Location = new System.Drawing.Point(25, 10);
 		inputBox.Controls.Add(okButton);
 
+		Button cancelButton = new Button();
+		cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+		cancelButton.Name = "ABORT";
+		cancelButton.Text = "&Cancel";
+		cancelButton.Size = new System.Drawing.Size(75, 25);
+		cancelButton.Location = new System.Drawing.Point(125, 10);
+		inputBox.Controls.Add(cancelButton);
+
 		inputBox.AcceptButton = okButton;
+		inputBox.CancelButton = cancelButton;
 
 		DialogResult result = inputBox.ShowDialog();
+		
 		ImportFile = combo1.SelectedValue.ToString();
 		return result;
-		
+
 	}  // juiste bestand kiezen om te importeren vanaf de gekozen map
 
 }
