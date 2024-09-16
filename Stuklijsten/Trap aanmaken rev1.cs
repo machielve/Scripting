@@ -104,7 +104,7 @@ public class RidderScript : CommandScript
 		BoxBreed.Items.Add("900");
 		BoxBreed.Items.Add("1000");
 		BoxBreed.Items.Add("1200");
-		BoxBreed.SelectedIndex = 1;
+		BoxBreed.SelectedIndex = 5;
 		BoxBreed.Text = input2;
 		groepbreed.Controls.Add(BoxBreed);
 
@@ -355,7 +355,7 @@ public class RidderScript : CommandScript
 	{
 		string input = "Aantal trappen";
 		decimal input1 = 1;
-		string input2 = "Trap breedte";
+		string input2 = "800";
 
 		bool rb10 = false;
 		bool rb11 = false;
