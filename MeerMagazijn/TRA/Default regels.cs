@@ -115,6 +115,12 @@ public class RidderScript : CommandScript
 			risiconummer = 58;           //communicatie
 			maatregelnummer = 56;        //communicatie
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
+			
+			//regel 12
+			taaknummer = xx;             //beklemming
+			risiconummer = 152;           //-----
+			maatregelnummer = 295;        //verwijder sierraden
+			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
 			MessageBox.Show("Default regels op TRA toegevoegd.","Default TRA regels");
 
