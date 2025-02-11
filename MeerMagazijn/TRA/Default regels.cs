@@ -117,7 +117,7 @@ public class RidderScript : CommandScript
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 			
 			//regel 12
-			taaknummer = xx;             //beklemming
+			taaknummer = 3;             //beklemming
 			risiconummer = 152;           //-----
 			maatregelnummer = 295;        //verwijder sierraden
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
