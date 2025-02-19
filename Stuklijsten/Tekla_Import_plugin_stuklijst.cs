@@ -225,6 +225,9 @@ public class RidderScript : CommandScript
 				ListLeuning.Add(LeuningRegel);
 			}
 
+
+
+
 			else
 			{
 				string ItemCode = listB[i].ToString().Substring(0, 5);
@@ -382,7 +385,7 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
 							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
 							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
-							rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
+							//rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
 							rsJoborderItem.Fields["DESCRIPTION"].Value = Omschrijving;
 							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
 							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
@@ -413,9 +416,9 @@ public class RidderScript : CommandScript
 							rsJoborderItem.AddNew();
 
 							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
-							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
-							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
-							rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
+						//	rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
+						//	rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
+						//	rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
 							rsJoborderItem.Fields["DESCRIPTION"].Value = Omschrijving;
 							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
 							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
@@ -425,7 +428,7 @@ public class RidderScript : CommandScript
 							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
 							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
 
-							rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
+							//rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
 
 							rsJoborderItem.UseDataChanges = true;
 
