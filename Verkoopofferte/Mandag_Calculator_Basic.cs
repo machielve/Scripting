@@ -19,7 +19,7 @@ public class RidderScript : CommandScript
 	
 	Mandag calculator, het  programma om het benodigde aantal mandagen voor de montage te berekenen
 	Uit te voeren vanuit een offerte met de status nieuw
-	Geschreven door: Machiel R. van Emden mei-2022
+	Geschreven door: Machiel R. van Emden feb-2025
 
 	*/
 
@@ -230,7 +230,7 @@ public class RidderScript : CommandScript
 		textBox21.Value = fixed1;
 		textBox21.Minimum = 0;
 		textBox21.Maximum = 1500000;
-		textBox21.DecimalPlaces = 0;
+		textBox21.DecimalPlaces = 1;
 		inputBox.Controls.Add(textBox21);
 		textBox21.Controls.RemoveAt(0);
 		textBox21.BackColor = Color.LightGray;
@@ -241,7 +241,7 @@ public class RidderScript : CommandScript
 		textBox22.Value = fixed2;
 		textBox22.Minimum = 0;
 		textBox22.Maximum = 1500000;
-		textBox22.DecimalPlaces = 0;
+		textBox22.DecimalPlaces = 1;
 		inputBox.Controls.Add(textBox22);
 		textBox22.Controls.RemoveAt(0);
 		textBox22.BackColor = Color.LightGray;
@@ -252,7 +252,7 @@ public class RidderScript : CommandScript
 		textBox23.Value = fixed3;
 		textBox23.Minimum = 0;
 		textBox23.Maximum = 1500000;
-		textBox23.DecimalPlaces = 0;
+		textBox23.DecimalPlaces = 1;
 		inputBox.Controls.Add(textBox23);
 		textBox23.Controls.RemoveAt(0);
 		textBox23.BackColor = Color.LightGray;
@@ -263,7 +263,7 @@ public class RidderScript : CommandScript
 		textBox24.Value = fixed4;
 		textBox24.Minimum = 0;
 		textBox24.Maximum = 1500000;
-		textBox24.DecimalPlaces = 0;
+		textBox24.DecimalPlaces = 1;
 		inputBox.Controls.Add(textBox24);
 		textBox24.Controls.RemoveAt(0);
 		textBox24.BackColor = Color.LightGray;
@@ -274,7 +274,7 @@ public class RidderScript : CommandScript
 		textBox25.Value = fixed5;
 		textBox25.Minimum = 0;
 		textBox25.Maximum = 1500000;
-		textBox25.DecimalPlaces = 0;
+		textBox25.DecimalPlaces = 1;
 		inputBox.Controls.Add(textBox25);
 		textBox25.Controls.RemoveAt(0);
 		textBox25.BackColor = Color.LightGray;
@@ -344,10 +344,10 @@ public class RidderScript : CommandScript
 		decimal input4 = 0;
 		decimal input5 = 0;
 
-		decimal fixed1 = 15;
-		decimal fixed2 = 1;
+		decimal fixed1 = 20;
+		decimal fixed2 = 0.5m;
 		decimal fixed3 = 1;
-		decimal fixed4 = 20;
+		decimal fixed4 = 15;
 		decimal fixed5 = 20;
 
 		DialogResult result = ShowInputDialog(ref input1, ref input2, ref input3, ref input4, ref input5, ref fixed1, ref fixed2, ref fixed3, ref fixed4, ref fixed5);
@@ -386,7 +386,7 @@ public class RidderScript : CommandScript
 			{
 				output4 = output3;
 			}
-			
+
 			double montagetijd = output4 * 24 * 60 * 60 * 10000000;
 
 
@@ -398,6 +398,6 @@ public class RidderScript : CommandScript
 
 	}
 
-	// M.R.v.E - 2022
+	// M.R.v.E - 2025
 
 }

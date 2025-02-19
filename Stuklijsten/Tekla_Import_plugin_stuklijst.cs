@@ -22,7 +22,7 @@ public class RidderScript : CommandScript
 		string ErrorLocation = "";
 		string ErrorFile = "";
 		string ImportFile = "";
-		string SalesOrder = "";
+		string SalesOffer = "";
 		string ErrorRegel = "";
 		string SkipRegel = "";
 		string LeuningRegel = "";
@@ -30,26 +30,29 @@ public class RidderScript : CommandScript
 		decimal spacerQnty = 0;
 		decimal shortjoistQnty = 0;
 
-		string bonId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
+		string StuklijstId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 
-		ScriptRecordset rsJobOrder = this.GetRecordset("R_JOBORDER", "", "PK_R_JOBORDER= " + bonId, "");
-		rsJobOrder.MoveFirst();
-		var OrderId = rsJobOrder.Fields["FK_ORDER"].Value.ToString();
+		ScriptRecordset rsStuklijst = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + StuklijstId, "");
+		rsStuklijst.MoveFirst();
 
-		ScriptRecordset rsOrder = this.GetRecordset("R_ORDER", "", "PK_R_ORDER= " + OrderId, "");
-		rsOrder.MoveFirst();
-		SalesOrder = rsOrder.Fields["ORDERNUMBER"].Value.ToString();
+		string tekeningnmr = rsStuklijst.Fields["DRAWINGNUMBER"].Value.ToString();
+		string tekeningnmr1 = tekeningnmr.Substring(0, 5);
 
-		DialogResult result = ShowInputDialog1(ref SalesOrder);
+		var OfferteNummer = tekeningnmr1;
+
+		SalesOffer = OfferteNummer;
+
+
+		DialogResult result = ShowInputDialog1(ref SalesOffer);
 
 		if (result != DialogResult.OK)
 		{
-			MessageBox.Show("Project keuze afgebroken");
+			MessageBox.Show("Offerte keuze afgebroken");
 			return;
 		}
 
 
-		MapBuilder(ref SalesOrder, ref Filelocation);
+		MapBuilder(ref SalesOffer, ref Filelocation);
 		if (Filelocation == "")
 		{
 			return;
@@ -60,9 +63,6 @@ public class RidderScript : CommandScript
 		{
 			return;
 		}
-
-
-
 
 		List<string> listA = new List<string>();                //Phase
 		List<string> listB = new List<string>();                //Artikelcode
@@ -84,6 +84,10 @@ public class RidderScript : CommandScript
 		List<string> ListHR = new List<string>();               //de handrail lijst
 		List<string> ListKR = new List<string>();               //de knierail lijst
 		List<string> ListSR = new List<string>();               //de schoprail lijst
+
+
+
+
 
 
 		using (StreamReader reader = new StreamReader(ImportFile))
@@ -199,6 +203,8 @@ public class RidderScript : CommandScript
 				SkipRegel = "Header             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
 				ListSkip.Add(SkipRegel);
 			}
+
+			// keuze maken over opbouw van leuning in de offerte
 
 
 			else if (Phase > 649 && Phase < 700 && listB[i].ToString().Substring(0, 5) == "10553") // && listD[i].ToString().Substring(0, 3) == "RLG" ) // Handrail regels		
@@ -392,7 +398,7 @@ public class RidderScript : CommandScript
 
 							if (Tekening == "")
 							{
-								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOrder;
+								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOffer;
 							}
 
 							rsJoborderItem.Update();
@@ -428,7 +434,7 @@ public class RidderScript : CommandScript
 
 							if (Tekening == "")
 							{
-								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOrder;
+								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOffer;
 							}
 
 							rsJoborderItem.Update();
@@ -445,7 +451,7 @@ public class RidderScript : CommandScript
 
 		if (ListError.Count > 0 || ListSkip.Count > 0)
 		{
-			ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
+			ErrorBuilder(ref SalesOffer, ref Filelocation, ref ErrorLocation);
 			ErrorLog(ref ErrorLocation, ref ListError, ref ListSkip, ref ListLeuning, ref ErrorFile);
 			MessageBox.Show(ListError.Count.ToString() + " regels in error log");
 
@@ -518,17 +524,17 @@ public class RidderScript : CommandScript
 	}
 
 
-	public void MapBuilder(ref string SalesOrder, ref string Filelocation)
+	public void MapBuilder(ref string SalesOffer, ref string Filelocation)
 	{
-		string BaseFolder = @"T:\Projecten\";
+		string BaseFolder = @"T:\Projecten\";   //wacht op nieuwe offerte map structuur, Luke
 
-		string OrderStart = SalesOrder.Substring(0, 2);
+		string OrderStart = SalesOffer.Substring(0, 2);
 
 		string OrderGroup = OrderStart + "00-" + OrderStart + @"99\";
 
 		string rootFolder = BaseFolder + OrderGroup;
 
-		string partialFolderName = SalesOrder;
+		string partialFolderName = SalesOffer;
 
 		string fullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
 
@@ -539,7 +545,7 @@ public class RidderScript : CommandScript
 		}
 		else
 		{
-			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOrder);
+			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOffer);
 			Filelocation = "";
 
 		}
@@ -632,17 +638,17 @@ public class RidderScript : CommandScript
 		return null; // Return null if no matching folder is found.
 	}
 
-	public void ErrorBuilder(ref string SalesOrder, ref string Filelocation, ref string ErrorLocation)
+	public void ErrorBuilder(ref string SalesOffer, ref string Filelocation, ref string ErrorLocation)
 	{
 		string BaseFolder = @"T:\Projecten\";
 
-		string OrderStart = SalesOrder.Substring(0, 2);
+		string OrderStart = SalesOffer.Substring(0, 2);
 
 		string OrderGroup = OrderStart + "00-" + OrderStart + @"99\";
 
 		string rootFolder = BaseFolder + OrderGroup;
 
-		string partialFolderName = SalesOrder; // Replace with the first 5 characters you know.
+		string partialFolderName = SalesOffer; // Replace with the first 5 characters you know.
 
 		string fullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
 
@@ -653,7 +659,7 @@ public class RidderScript : CommandScript
 		}
 		else
 		{
-			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOrder);
+			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOffer);
 
 		}
 	}
@@ -701,7 +707,7 @@ public class RidderScript : CommandScript
 
 
 
-	private static DialogResult ShowInputDialog1(ref string SalesOrder)
+	private static DialogResult ShowInputDialog1(ref string SalesOffer)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
@@ -713,13 +719,13 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.Label label = new Label();
 		label.Size = new System.Drawing.Size(95, 25);
 		label.Location = new System.Drawing.Point(5, 60);
-		label.Text = "Tekla project nummer";
+		label.Text = "Tekla offerte nummer";
 		inputBox.Controls.Add(label);
 
 		System.Windows.Forms.TextBox textBox = new TextBox();
 		textBox.Size = new System.Drawing.Size(200, 25);
 		textBox.Location = new System.Drawing.Point(100, 60);
-		textBox.Text = SalesOrder;
+		textBox.Text = SalesOffer;
 		inputBox.Controls.Add(textBox);
 
 		Button okButton = new Button();
@@ -743,7 +749,7 @@ public class RidderScript : CommandScript
 
 		DialogResult result = inputBox.ShowDialog();
 
-		SalesOrder = textBox.Text;
+		SalesOffer = textBox.Text;
 		return result;
 
 	} // bevestigen of wijzigen van het ordernummer
@@ -760,7 +766,7 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.Label label = new Label();
 		label.Size = new System.Drawing.Size(95, 25);
 		label.Location = new System.Drawing.Point(5, 60);
-		label.Text = "Tekla project naam";
+		label.Text = "Tekla offerte naam";
 		inputBox.Controls.Add(label);
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
