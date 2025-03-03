@@ -25,7 +25,7 @@ public class RidderScript : CommandScript
 
 	private static DialogResult ShowInputDialog(ref decimal input1, ref decimal input2, ref decimal input3, ref decimal input4,
 												ref bool rb10, ref bool rb11, ref bool rb12, ref bool rb13,
-												ref bool rb20, ref bool rb21, ref bool rb22,
+												ref bool rb20, ref bool rb21, ref bool rb22, ref bool rb23,
 												ref bool cb1, ref bool cb2)
 	{
 
@@ -164,7 +164,7 @@ public class RidderScript : CommandScript
 
 		//groep materiaal
 		GroupBox groepmateriaal = new GroupBox();
-		groepmateriaal.Size = new System.Drawing.Size(180, 125);
+		groepmateriaal.Size = new System.Drawing.Size(180, 150);
 		groepmateriaal.Location = new System.Drawing.Point(10, 375);
 		groepmateriaal.Text = "Staal kwaliteit";
 
@@ -175,16 +175,23 @@ public class RidderScript : CommandScript
 		rbutton20.Text = "S235JR";
 		groepmateriaal.Controls.Add(rbutton20);
 
+		System.Windows.Forms.RadioButton rbutton23 = new RadioButton();
+		rbutton23.Size = new System.Drawing.Size(150, 25);
+		rbutton23.Location = new System.Drawing.Point(10, 50);
+		rbutton23.Checked = false;
+		rbutton23.Text = "S250GD (Magnelis)";
+		groepmateriaal.Controls.Add(rbutton23);
+
 		System.Windows.Forms.RadioButton rbutton21 = new RadioButton();
 		rbutton21.Size = new System.Drawing.Size(75, 25);
-		rbutton21.Location = new System.Drawing.Point(10, 50);
+		rbutton21.Location = new System.Drawing.Point(10, 75);
 		rbutton21.Checked = false;
 		rbutton21.Text = "S275JR";
 		groepmateriaal.Controls.Add(rbutton21);
 
 		System.Windows.Forms.RadioButton rbutton22 = new RadioButton();
 		rbutton22.Size = new System.Drawing.Size(75, 25);
-		rbutton22.Location = new System.Drawing.Point(10, 75);
+		rbutton22.Location = new System.Drawing.Point(10, 100);
 		rbutton22.Checked = false;
 		rbutton22.Text = "S355JR";
 		groepmateriaal.Controls.Add(rbutton22);
@@ -195,7 +202,7 @@ public class RidderScript : CommandScript
 		//groep modificator
 		GroupBox groepMod = new GroupBox();
 		groepMod.Size = new System.Drawing.Size(180, 125);
-		groepMod.Location = new System.Drawing.Point(10, 525);
+		groepMod.Location = new System.Drawing.Point(10, 550);
 		groepMod.Text = "Extra naam deel";
 
 		System.Windows.Forms.CheckBox cbutton1 = new CheckBox();
@@ -233,6 +240,7 @@ public class RidderScript : CommandScript
 		rb20 = rbutton20.Checked;
 		rb21 = rbutton21.Checked;
 		rb22 = rbutton22.Checked;
+		rb23 = rbutton22.Checked;
 
 		cb1 = cbutton1.Checked;
 		cb2 = cbutton2.Checked;
@@ -256,6 +264,7 @@ public class RidderScript : CommandScript
 		bool rb20 = true;
 		bool rb21 = false;
 		bool rb22 = false;
+		bool rb23 = false;
 
 		bool cb1 = false;
 		bool cb2 = false;
@@ -263,7 +272,7 @@ public class RidderScript : CommandScript
 
 		DialogResult result = ShowInputDialog(ref input1, ref input2, ref input3, ref input4,
 							ref rb10, ref rb11, ref rb12, ref rb13,
-							ref rb20, ref rb21, ref rb22,
+							ref rb20, ref rb21, ref rb22, ref rb23,
 							ref cb1, ref cb2);
 
 		if (result != DialogResult.OK)
@@ -296,6 +305,7 @@ public class RidderScript : CommandScript
 		if (rb20 == true) materiaal = " S235JR";
 		if (rb21 == true) materiaal = " S275JR";
 		if (rb22 == true) materiaal = " S355JR";
+		if (rb23 == true) materiaal = " S250GD";
 
 
 
@@ -413,7 +423,7 @@ public class RidderScript : CommandScript
 			rsItemSup.Fields["PURCHASEDESCRIPTION"].Value = naam1;
 			rsItemSup.Fields["ITEMTYPE"].Value = 5;
 			rsItemSup.Update();
-			
+
 			/*
 
 			rsItemSup.AddNew();
