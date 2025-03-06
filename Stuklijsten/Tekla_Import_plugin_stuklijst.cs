@@ -28,14 +28,14 @@ public class RidderScript : CommandScript
 		string LeuningRegel = "";
 		string Fullpath = "";
 
-		bool cb1;			// S100217, staalcon
-		bool cb2;			// S100218, vloerplaten
-		bool cb3;			// S100215, trappen
-		bool cb4;			// S100219, leuning
-		bool cb5;			// S100220, opzetplekken
-		bool cb6;			// S100542, cat-ladders
-		bool cb7;			// S100343, kolom bescherm
-		bool cb8;			// S100569, staalcon basic
+		bool cb1;           // S100217, staalcon
+		bool cb2;           // S100218, vloerplaten
+		bool cb3;           // S100215, trappen
+		bool cb4;           // S100219, leuning
+		bool cb5;           // S100220, opzetplekken
+		bool cb6;           // S100542, cat-ladders
+		bool cb7;           // S100343, kolom bescherm
+		bool cb8;           // S100569, staalcon basic
 
 		decimal spacerQnty = 0;
 		decimal shortjoistQnty = 0;
@@ -50,7 +50,7 @@ public class RidderScript : CommandScript
 
 		string tekeningnmr = rsStuklijst.Fields["DRAWINGNUMBER"].Value.ToString();
 		string tekeningnmr1 = tekeningnmr.Substring(0, 5);
-		string StuklijstType = rsStuklijst.Fields["CODE"].Value.ToString().substring(0,8);
+		string StuklijstType = rsStuklijst.Fields["CODE"].Value.ToString().Substring(0, 8);
 
 		var OfferteNummer = tekeningnmr1;
 
@@ -158,10 +158,6 @@ public class RidderScript : CommandScript
 			cb8 = false;
 		}
 
-
-
-
-
 		// csv bestand ophalen
 
 		DialogResult result = ShowInputDialog1(ref SalesOffer, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7, ref cb8);
@@ -209,7 +205,7 @@ public class RidderScript : CommandScript
 		List<string> ListHR = new List<string>();               //de handrail lijst
 		List<string> ListKR = new List<string>();               //de knierail lijst
 		List<string> ListSR = new List<string>();               //de schoprail lijst
-		
+
 		List<string> ListError = new List<string>();            //de error lijst
 		List<string> ListGood = new List<string>();             //de check lijst
 		List<string> ListSkip = new List<string>();             //de skip lijst
@@ -233,11 +229,11 @@ public class RidderScript : CommandScript
 				if (check1 == "True")
 				{
 					// Phase -> naar lijst A				
-					if (values[0].ToString() == "Fase ")
+					if (values[0].ToString().Substring(0,2) == " Fa")
 					{
 						listA.Add("0");
 					}
-					else if (values[0].ToString() == "     ")
+					else if (values[0].ToString().Substring(0,3) == "   ")
 					{
 						listA.Add("0");
 					}
@@ -248,11 +244,7 @@ public class RidderScript : CommandScript
 					{
 						listB.Add("x");
 					}
-					else if (values[1].ToString().Substring(0, 1) == "0")
-					{
-						listB.Add("x");
-					}
-					else listB.Add(values[1]);				
+					else listB.Add(values[1]);
 
 					// Aantal -> naar lijst C
 					if (values[2].ToString() == "")
@@ -288,16 +280,16 @@ public class RidderScript : CommandScript
 						listL.Add("0");
 					}
 					else listL.Add(values[6]);
-					
+
 					// Stuklijst nummer -> naar lijst M
 					if (values[7].ToString().Substring(0, 2) != "S1")
 					{
 						listM.Add("x");
 					}
-					else listM.Add(values[7]);					
-
+					else listM.Add(values[7]);
+					
 					// Profiel -> naar lijst F				  
-					if (values[8].ToString().Substring(0,5) == "     ")
+					if (values[8].ToString().Substring(0, 5) == "     ")
 					{
 						listF.Add("x");
 					}
@@ -309,61 +301,67 @@ public class RidderScript : CommandScript
 				}
 			}
 		}
-
-		// regels analyseren
-
+		
+		
+		// regels verwerken
+		
 		int regels = listA.Count;
 
-		for (int i = 0; i < regels; i++)
+
+
+		if (cb1 == true)    //Staalconstructie injectie	
 		{
-			int Phase = Convert.ToInt32(listA[i].ToString());
-
-			// fouten opsporen
-
-			if (listB[i].ToString().Substring(0, 4) == "Art.") // header check
-			{
-				SkipRegel = "Header             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-				ListSkip.Add(SkipRegel);
-			}
-
-			else if (listB[i].ToString() == "x" && listK[i].ToString() == "x") // verschillende checks voor artikelcode = x
-			{
-				if (listA[i].ToString() == "x")
-				{
-					SkipRegel = "Geen fase          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else if (listD[i].ToString() == "x")
-				{
-					SkipRegel = "Geen merk          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else if (listK[i].ToString() == "x")
-				{
-					SkipRegel = "Geen stuklijst nmr -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else
-				{
-					ErrorRegel = "Geen Acode         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListError.Add(ErrorRegel);
-				}
-			}
-
-			// goede regels verwerken
-
-			else if (cb8 == true)    //staalconstructie basic injectie	
-			{
-				staalCinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
-			}
-
-
-
-
-
+			StaalInput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
 		}
 
+		if (cb2 == true)    //vloerdelen injectie	
+		{
+			Vloeren(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
+
+		if (cb3 == true)    //Trappen injectie	
+		{
+			Trappen(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}		
+
+		if (cb4 == true)    //Leuning injectie	
+		{
+			Leunings(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
 		
+		if (cb5 == true)    //Opzetplekken injectie	
+		{
+			POPers(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
+
+		if (cb6 == true)    //Ladders injectie	
+		{
+			Ladders(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
+
+		if (cb7 == true)    //KolomBescherm injectie	
+		{
+			KolomBescherm(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
+
+		if (cb8 == true)    //staalconstructie basic injectie	
+		{	
+			staalCinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
+		}
+
+
+
+		
+		
+		
+		
+		
+		
+
+		
+
+
+
 		if (ListError.Count > 0 || ListSkip.Count > 0)
 		{
 			ErrorBuilder(ref SalesOffer, ref Filelocation, ref ErrorLocation, ref Fullpath);
@@ -373,31 +371,124 @@ public class RidderScript : CommandScript
 			System.Diagnostics.Process.Start(ErrorFile);
 		}
 
+		MessageBox.Show("klaar");
 
 	}
 
-	public void staalCinput(ref int regels, ref int StuklijstId, ref List<string> listA, 
-																ref List<string> listB, 
-																ref List<string> listC, 
-																ref List<string> listD, 
-																ref List<string> listE, 
-																ref List<string> listK, 
-																ref List<string> listL, 
-																ref List<string> listM, 
-																ref List<string> listF, 
-																ref List<string> listH)
+
+
+
+	public void StaalInput(ref int regels, ref string StuklijstId, ref List<string> listA,
+										ref List<string> listB,
+										ref List<string> listC,
+										ref List<string> listD,
+										ref List<string> listE,
+										ref List<string> listK,
+										ref List<string> listL,
+										ref List<string> listM,
+										ref List<string> listF,
+										ref List<string> listH)
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			if (Convert.ToInt32(listA[i]).ToString() == "2")
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 3)
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
 
 			}
 		}
-	}
+	} // Staalconstructie importeren
+	
+	public void Vloeren(ref int regels, ref string StuklijstId, ref List<string> listA,
+											ref List<string> listB,
+											ref List<string> listC,
+											ref List<string> listD,
+											ref List<string> listE,
+											ref List<string> listK,
+											ref List<string> listL,
+											ref List<string> listM,
+											ref List<string> listF,
+											ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 4)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
 
-	public void knalErin(ref int regels, ref int StuklijstId, 	ref List<string> listA,
+			}
+		}
+	} // Vloerdelen importeren
+
+	public void Trappen(ref int regels, ref string StuklijstId, ref List<string> listA,
+												ref List<string> listB,
+												ref List<string> listC,
+												ref List<string> listD,
+												ref List<string> listE,
+												ref List<string> listK,
+												ref List<string> listL,
+												ref List<string> listM,
+												ref List<string> listF,
+												ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 6)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // Trappen importeren
+
+	public void Leunings(ref int regels, ref string StuklijstId, ref List<string> listA,
+													ref List<string> listB,
+													ref List<string> listC,
+													ref List<string> listD,
+													ref List<string> listE,
+													ref List<string> listK,
+													ref List<string> listL,
+													ref List<string> listM,
+													ref List<string> listF,
+													ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 5)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // Leuning importeren
+	
+	public void POPers(ref int regels, ref string StuklijstId, ref List<string> listA,
+														ref List<string> listB,
+														ref List<string> listC,
+														ref List<string> listD,
+														ref List<string> listE,
+														ref List<string> listK,
+														ref List<string> listL,
+														ref List<string> listM,
+														ref List<string> listF,
+														ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 8)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // Opzetplekken importeren
+
+	public void Ladders(ref int regels, ref string StuklijstId, ref List<string> listA,
 															ref List<string> listB,
 															ref List<string> listC,
 															ref List<string> listD,
@@ -406,58 +497,181 @@ public class RidderScript : CommandScript
 															ref List<string> listL,
 															ref List<string> listM,
 															ref List<string> listF,
-															ref List<string> listH, ref int i)
+															ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 7)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // Ladders importeren
+	
+	public void KolomBescherm(ref int regels, ref string StuklijstId, ref List<string> listA,
+																ref List<string> listB,
+																ref List<string> listC,
+																ref List<string> listD,
+																ref List<string> listE,
+																ref List<string> listK,
+																ref List<string> listL,
+																ref List<string> listM,
+																ref List<string> listF,
+																ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 10)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // KolomBescherm importeren
+
+	public void staalCinput(ref int regels, ref string StuklijstId, ref List<string> listA,
+																ref List<string> listB,
+																ref List<string> listC,
+																ref List<string> listD,
+																ref List<string> listE,
+																ref List<string> listK,
+																ref List<string> listL,
+																ref List<string> listM,
+																ref List<string> listF,
+																ref List<string> listH)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 2)
+			{				
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
+
+			}
+		}
+	} // staalconstructie basic importeren
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// importeren vanaf alles
+	
+	
+	public void knalErin(ref int regels, ref string StuklijstId, 	ref List<string> listA,
+																	ref List<string> listB,
+																	ref List<string> listC,
+																	ref List<string> listD,
+																	ref List<string> listE,
+																	ref List<string> listK,
+																	ref List<string> listL,
+																	ref List<string> listM,
+																	ref List<string> listF,
+																	ref List<string> listH, ref int i)
 	{
 		int aantal = Convert.ToInt32(listC[i]);
 		decimal lengte = Convert.ToDecimal(listE[i]);
 		decimal breedte = Convert.ToDecimal(listK[i]);
+		decimal extraInfo = Convert.ToDecimal(listL[i]);
+		string TAG = listD[i];
 		string Acode = listB[i];
 		string sub1 = listM[i];
 		string watser = listF[i] + " - " + listD[i];
 
-		if (Acode != "x") artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
+	//	MessageBox.Show(watser);
 
-		if (sub1 != "x") sub1input(ref hoofdlijstNmr, ref aantal, ref sub1);
+		if (Acode != "x") artinput(ref StuklijstId, ref aantal, ref Acode, ref lengte, ref breedte, ref extraInfo, ref TAG, ref watser);
 
-	} 
+		if (sub1 != "x") sub1input(ref StuklijstId, ref aantal, ref sub1);
 
-	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser)
+	} //complete regel importeren	
+	
+	public void artinput(ref string StuklijstId, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref decimal extraInfo, ref string TAG, ref string watser)
 	{
 		int artID;
+		decimal lengte2 = 0;
+		decimal breedte2 = 0;
+		decimal type;
 
 		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", Acode), "");
 		rsItem.MoveFirst();
-
+		
 		if (rsItem.RecordCount == 0)
-		{
-			/*
+		{			
 			artID = 0;
+			
+			/*
 			artswap(ref Acode, ref artID, ref watser);
 			*/
 		}
-		else artID = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
+		else
+		{
+			artID = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
+			type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
+
+			// Artikleeenheden Plaat en Rooster, lengte en breedte
+			if (type == 10 || type == 15 || type == 30)
+			{
+				lengte2 = lengte / 1000;
+				breedte2 = breedte / 1000;
+			}
+
+			// Artikleeenheden met een lengte maat
+			else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32 || type == 36)
+			{
+				lengte2 = lengte / 1000;
+				breedte2 = 0;
+			}
+
+			// Artikleeenheid Trapboom
+			else if (type == 22 || type == 34)
+			{				
+				lengte2 = extraInfo;
+				breedte2 = 0;
+			}
+
+			// Artikleenheden welke niet hierboven gekozen worden
+			else
+			{
+				lengte2 = 0;
+				breedte2 = 0;
+			}
+
+		}
 
 		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 		rsSlArt.UseDataChanges = true;
 		rsSlArt.AddNew();
-		rsSlArt.Fields["FK_ASSEMBLY"].Value = hoofdlijstNmr;
+		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
 		rsSlArt.Fields["FK_ITEM"].Value = artID;
-		rsSlArt.Fields["LENGTH"].Value = lengte / 1000;
-		rsSlArt.Fields["WIDTH"].Value = breedte / 1000;
+		rsSlArt.Fields["LENGTH"].Value = lengte2;
+		rsSlArt.Fields["WIDTH"].Value = breedte2;
 		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Fields["CAMPARAMETER"].Value = TAG;
 		rsSlArt.Update();
-	}
+	} // artikel importeren
 
-	public void sub1input(ref int hoofdlijstNmr, ref int aantal, ref String sub1)
+	public void sub1input(ref string StuklijstId, ref int aantal, ref String sub1)
 	{
 		string sub = sub1;
 
-		subinput(ref hoofdlijstNmr, ref aantal, ref sub);
+		subinput(ref StuklijstId, ref aantal, ref sub);
 
 
-	} 
+	} // sub-stuklijst 1 importeren
 
-	public void subinput(ref int hoofdlijstNmr, ref int aantal, ref String sub)
+	public void subinput(ref string StuklijstId, ref int aantal, ref String sub)
 	{
 		int stukID;
 		string stuknummer;
@@ -467,19 +681,19 @@ public class RidderScript : CommandScript
 
 		if (rsSub.RecordCount == 0)
 		{
-			/*
-			stuknummer = sub;
 			stukID = 0;
+			/*
+			stuknummer = sub;			
 			subswap(ref stuknummer, ref stukID);
 
 			*/
 		}
 		else if (rsSub.Fields["FK_WORKFLOWSTATE"].Value.ToString() != "8d7fae53-228b-4ee9-a72a-a60d0ea6c65c")
-		{
+		{  
+			stukID = 0;
 			/*
 			MessageBox.Show("Stuklijst " + (rsSub.Fields["CODE"].Value.ToString()) + " status is niet beschikbaar");
-			stuknummer = sub;
-			stukID = 0;
+			stuknummer = sub;			
 			subswap(ref stuknummer, ref stukID);
 			
 			*/
@@ -495,19 +709,23 @@ public class RidderScript : CommandScript
 		ScriptRecordset rsSlSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
 		rsSlSub.UseDataChanges = true;
 		rsSlSub.AddNew();
-		rsSlSub.Fields["FK_ASSEMBLY"].Value = hoofdlijstNmr;
+		rsSlSub.Fields["FK_ASSEMBLY"].Value = StuklijstId;
 		rsSlSub.Fields["QUANTITY"].Value = aantal;
 		rsSlSub.Fields["FK_SUBASSEMBLY"].Value = stukID;
 		rsSlSub.Update();
 
-	}
+	} // sub-stuklijsten importeren op stuklijst
 
 
 
 
+	
+	
+	// maken van mappen en lijsten	
+	
 	public void MapBuilder(ref string SalesOffer, ref string Filelocation, ref string Fullpath)
 	{
-		string BaseFolder = @"T:\Offertes\";   //wacht op nieuwe offerte map structuur, Luke
+		string BaseFolder = @"T:\Offertes\";   
 
 		string OfferStart = SalesOffer.Substring(0, 3);
 
@@ -517,11 +735,11 @@ public class RidderScript : CommandScript
 
 		string partialFolderName = SalesOffer;
 
-		FullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
+		Fullpath = FindFolder(rootFolder, partialFolderName, Filelocation);
 
-		if (FullPath != null)
+		if (Fullpath != null)
 		{
-			Filelocation = FullPath + @"\Lijsten";
+			Filelocation = Fullpath + @"\Lijsten";
 
 		}
 		else
@@ -545,13 +763,13 @@ public class RidderScript : CommandScript
 			{
 				return matchingFolders.First(); // Return the full path of the matching folder.
 			}
-			
+
 			else if (matchingFolders.Count > 1)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
 				DialogResult result = ShowInputDialog2(ref matchingFolders, ref Filelocation);
-				
+
 				if (result != DialogResult.OK)
 				{
 					MessageBox.Show("Map keuze afgebroken");
@@ -621,16 +839,9 @@ public class RidderScript : CommandScript
 
 	public void ErrorBuilder(ref string SalesOffer, ref string Filelocation, ref string ErrorLocation, ref string Fullpath)
 	{
-		if (FullPath != null)
-		{
-			ErrorLocation = FullPath + @"\ALM_Errors";
+			ErrorLocation = Fullpath + @"\ALM_Errors";
 			// Now you can use 'fullPath' to access the folder.
-		}
-		else
-		{
-			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOffer);
 
-		}
 	}
 
 	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError, ref List<String> ListSkip, ref List<String> ListLeuning, ref string ErrorFile)
@@ -674,9 +885,16 @@ public class RidderScript : CommandScript
 
 
 
+	// pop-ups voor input
 
-
-	private static DialogResult ShowInputDialog1(ref string SalesOffer, ref bool cb1, ref bool cb2,  ref bool cb3, ref bool cb4, ref bool cb5, ref bool cb6, ref bool cb7, ref bool cb8)
+	private static DialogResult ShowInputDialog1(ref string SalesOffer, ref bool cb1, 
+																		ref bool cb2, 
+																		ref bool cb3, 
+																		ref bool cb4, 
+																		ref bool cb5, 
+																		ref bool cb6, 
+																		ref bool cb7, 
+																		ref bool cb8)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
@@ -779,6 +997,7 @@ public class RidderScript : CommandScript
 		cb5 = cbox5.Checked;
 		cb6 = cbox6.Checked;
 		cb7 = cbox7.Checked;
+		cb8 = cbox8.Checked;
 		return result;
 
 	} // bevestigen of wijzigen van het offertenummer
