@@ -539,8 +539,8 @@ public class RidderScript : CommandScript
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 
 			//splice  
-			ItemC = "13996";
-			ItemID = 4034;
+			ItemC = "10371";
+			ItemID = 389;
 
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 		}
