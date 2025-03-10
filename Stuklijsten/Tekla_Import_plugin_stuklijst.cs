@@ -229,11 +229,11 @@ public class RidderScript : CommandScript
 				if (check1 == "True")
 				{
 					// Phase -> naar lijst A				
-					if (values[0].ToString().Substring(0,2) == " Fa")
+					if (values[0].ToString().Substring(0, 2) == " Fa")
 					{
 						listA.Add("0");
 					}
-					else if (values[0].ToString().Substring(0,3) == "   ")
+					else if (values[0].ToString().Substring(0, 3) == "   ")
 					{
 						listA.Add("0");
 					}
@@ -287,7 +287,7 @@ public class RidderScript : CommandScript
 						listM.Add("x");
 					}
 					else listM.Add(values[7]);
-					
+
 					// Profiel -> naar lijst F				  
 					if (values[8].ToString().Substring(0, 5) == "     ")
 					{
@@ -301,10 +301,10 @@ public class RidderScript : CommandScript
 				}
 			}
 		}
-		
-		
+
+
 		// regels verwerken
-		
+
 		int regels = listA.Count;
 
 
@@ -322,13 +322,13 @@ public class RidderScript : CommandScript
 		if (cb3 == true)    //Trappen injectie	
 		{
 			Trappen(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
-		}		
+		}
 
 		if (cb4 == true)    //Leuning injectie	
 		{
 			Leunings(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
 		}
-		
+
 		if (cb5 == true)    //Opzetplekken injectie	
 		{
 			POPers(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
@@ -345,20 +345,20 @@ public class RidderScript : CommandScript
 		}
 
 		if (cb8 == true)    //staalconstructie basic injectie	
-		{	
+		{
 			staalCinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH);
 		}
 
 
 
-		
-		
-		
-		
-		
-		
 
-		
+
+
+
+
+
+
+
 
 
 
@@ -399,7 +399,7 @@ public class RidderScript : CommandScript
 			}
 		}
 	} // Staalconstructie importeren
-	
+
 	public void Vloeren(ref int regels, ref string StuklijstId, ref List<string> listA,
 											ref List<string> listB,
 											ref List<string> listC,
@@ -454,18 +454,106 @@ public class RidderScript : CommandScript
 													ref List<string> listM,
 													ref List<string> listF,
 													ref List<string> listH)
-	{
+	{		
+		decimal aantalKrT = 0;
+		decimal aantalKcT = 0;
+		decimal aantalL = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
+
+			string ItemCode = listB[i].ToString();
 			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 5)
+
+			if (phase == 5 && ItemCode == "10367    ")
+			{
+				int aantalKr = Convert.ToInt32(listC[i].ToString());
+				int LengteKr = Convert.ToInt32(listE[i].ToString());
+				decimal KnieRL = aantalKr * LengteKr / 1000;
+				aantalKrT = Math.Ceiling(KnieRL / 6);
+			}
+
+			else if (phase == 5 && ItemCode == "10370    ")
+			{
+				int aantalKr = Convert.ToInt32(listC[i].ToString());
+				int LengteKr = Convert.ToInt32(listE[i].ToString());
+				decimal KickRL = aantalKr * LengteKr / 1000;
+				aantalKcT = Math.Ceiling(KickRL / 6);
+			}
+
+			else if (phase == 5 && ItemCode == "10553    ")
+			{
+				int aantalLt = Convert.ToInt32(listC[i].ToString());
+				int LengteLt = Convert.ToInt32(listE[i].ToString());
+				decimal LeuningL = aantalLt * LengteLt / 1000;
+				aantalL = Math.Ceiling(LeuningL / 6);
+			}
+
+			else if (phase == 5 && (ItemCode != "10553    " || ItemCode != "10370    " || ItemCode != "10367    "))
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
-
 			}
 		}
+
+		// Leuning aangepast erin
+
+		if (aantalL > 0) // handrail aantal groter als 0
+		{
+			decimal aantal = aantalL;
+			// profiel
+			string ItemC = "10553";
+			int ItemID = 571;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice
+			ItemC = "12258";
+			ItemID = 2285;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+		
+		if (aantalKrT > 0) // knierail aantal groter als 0
+		{
+			decimal aantal = aantalKrT;
+			// profiel
+			string ItemC = "10367";
+			int ItemID = 385;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice
+			ItemC = "12260";
+			ItemID = 2287;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+		
+		if (aantalKcT > 0) // kickrail aantal groter als 0
+		{
+			decimal aantal = aantalKcT;
+			// profiel
+			string ItemC = "10370";
+			int ItemID = 388;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice  
+			ItemC = "13996";
+			ItemID = 4034;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+
+
+
+
+
+
+
+
 	} // Leuning importeren
-	
+
 	public void POPers(ref int regels, ref string StuklijstId, ref List<string> listA,
 														ref List<string> listB,
 														ref List<string> listC,
@@ -509,7 +597,7 @@ public class RidderScript : CommandScript
 			}
 		}
 	} // Ladders importeren
-	
+
 	public void KolomBescherm(ref int regels, ref string StuklijstId, ref List<string> listA,
 																ref List<string> listB,
 																ref List<string> listC,
@@ -547,29 +635,29 @@ public class RidderScript : CommandScript
 		{
 			int phase = Convert.ToInt32((listA[i]).ToString());
 			if (phase == 2)
-			{				
+			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref i);
 
 			}
 		}
 	} // staalconstructie basic importeren
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 	// importeren vanaf alles
-	
-	
-	public void knalErin(ref int regels, ref string StuklijstId, 	ref List<string> listA,
+
+
+	public void knalErin(ref int regels, ref string StuklijstId, ref List<string> listA,
 																	ref List<string> listB,
 																	ref List<string> listC,
 																	ref List<string> listD,
@@ -589,14 +677,14 @@ public class RidderScript : CommandScript
 		string sub1 = listM[i];
 		string watser = listF[i] + " - " + listD[i];
 
-	//	MessageBox.Show(watser);
+		//	MessageBox.Show(watser);
 
 		if (Acode != "x") artinput(ref StuklijstId, ref aantal, ref Acode, ref lengte, ref breedte, ref extraInfo, ref TAG, ref watser);
 
 		if (sub1 != "x") sub1input(ref StuklijstId, ref aantal, ref sub1);
 
 	} //complete regel importeren	
-	
+
 	public void artinput(ref string StuklijstId, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref decimal extraInfo, ref string TAG, ref string watser)
 	{
 		int artID;
@@ -606,11 +694,11 @@ public class RidderScript : CommandScript
 
 		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", Acode), "");
 		rsItem.MoveFirst();
-		
+
 		if (rsItem.RecordCount == 0)
-		{			
+		{
 			artID = 0;
-			
+
 			/*
 			artswap(ref Acode, ref artID, ref watser);
 			*/
@@ -636,7 +724,7 @@ public class RidderScript : CommandScript
 
 			// Artikleeenheid Trapboom
 			else if (type == 22 || type == 34)
-			{				
+			{
 				lengte2 = extraInfo;
 				breedte2 = 0;
 			}
@@ -689,7 +777,7 @@ public class RidderScript : CommandScript
 			*/
 		}
 		else if (rsSub.Fields["FK_WORKFLOWSTATE"].Value.ToString() != "8d7fae53-228b-4ee9-a72a-a60d0ea6c65c")
-		{  
+		{
 			stukID = 0;
 			/*
 			MessageBox.Show("Stuklijst " + (rsSub.Fields["CODE"].Value.ToString()) + " status is niet beschikbaar");
@@ -715,6 +803,19 @@ public class RidderScript : CommandScript
 		rsSlSub.Update();
 
 	} // sub-stuklijsten importeren op stuklijst
+
+	public void LeuningErin(ref string StuklijstId, ref decimal aantal, ref string ItemC, ref int ItemID)	
+	{
+		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+		rsSlArt.UseDataChanges = true;
+		rsSlArt.AddNew();
+		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
+		rsSlArt.Fields["FK_ITEM"].Value = ItemID;
+		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Update();
+	
+	}
+ //gecombineerde leuning erin
 
 
 
