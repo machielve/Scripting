@@ -22,38 +22,161 @@ public class RidderScript : CommandScript
 		string ErrorLocation = "";
 		string ErrorFile = "";
 		string ImportFile = "";
-		string SalesOrder = "";
+		string SalesOffer = "";
 		string ErrorRegel = "";
 		string SkipRegel = "";
 		string LeuningRegel = "";
+		string Fullpath = "";
+
+		bool cb1;           // S100217, staalcon
+		bool cb2;           // S100218, vloerplaten
+		bool cb3;           // S100215, trappen
+		bool cb4;           // S100219, leuning
+		bool cb5;           // S100220, opzetplekken
+		bool cb6;           // S100542, cat-ladders
+		bool cb7;           // S100343, kolom bescherm
+		bool cb8;           // S100569, staalcon basic
 
 		decimal spacerQnty = 0;
 		decimal shortjoistQnty = 0;
 
-		string bonId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 
-		ScriptRecordset rsJobOrder = this.GetRecordset("R_JOBORDER", "", "PK_R_JOBORDER= " + bonId, "");
-		rsJobOrder.MoveFirst();
-		var OrderId = rsJobOrder.Fields["FK_ORDER"].Value.ToString();
 
-		ScriptRecordset rsOrder = this.GetRecordset("R_ORDER", "", "PK_R_ORDER= " + OrderId, "");
-		rsOrder.MoveFirst();
-		SalesOrder = rsOrder.Fields["ORDERNUMBER"].Value.ToString();
 
-		DialogResult result = ShowInputDialog1(ref SalesOrder);
+		string StuklijstId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
+
+		ScriptRecordset rsStuklijst = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + StuklijstId, "");
+		rsStuklijst.MoveFirst();
+
+		string tekeningnmr = rsStuklijst.Fields["DRAWINGNUMBER"].Value.ToString();
+		string tekeningnmr1 = tekeningnmr.Substring(0, 5);
+		string StuklijstType = rsStuklijst.Fields["CODE"].Value.ToString().Substring(0, 8);
+
+		var OfferteNummer = tekeningnmr1;
+
+		SalesOffer = OfferteNummer;
+
+
+
+		if (StuklijstType == "S100217/")
+		{
+			cb1 = true;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100218/")
+		{
+			cb1 = false;
+			cb2 = true;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100215/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = true;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100219/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = true;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100220/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = true;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100542/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = true;
+			cb7 = false;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100343/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = true;
+			cb8 = false;
+		}
+		else if (StuklijstType == "S100569/")
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = true;
+		}
+		else
+		{
+			cb1 = false;
+			cb2 = false;
+			cb3 = false;
+			cb4 = false;
+			cb5 = false;
+			cb6 = false;
+			cb7 = false;
+			cb8 = false;
+		}
+
+		// csv bestand ophalen
+
+		DialogResult result = ShowInputDialog1(ref SalesOffer, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7, ref cb8);
 
 		if (result != DialogResult.OK)
 		{
-			MessageBox.Show("Project keuze afgebroken");
+			MessageBox.Show("Offerte keuze afgebroken");
 			return;
 		}
 
 
-		MapBuilder(ref SalesOrder, ref Filelocation);
+
+		MapBuilder(ref SalesOffer, ref Filelocation, ref Fullpath);
 		if (Filelocation == "")
 		{
 			return;
 		}
+
+
 
 		FileBuilder(ref Filelocation, ref ImportFile);
 		if (ImportFile == "")
@@ -61,30 +184,38 @@ public class RidderScript : CommandScript
 			return;
 		}
 
-
-
+		// aanmaken van de benodigde kolommen
 
 		List<string> listA = new List<string>();                //Phase
-		List<string> listB = new List<string>();                //Artikelcode
+		List<string> listB = new List<string>();                //Artikel code
 		List<string> listC = new List<string>();                //Aantal
 		List<string> listD = new List<string>();                //Merk
 		List<string> listE = new List<string>();                //Lengte
 		List<string> listK = new List<string>();                //Breedte
 		List<string> listL = new List<string>();                //Extra info
+		List<string> listM = new List<string>();                //Stuklijst nummer
+
 		List<string> listF = new List<string>();                //Profiel
 		List<string> listH = new List<string>();                //Weight (regel)
+
 		List<string> listI = new List<string>();                //
 		List<string> listJ = new List<string>();                //
-
-		List<string> ListError = new List<string>();            //de error lijst
-		List<string> ListGood = new List<string>();             //de check lijst
-		List<string> ListSkip = new List<string>();             //de skip lijst
 
 		List<string> ListLeuning = new List<string>();          //de leuning lijst
 		List<string> ListHR = new List<string>();               //de handrail lijst
 		List<string> ListKR = new List<string>();               //de knierail lijst
 		List<string> ListSR = new List<string>();               //de schoprail lijst
 
+		List<string> ListError = new List<string>();            //de error lijst
+		List<string> ListGood = new List<string>();             //de check lijst
+		List<string> ListSkip = new List<string>();             //de skip lijst
+
+
+
+
+
+
+		// inlezen csv bestand en aanpassen naar de juiste kolommen
 
 		using (StreamReader reader = new StreamReader(ImportFile))
 		{
@@ -98,23 +229,18 @@ public class RidderScript : CommandScript
 				if (check1 == "True")
 				{
 					// Phase -> naar lijst A				
-					if (values[0].ToString().Substring(0, 6) == "     F")
+					if (values[0].ToString().Substring(0, 2) == " Fa")
 					{
 						listA.Add("0");
 					}
-					else if (values[0].ToString() == "          ")
+					else if (values[0].ToString().Substring(0, 3) == "   ")
 					{
 						listA.Add("0");
 					}
-
 					else listA.Add(values[0]);
 
 					// Artcode -> naar lijst B
 					if (values[1].ToString().Substring(0, 1) != "1")
-					{
-						listB.Add("x");
-					}
-					else if (values[1].ToString().Substring(0, 1) == "0")
 					{
 						listB.Add("x");
 					}
@@ -128,418 +254,599 @@ public class RidderScript : CommandScript
 					else listC.Add(values[2]);
 
 					// Merk -> naar lijst D				
-					if (values[3].ToString().Substring(0, 5) == "     ")
+					if (values[3].ToString() == "         ")
 					{
 						listD.Add("x");
 					}
 					else listD.Add(values[3]);
 
 					// Lengte -> naar lijst E
-					listE.Add(values[4]);
+					if (values[4].ToString() == "        ")
+					{
+						listE.Add("0");
+					}
+					else listE.Add(values[4]);
 
 					// Breedte -> naar lijst K 
-					if (values[5].ToString() == "                        ")
+					if (values[5].ToString() == "        ")
 					{
 						listK.Add("0");
 					}
 					else listK.Add(values[5]);
 
 					// Extra info -> naar lijst L
-					if (values[6].ToString() == " ")
+					if (values[6].ToString() == "           ")
 					{
 						listL.Add("0");
 					}
 					else listL.Add(values[6]);
 
+					// Stuklijst nummer -> naar lijst M
+					if (values[7].ToString().Substring(0, 2) != "S1")
+					{
+						listM.Add("x");
+					}
+					else listM.Add(values[7]);
+
 					// Profiel -> naar lijst F				  
-					listF.Add(values[7]);
+					if (values[8].ToString().Substring(0, 5) == "     ")
+					{
+						listF.Add("x");
+					}
+					else listF.Add(values[8]);
 
 					// Weight(regel) -> naar lijst H  
-					listH.Add(values[8]);
+					listH.Add(values[9]);
 
 				}
 			}
 		}
 
+
+		// regels verwerken
 
 		int regels = listA.Count;
 
-		//	MessageBox.Show(regels.ToString());
-
-		for (int i = 0; i < regels; i++)
+		if (cb1 == true)    //Staalconstructie injectie	
 		{
-			int Phase = Convert.ToInt32(listA[i].ToString());
-
-			if (listB[i].ToString() == "x") // verschillende checks voor artikelcode = x
-			{
-				if (listA[i].ToString() == "x")
-				{
-					SkipRegel = "Geen fase          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else if (listD[i].ToString() == "x")
-				{
-					SkipRegel = "Geen merk          -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else if (listD[i].ToString().Substring(0, 3) == "DUM")
-				{
-					SkipRegel = "Dummy             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListSkip.Add(SkipRegel);
-				}
-				else
-				{
-					ErrorRegel = "Geen Acode         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListError.Add(ErrorRegel);
-				}
-			}
-
-			else if (listB[i].ToString().Substring(0, 4) == "Art.") // header check
-			{
-				SkipRegel = "Header             -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-				ListSkip.Add(SkipRegel);
-			}
-
-
-			else if (Phase > 649 && Phase < 700 && listB[i].ToString().Substring(0, 5) == "10553") // && listD[i].ToString().Substring(0, 3) == "RLG" ) // Handrail regels		
-			{
-				LeuningRegel = "Losse regel         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-				ListLeuning.Add(LeuningRegel);
-			}
-
-			else if (Phase > 649 && Phase < 700 && listB[i].ToString().Substring(0, 5) == "10370" && listD[i].ToString().Substring(0, 3) == "RLG") // Kickrail regels zonder sommatie		
-			{
-				LeuningRegel = "Losse regel         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-				ListLeuning.Add(LeuningRegel);
-			}
-
-			else if (Phase > 649 && Phase < 700 && listB[i].ToString().Substring(0, 5) == "10367" && listD[i].ToString().Substring(0, 3) == "RLG") // Knierail regels zonder sommatie		
-			{
-				LeuningRegel = "Losse regel         -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + "         -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-				ListLeuning.Add(LeuningRegel);
-			}
-
-			else
-			{
-				string ItemCode = listB[i].ToString().Substring(0, 5);
-				decimal aantal = Convert.ToDecimal(listC[i].ToString());
-				string fase = listA[i].ToString();
-				string merk = listD[i].ToString();
-				decimal lengte = Convert.ToDecimal(listE[i].ToString());
-				decimal breedte = Convert.ToDecimal(listK[i].ToString());
-				decimal extraInfo = Convert.ToDecimal(listL[i].ToString());
-				decimal Tgewicht = Convert.ToDecimal(listH[i].ToString()) / 10;
-				string extraDim = "";
-
-				if (Phase > 649 && Phase < 700 && (ItemCode == "10553" || ItemCode == "10370" || ItemCode == "10367"))
-				{
-					merk = ""; // TAG veld leeg voor de sommatie regels
-					aantal = Math.Ceiling(aantal / (lengte / 1000)); // aantal meters naar aantal handelslengtes					
-				}
-
-				/*
-				
-				if (Phase > 649 && Phase < 700 && ItemCode == "10553")
-				{
-					merk = ""; // TAG veld leeg voor de sommatie regels
-					aantal = Math.Ceiling(aantal / (lengte / 1000)); // aantal meters naar aantal handelslengtes					
-				}
-
-				if (Phase > 649 && Phase < 700 && ItemCode == "10370")
-				{
-					merk = ""; // TAG veld leeg voor de sommatie regels
-					aantal = Math.Ceiling(aantal / (lengte / 1000)); // aantal meters naar aantal handelslengtes					
-				}
-
-				if (Phase > 649 && Phase < 700 && ItemCode == "10367")
-				{
-					merk = ""; // TAG veld leeg voor de sommatie regels
-					aantal = Math.Ceiling(aantal / (lengte / 1000)); // aantal meters naar aantal handelslengtes					
-				}
-				
-				*/
-
-
-				// artikel info uit ridder ophalen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", ItemCode), "");
-				rsItem.MoveFirst();
-				decimal AGroup = Convert.ToDecimal(rsItem.Fields["FK_ITEMGROUP"].Value.ToString());
-
-				if (ItemCode == "14166") // totaal aantal joist spacers tellen
-				{
-					spacerQnty = spacerQnty + aantal;
-				}
-
-
-
-
-
-
-				if (rsItem != null && rsItem.RecordCount == 0) // check op onbekend artikel
-				{
-					ErrorRegel = "Artikel onbekend   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListError.Add(ErrorRegel);
-				}
-
-				else if (aantal == 0) // check op aantal = 0
-				{
-					ErrorRegel = "Aantal is 0        -" + "Header    -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-					ListError.Add(ErrorRegel);
-				}
-
-				else
-				{
-					decimal type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
-					int itemId = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
-					int Leverwijze = 4;
-					int Regtraject = Convert.ToInt32(rsItem.Fields["REGISTRATIONPATH"].Value.ToString());
-					int ZaagCode = Convert.ToInt32(rsItem.Fields["DEFAULTSAWINGCODE"].Value.ToString());
-					string Omschrijving = rsItem.Fields["DESCRIPTION"].Value.ToString();
-					string groupId = rsItem.Fields["FK_ITEMGROUP"].Value.ToString();
-					string Tekening = rsItem.Fields["DRAWINGNUMBER"].Value.ToString();
-					decimal MaxL = Convert.ToDecimal(rsItem.Fields["TRADELENGTH"].Value.ToString());
-					decimal MaxB = Convert.ToDecimal(rsItem.Fields["TRADEWIDTH"].Value.ToString());
-
-					ScriptRecordset rsItemSup = this.GetRecordset("R_ITEMWAREHOUSE", "PK_R_ITEMWAREHOUSE", "MAINWAREHOUSE = 1 AND FK_ITEM = " + itemId, "");
-					rsItemSup.MoveFirst();
-
-					int magazijnId = Convert.ToInt32(rsItemSup.Fields["PK_R_ITEMWAREHOUSE"].Value.ToString());
-
-
-					// Artikleeenheden Plaat en Rooster, lengte en breedte
-					if (type == 10 || type == 15 || type == 30)
-					{
-						lengte = lengte / 1000;
-						breedte = breedte / 1000;
-					}
-
-					// Artikleeenheden met een lengte maat
-					else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32 || type == 36)
-					{
-						lengte = lengte / 1000;
-						breedte = 0;
-					}
-
-					// Artikleeenheid Trapboom
-					else if (type == 22 || type == 34)
-					{
-						extraDim = "L= " + lengte.ToString();
-						lengte = extraInfo;
-						breedte = 0;
-
-					}
-
-					// Artikleenheden welke niet hierboven gekozen worden
-					else
-					{
-						lengte = 0;
-						breedte = 0;
-					}
-
-
-
-
-					if (groupId == "119" && lengte < 1)
-					{
-						shortjoistQnty = shortjoistQnty + aantal;
-
-					}
-
-
-
-					if (breedte > MaxB) // check voor maximale Breedte
-					{
-						ErrorRegel = "Breedte te groot   -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-						ListError.Add(ErrorRegel);
-					}
-
-					else if (lengte > MaxL) // check voor maximale Lengte
-					{
-						ErrorRegel = "Lengte te groot    -" + "Fase= " + listA[i].ToString() + "Art.code= " + listB[i].ToString() + " -Merk= " + listD[i].ToString() + " -Profiel= " + listF[i].ToString();
-						ListError.Add(ErrorRegel);
-					}
-
-					else
-					{
-						// zonder Riddder update berekeningen
-						if (groupId != "116" &&     // NIET accessoires constructie
-								groupId != "117" &&     // NIET vloerdelen hout
-								groupId != "119" &&     // NIET koud gewalste liggers
-								groupId != "120" &&     // NIET bevestiging materiaal
-								groupId != "125" &&     // NIET accessoires
-								groupId != "130")       // NIET vloerdelen staal
-						{
-							ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
-							rsJoborderItem.AddNew();
-
-							rsJoborderItem.Fields["WEIGHT"].Value = Tgewicht;
-							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
-							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
-							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
-							rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
-							rsJoborderItem.Fields["DESCRIPTION"].Value = Omschrijving;
-							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
-							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
-							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
-							rsJoborderItem.Fields["QUANTITY"].Value = aantal;
-							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
-							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
-							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-
-							rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
-
-							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
-
-							if (Tekening == "")
-							{
-								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOrder;
-							}
-
-							rsJoborderItem.Update();
-
-						}
-
-
-						// met ridder berekeningen
-						else
-						{
-							ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "PK_R_JOBORDERDETAILITEM= -1", "");
-							rsJoborderItem.AddNew();
-
-							rsJoborderItem.Fields["FK_JOBORDER"].Value = bonId;
-							rsJoborderItem.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
-							rsJoborderItem.Fields["FK_ITEMWAREHOUSE"].Value = magazijnId;
-							rsJoborderItem.Fields["DELIVERYMETHOD"].Value = Leverwijze;
-							rsJoborderItem.Fields["DESCRIPTION"].Value = Omschrijving;
-							rsJoborderItem.Fields["REGISTRATIONPATH"].Value = Regtraject;
-							rsJoborderItem.Fields["SAWINGCODE"].Value = ZaagCode;
-							rsJoborderItem.Fields["LENGTH"].Value = Convert.ToDouble(lengte);
-							rsJoborderItem.Fields["WIDTH"].Value = Convert.ToDouble(breedte);
-							rsJoborderItem.Fields["FK_ITEM"].Value = itemId;
-							rsJoborderItem.Fields["DIM_W"].Value = extraDim;
-							rsJoborderItem.Fields["CAMPARAMETER"].Value = merk;
-
-							rsJoborderItem.Fields["TEKLA_FASE"].Value = fase;
-
-							rsJoborderItem.UseDataChanges = true;
-
-							rsJoborderItem.Fields["QUANTITY"].Value = aantal;
-
-
-							if (Tekening == "")
-							{
-								rsJoborderItem.Fields["CAMGEOMETRY"].Value = SalesOrder;
-							}
-
-							rsJoborderItem.Update();
-						}
-					}
-
-					ListGood.Add(listD[i].ToString());
-
-				}
-
-			}
+			StaalInput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
 		}
-		//	MessageBox.Show(ListGood.Count.ToString() + " regels geimporteerd");
+
+		if (cb2 == true)    //vloerdelen injectie	
+		{
+			Vloeren(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb3 == true)    //Trappen injectie	
+		{
+			Trappen(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb4 == true)    //Leuning injectie	
+		{
+			Leunings(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb5 == true)    //Opzetplekken injectie	
+		{
+			POPers(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb6 == true)    //Ladders injectie	
+		{
+			Ladders(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb7 == true)    //KolomBescherm injectie	
+		{
+			KolomBescherm(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb8 == true)    //staalconstructie basic injectie	
+		{
+			staalCinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		if (ListError.Count > 0 || ListSkip.Count > 0)
 		{
-			ErrorBuilder(ref SalesOrder, ref Filelocation, ref ErrorLocation);
+			ErrorBuilder(ref SalesOffer, ref Filelocation, ref ErrorLocation, ref Fullpath);
 			ErrorLog(ref ErrorLocation, ref ListError, ref ListSkip, ref ListLeuning, ref ErrorFile);
 			MessageBox.Show(ListError.Count.ToString() + " regels in error log");
 
 			System.Diagnostics.Process.Start(ErrorFile);
 		}
 
-		// hier UBW aanmaken indien nodig
-		string spaceraantal = spacerQnty.ToString();
-		string kortejoists = shortjoistQnty.ToString();
-
-		if (spacerQnty > 0)
-		{
-			ScriptRecordset rsUBWOrigin = this.GetRecordset("R_OUTSOURCEDACTIVITY", "", "PK_R_OUTSOURCEDACTIVITY= 25", "");
-			rsUBWOrigin.MoveFirst();
-
-
-			ScriptRecordset rsJoborderUBW = this.GetRecordset("R_JOBORDERDETAILOUTSOURCED", "", "PK_R_JOBORDERDETAILOUTSOURCED= -1", "");
-			rsJoborderUBW.AddNew();
-
-			rsJoborderUBW.Fields["FK_JOBORDER"].Value = Convert.ToInt32(bonId);
-			rsJoborderUBW.Fields["FK_ORDER"].Value = Convert.ToInt32(OrderId);
-			rsJoborderUBW.Fields["FK_OUTSOURCEDACTIVITY"].Value = 25;
-			rsJoborderUBW.Fields["QUANTITY"].Value = spacerQnty;
-			rsJoborderUBW.Fields["DELIVERYMETHOD"].Value = 4;
-			rsJoborderUBW.Fields["REGISTRATIONPATH"].Value = rsUBWOrigin.Fields["REGISTRATIONPATH"].Value;
-			rsJoborderUBW.Fields["DESCRIPTION"].Value = rsUBWOrigin.Fields["DESCRIPTION"].Value;
-
-			rsJoborderUBW.Update();
-
-			int UBWnummer = Convert.ToInt32(rsJoborderUBW.Fields["PK_R_JOBORDERDETAILOUTSOURCED"].Value.ToString());
-
-			//	MessageBox.Show("U1503 toegevoegd met " + spaceraantal + " stuks. Nu koppelen aan artikelen.");
-
-			// koppeling tabel vullen
-			// alle joist spacer ophalen van de bon
-			ScriptRecordset rsJoborderItem = this.GetRecordset("R_JOBORDERDETAILITEM", "", "FK_JOBORDER= " + bonId + " AND FK_ITEM= 4204", "");
-			rsJoborderItem.MoveFirst();
-
-			while (rsJoborderItem.EOF == false)
-			{
-				ScriptRecordset rsJoborderKMB = this.GetRecordset("R_JOBORDERITEMOUTSOURCED", "", "PK_R_JOBORDERITEMOUTSOURCED= -1", "");
-				rsJoborderKMB.AddNew();
-				rsJoborderKMB.Fields["FK_JOBORDERDETAILITEM"].Value = rsJoborderItem.Fields["PK_R_JOBORDERDETAILITEM"].Value;
-				rsJoborderKMB.Fields["FK_JOBORDERDETAILOUTSOURCED"].Value = UBWnummer;
-
-				rsJoborderKMB.Update();
-
-				rsJoborderItem.MoveNext();
-			}
-
-			MessageBox.Show("U1503 gekoppeld aan de artikelen");
-		}
-
-
-
-		if (shortjoistQnty > 0)
-		{
-			MessageBox.Show(kortejoists + " stuks korte koud gewalste liggers. UBW nodig voor zagen indien Sadef (U1502).");
-
-
-		}
-
-
-
-
-
-		// Einde script
-
+		MessageBox.Show("klaar");
 
 	}
 
 
-	public void MapBuilder(ref string SalesOrder, ref string Filelocation)
+
+
+	public void StaalInput(ref int regels, ref string StuklijstId, ref List<string> listA,
+										ref List<string> listB,
+										ref List<string> listC,
+										ref List<string> listD,
+										ref List<string> listE,
+										ref List<string> listK,
+										ref List<string> listL,
+										ref List<string> listM,
+										ref List<string> listF,
+										ref List<string> listH,
+										ref List<string> ListError)
 	{
-		string BaseFolder = @"T:\Projecten\";
-
-		string OrderStart = SalesOrder.Substring(0, 2);
-
-		string OrderGroup = OrderStart + "00-" + OrderStart + @"99\";
-
-		string rootFolder = BaseFolder + OrderGroup;
-
-		string partialFolderName = SalesOrder;
-
-		string fullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
-
-		if (fullPath != null)
+		for (int i = 1; i < regels; i++)
 		{
-			Filelocation = fullPath + @"\Lijsten";
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 3)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // Staalconstructie importeren
+
+	public void Vloeren(ref int regels, ref string StuklijstId, ref List<string> listA,
+											ref List<string> listB,
+											ref List<string> listC,
+											ref List<string> listD,
+											ref List<string> listE,
+											ref List<string> listK,
+											ref List<string> listL,
+											ref List<string> listM,
+											ref List<string> listF,
+											ref List<string> listH,
+											ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 4)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // Vloerdelen importeren
+
+	public void Trappen(ref int regels, ref string StuklijstId, ref List<string> listA,
+												ref List<string> listB,
+												ref List<string> listC,
+												ref List<string> listD,
+												ref List<string> listE,
+												ref List<string> listK,
+												ref List<string> listL,
+												ref List<string> listM,
+												ref List<string> listF,
+												ref List<string> listH,
+												ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 6)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // Trappen importeren
+
+	public void Leunings(ref int regels, ref string StuklijstId, ref List<string> listA,
+													ref List<string> listB,
+													ref List<string> listC,
+													ref List<string> listD,
+													ref List<string> listE,
+													ref List<string> listK,
+													ref List<string> listL,
+													ref List<string> listM,
+													ref List<string> listF,
+													ref List<string> listH,
+													ref List<string> ListError)
+	{		
+		decimal aantalKrT = 0;
+		decimal aantalKcT = 0;
+		decimal aantalL = 0;
+
+		for (int i = 1; i < regels; i++)
+		{
+
+			string ItemCode = listB[i].ToString();
+			int phase = Convert.ToInt32((listA[i]).ToString());
+
+			if (phase == 5 && ItemCode == "10367    ")
+			{
+				int aantalKr = Convert.ToInt32(listC[i].ToString());
+				int LengteKr = Convert.ToInt32(listE[i].ToString());
+				decimal KnieRL = aantalKr * LengteKr / 1000;
+				aantalKrT = Math.Ceiling(KnieRL / 6);
+			}
+
+			else if (phase == 5 && ItemCode == "10370    ")
+			{
+				int aantalKr = Convert.ToInt32(listC[i].ToString());
+				int LengteKr = Convert.ToInt32(listE[i].ToString());
+				decimal KickRL = aantalKr * LengteKr / 1000;
+				aantalKcT = Math.Ceiling(KickRL / 6);
+			}
+
+			else if (phase == 5 && ItemCode == "10553    ")
+			{
+				int aantalLt = Convert.ToInt32(listC[i].ToString());
+				int LengteLt = Convert.ToInt32(listE[i].ToString());
+				decimal LeuningL = aantalLt * LengteLt / 1000;
+				aantalL = Math.Ceiling(LeuningL / 6);
+			}
+
+			else if (phase == 5 && (ItemCode != "10553    " || ItemCode != "10370    " || ItemCode != "10367    "))
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+			}
+		}
+
+		// Leuning aangepast erin
+
+		if (aantalL > 0) // handrail aantal groter als 0
+		{
+			decimal aantal = aantalL;
+			// profiel
+			string ItemC = "10553";
+			int ItemID = 571;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice
+			ItemC = "12258";
+			ItemID = 2285;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+		
+		if (aantalKrT > 0) // knierail aantal groter als 0
+		{
+			decimal aantal = aantalKrT;
+			// profiel
+			string ItemC = "10367";
+			int ItemID = 385;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice
+			ItemC = "12260";
+			ItemID = 2287;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+		
+		if (aantalKcT > 0) // kickrail aantal groter als 0
+		{
+			decimal aantal = aantalKcT;
+			// profiel
+			string ItemC = "10370";
+			int ItemID = 388;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+
+			//splice  
+			ItemC = "10371";
+			ItemID = 389;
+
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+		}
+
+
+
+
+
+
+
+
+	} // Leuning importeren
+
+	public void POPers(ref int regels, ref string StuklijstId, ref List<string> listA,
+														ref List<string> listB,
+														ref List<string> listC,
+														ref List<string> listD,
+														ref List<string> listE,
+														ref List<string> listK,
+														ref List<string> listL,
+														ref List<string> listM,
+														ref List<string> listF,
+														ref List<string> listH,
+														ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 8)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // Opzetplekken importeren
+
+	public void Ladders(ref int regels, ref string StuklijstId, ref List<string> listA,
+															ref List<string> listB,
+															ref List<string> listC,
+															ref List<string> listD,
+															ref List<string> listE,
+															ref List<string> listK,
+															ref List<string> listL,
+															ref List<string> listM,
+															ref List<string> listF,
+															ref List<string> listH,
+															ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 7)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // Ladders importeren
+
+	public void KolomBescherm(ref int regels, ref string StuklijstId, ref List<string> listA,
+																ref List<string> listB,
+																ref List<string> listC,
+																ref List<string> listD,
+																ref List<string> listE,
+																ref List<string> listK,
+																ref List<string> listL,
+																ref List<string> listM,
+																ref List<string> listF,
+																ref List<string> listH,
+																ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 10)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+
+			}
+		}
+	} // KolomBescherm importeren
+
+	public void staalCinput(ref int regels, ref string StuklijstId, ref List<string> listA,
+																ref List<string> listB,
+																ref List<string> listC,
+																ref List<string> listD,
+																ref List<string> listE,
+																ref List<string> listK,
+																ref List<string> listL,
+																ref List<string> listM,
+																ref List<string> listF,
+																ref List<string> listH,
+																ref List<string> ListError)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			int phase = Convert.ToInt32((listA[i]).ToString());
+			if (phase == 2)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+			}
+		}
+	} // staalconstructie basic importeren
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// importeren vanaf alles
+
+	public void knalErin(ref int regels, ref string StuklijstId, ref List<string> listA,
+																	ref List<string> listB,
+																	ref List<string> listC,
+																	ref List<string> listD,
+																	ref List<string> listE,
+																	ref List<string> listK,
+																	ref List<string> listL,
+																	ref List<string> listM,
+																	ref List<string> listF,
+																	ref List<string> listH,
+																	ref List<string> ListError, ref int i)
+	{
+		int aantal = Convert.ToInt32(listC[i]);
+		decimal lengte = Convert.ToDecimal(listE[i]);
+		decimal breedte = Convert.ToDecimal(listK[i]);
+		decimal extraInfo = Convert.ToDecimal(listL[i]);
+		string TAG = listD[i];
+		string Acode = listB[i];
+		string sub1 = listM[i];
+		string watser = listF[i] + " - " + listD[i];
+
+		//	MessageBox.Show(watser);
+
+		if (Acode != "x") artinput(ref StuklijstId, ref aantal, ref Acode, ref lengte, ref breedte, ref extraInfo, ref TAG, ref watser, ref ListError);
+
+		if (sub1 != "x") sub1input(ref StuklijstId, ref aantal, ref sub1, ref ListError);
+
+	} //complete regel importeren	
+
+	public void artinput(ref string StuklijstId, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, 
+												ref decimal extraInfo, ref string TAG, ref string watser, ref List<string> ListError)
+	{
+		int artID;
+		decimal lengte2 = 0;
+		decimal breedte2 = 0;
+		decimal type;
+
+		ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "", string.Format("CODE = '{0}'", Acode), "");
+		rsItem.MoveFirst();
+
+		if (rsItem.RecordCount == 0)
+		{
+			artID = 0;
+
+			string ErrorRegel = "Code onbekend - Code = " + Acode  + " TAG= " + TAG + " extra - = " + watser;
+			ListError.Add(ErrorRegel);
+
+			/*
+			artswap(ref Acode, ref artID, ref watser);
+			*/
+		}
+		else
+		{
+			artID = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
+			type = Convert.ToDecimal(rsItem.Fields["FK_ITEMUNIT"].Value.ToString());
+
+			// Artikleeenheden Plaat en Rooster, lengte en breedte
+			if (type == 10 || type == 15 || type == 30)
+			{
+				lengte2 = lengte / 1000;
+				breedte2 = breedte / 1000;
+			}
+
+			// Artikleeenheden met een lengte maat
+			else if (type == 11 || type == 17 || type == 20 || type == 23 || type == 24 || type == 31 || type == 32 || type == 36)
+			{
+				lengte2 = lengte / 1000;
+				breedte2 = 0;
+			}
+
+			// Artikleeenheid Trapboom
+			else if (type == 22 || type == 34)
+			{
+				lengte2 = extraInfo;
+				breedte2 = 0;
+			}
+
+			// Artikleenheden welke niet hierboven gekozen worden
+			else
+			{
+				lengte2 = 0;
+				breedte2 = 0;
+			}
+
+		}
+
+		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+		rsSlArt.UseDataChanges = true;
+		rsSlArt.AddNew();
+		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
+		rsSlArt.Fields["FK_ITEM"].Value = artID;
+		rsSlArt.Fields["LENGTH"].Value = lengte2;
+		rsSlArt.Fields["WIDTH"].Value = breedte2;
+		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Fields["CAMPARAMETER"].Value = TAG;
+		rsSlArt.Update();
+	} // artikel importeren
+
+	public void sub1input(ref string StuklijstId, ref int aantal, ref String sub1, ref List<string> ListError)
+	{
+		string sub = sub1;
+
+		subinput(ref StuklijstId, ref aantal, ref sub, ref ListError);
+
+
+	} // sub-stuklijst 1 importeren
+
+	public void subinput(ref string StuklijstId, ref int aantal, ref string sub, ref List<string> ListError)
+	{
+		int stukID;
+		string stuknummer;
+
+		ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLY", "", string.Format("CODE = '{0}'", sub), "");
+		rsSub.MoveFirst();
+
+		if (rsSub.RecordCount == 0)
+		{
+			stukID = 0;
+			string ErrorRegel = "Code onbekend - Code = " + sub;
+			ListError.Add(ErrorRegel);
+		}
+		else if (rsSub.Fields["FK_WORKFLOWSTATE"].Value.ToString() != "8d7fae53-228b-4ee9-a72a-a60d0ea6c65c")
+		{
+			stukID = 0;
+			string ErrorRegel = "Code onbruikbaar - Code = " + sub;
+			ListError.Add(ErrorRegel);
+		}
+		else stukID = Convert.ToInt32(rsSub.Fields["PK_R_ASSEMBLY"].Value.ToString());
+
+		if (stukID == 0)
+		{
+			//MessageBox.Show("Substuklijst overgeslagen");
+			return;
+		}
+
+		ScriptRecordset rsSlSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "PK_R_ASSEMBLYDETAILSUBASSEMBLY= -1", "");
+		rsSlSub.UseDataChanges = true;
+		rsSlSub.AddNew();
+		rsSlSub.Fields["FK_ASSEMBLY"].Value = StuklijstId;
+		rsSlSub.Fields["QUANTITY"].Value = aantal;
+		rsSlSub.Fields["FK_SUBASSEMBLY"].Value = stukID;
+		rsSlSub.Update();
+
+	} // sub-stuklijsten importeren op stuklijst
+
+	public void LeuningErin(ref string StuklijstId, ref decimal aantal, ref string ItemC, ref int ItemID)	
+	{
+		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+		rsSlArt.UseDataChanges = true;
+		rsSlArt.AddNew();
+		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
+		rsSlArt.Fields["FK_ITEM"].Value = ItemID;
+		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Update();
+	
+	} // gecombineerde leuning erin
+
+
+
+
+	
+	
+	// maken van mappen en lijsten	
+	
+	public void MapBuilder(ref string SalesOffer, ref string Filelocation, ref string Fullpath)
+	{
+		string BaseFolder = @"T:\Offertes\";   
+
+		string OfferStart = SalesOffer.Substring(0, 3);
+
+		string OfferGroup = OfferStart + "00-" + OfferStart + @"99\";
+
+		string rootFolder = BaseFolder + OfferGroup;
+
+		string partialFolderName = SalesOffer;
+
+		Fullpath = FindFolder(rootFolder, partialFolderName, Filelocation);
+
+		if (Fullpath != null)
+		{
+			Filelocation = Fullpath + @"\Lijsten";
 
 		}
 		else
 		{
-			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOrder);
+			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOffer);
 			Filelocation = "";
 
 		}
@@ -558,13 +865,13 @@ public class RidderScript : CommandScript
 			{
 				return matchingFolders.First(); // Return the full path of the matching folder.
 			}
-			
+
 			else if (matchingFolders.Count > 1)
 			{
 				// Handle the case where there are multiple matching folders with the same prefix.
 
 				DialogResult result = ShowInputDialog2(ref matchingFolders, ref Filelocation);
-				
+
 				if (result != DialogResult.OK)
 				{
 					MessageBox.Show("Map keuze afgebroken");
@@ -632,30 +939,11 @@ public class RidderScript : CommandScript
 		return null; // Return null if no matching folder is found.
 	}
 
-	public void ErrorBuilder(ref string SalesOrder, ref string Filelocation, ref string ErrorLocation)
+	public void ErrorBuilder(ref string SalesOffer, ref string Filelocation, ref string ErrorLocation, ref string Fullpath)
 	{
-		string BaseFolder = @"T:\Projecten\";
-
-		string OrderStart = SalesOrder.Substring(0, 2);
-
-		string OrderGroup = OrderStart + "00-" + OrderStart + @"99\";
-
-		string rootFolder = BaseFolder + OrderGroup;
-
-		string partialFolderName = SalesOrder; // Replace with the first 5 characters you know.
-
-		string fullPath = FindFolder(rootFolder, partialFolderName, Filelocation);
-
-		if (fullPath != null)
-		{
-			ErrorLocation = fullPath + @"\ALM_Errors";
+			ErrorLocation = Fullpath + @"\ALM_Errors";
 			// Now you can use 'fullPath' to access the folder.
-		}
-		else
-		{
-			MessageBox.Show("Geen map gevonden op: " + rootFolder + SalesOrder);
 
-		}
 	}
 
 	public void ErrorLog(ref string ErrorLocation, ref List<String> ListError, ref List<String> ListSkip, ref List<String> ListLeuning, ref string ErrorFile)
@@ -699,9 +987,16 @@ public class RidderScript : CommandScript
 
 
 
+	// pop-ups voor input
 
-
-	private static DialogResult ShowInputDialog1(ref string SalesOrder)
+	private static DialogResult ShowInputDialog1(ref string SalesOffer, ref bool cb1, 
+																		ref bool cb2, 
+																		ref bool cb3, 
+																		ref bool cb4, 
+																		ref bool cb5, 
+																		ref bool cb6, 
+																		ref bool cb7, 
+																		ref bool cb8)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
@@ -713,13 +1008,13 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.Label label = new Label();
 		label.Size = new System.Drawing.Size(95, 25);
 		label.Location = new System.Drawing.Point(5, 60);
-		label.Text = "Tekla project nummer";
+		label.Text = "Tekla offerte nummer";
 		inputBox.Controls.Add(label);
 
 		System.Windows.Forms.TextBox textBox = new TextBox();
 		textBox.Size = new System.Drawing.Size(200, 25);
 		textBox.Location = new System.Drawing.Point(100, 60);
-		textBox.Text = SalesOrder;
+		textBox.Text = SalesOffer;
 		inputBox.Controls.Add(textBox);
 
 		Button okButton = new Button();
@@ -738,15 +1033,76 @@ public class RidderScript : CommandScript
 		cancelButton.Location = new System.Drawing.Point(125, 10);
 		inputBox.Controls.Add(cancelButton);
 
+
+
+		System.Windows.Forms.CheckBox cbox1 = new CheckBox();
+		cbox1.Location = new System.Drawing.Point(5, 100);
+		cbox1.Checked = cb1;
+		cbox1.Text = "Staalconstructie";
+		inputBox.Controls.Add(cbox1);
+
+		System.Windows.Forms.CheckBox cbox2 = new CheckBox();
+		cbox2.Location = new System.Drawing.Point(5, 125);
+		cbox2.Checked = cb2;
+		cbox2.Text = "Vloerplaten";
+		inputBox.Controls.Add(cbox2);
+
+		System.Windows.Forms.CheckBox cbox3 = new CheckBox();
+		cbox3.Location = new System.Drawing.Point(5, 150);
+		cbox3.Checked = cb3;
+		cbox3.Text = "Trappen";
+		inputBox.Controls.Add(cbox3);
+
+		System.Windows.Forms.CheckBox cbox6 = new CheckBox();
+		cbox6.Location = new System.Drawing.Point(5, 175);
+		cbox6.Checked = cb6;
+		cbox6.Text = "Ladders";
+		inputBox.Controls.Add(cbox6);
+
+		System.Windows.Forms.CheckBox cbox4 = new CheckBox();
+		cbox4.Location = new System.Drawing.Point(5, 200);
+		cbox4.Checked = cb4;
+		cbox4.Text = "Leuning";
+		inputBox.Controls.Add(cbox4);
+
+		System.Windows.Forms.CheckBox cbox5 = new CheckBox();
+		cbox5.Location = new System.Drawing.Point(5, 225);
+		cbox5.Checked = cb5;
+		cbox5.Text = "Opzetplekken";
+		inputBox.Controls.Add(cbox5);
+
+		System.Windows.Forms.CheckBox cbox7 = new CheckBox();
+		cbox7.Location = new System.Drawing.Point(5, 250);
+		cbox7.Size = new System.Drawing.Size(200, 25);
+		cbox7.Checked = cb7;
+		cbox7.Text = "Kolom beschermers";
+		inputBox.Controls.Add(cbox7);
+
+		System.Windows.Forms.CheckBox cbox8 = new CheckBox();
+		cbox8.Location = new System.Drawing.Point(5, 275);
+		cbox8.Size = new System.Drawing.Size(200, 25);
+		cbox8.Checked = cb8;
+		cbox8.Text = "Staalconstructie basic";
+		inputBox.Controls.Add(cbox8);
+
+
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
 		DialogResult result = inputBox.ShowDialog();
 
-		SalesOrder = textBox.Text;
+		SalesOffer = textBox.Text;
+		cb1 = cbox1.Checked;
+		cb2 = cbox2.Checked;
+		cb3 = cbox3.Checked;
+		cb4 = cbox4.Checked;
+		cb5 = cbox5.Checked;
+		cb6 = cbox6.Checked;
+		cb7 = cbox7.Checked;
+		cb8 = cbox8.Checked;
 		return result;
 
-	} // bevestigen of wijzigen van het ordernummer
+	} // bevestigen of wijzigen van het offertenummer
 
 	private static DialogResult ShowInputDialog2(ref List<string> matchingFolders, ref string Filelocation)
 	{
@@ -760,7 +1116,7 @@ public class RidderScript : CommandScript
 		System.Windows.Forms.Label label = new Label();
 		label.Size = new System.Drawing.Size(95, 25);
 		label.Location = new System.Drawing.Point(5, 60);
-		label.Text = "Tekla project naam";
+		label.Text = "Tekla offerte naam";
 		inputBox.Controls.Add(label);
 
 		System.Windows.Forms.ComboBox combo1 = new ComboBox();
@@ -797,7 +1153,7 @@ public class RidderScript : CommandScript
 		Filelocation = combo1.SelectedValue.ToString();
 		return result;
 
-	}  // juiste map kiezen als er meerdere mappen zijn welke beginnen met het ordernummer
+	}  // juiste map kiezen als er meerdere mappen zijn welke beginnen met het offertenummer
 
 	private static DialogResult ShowInputDialog3(ref List<string> matchingFiles, ref string ImportFile)
 	{
