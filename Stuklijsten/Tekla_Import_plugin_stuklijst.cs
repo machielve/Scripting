@@ -550,22 +550,33 @@ public class RidderScript : CommandScript
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 		}
 		
+		//	aantal meter in trefwoorden veld
 		
-		
-		/*
-		aantal meter in trefwoorden veld
-		
-		
-		
-		
-		
-		*/
+		decimal LL1 = Math.Ceiling(KnieRL/2);
+		string LL = Convert.ToString(LL1);
+
+		decimal KR1 = Math.Ceiling(KickRL);
+		string KR = Convert.ToString(KR1);
+
+		string bericht1 = LL + " meter leuning.";
+		string bericht2 = KR + " meter schoprand.";
+
+		string bericht = "";
+
+		if (LL1 == 0 && KR1 == 0) bericht = bericht;
+
+		else if (KR1 == 0 && LL1 != 0) bericht = bericht1;
+
+		else bericht = bericht1 + " En " + bericht2;
 
 
+		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + StuklijstId, "");
+		rsAssemblyItem.MoveFirst();
+		rsAssemblyItem.UseDataChanges = true;
 
+		rsAssemblyItem.Fields["KEYWORDS"].Value = bericht;
 
-
-
+		rsAssemblyItem.Update();
 
 
 	} // Leuning importeren
