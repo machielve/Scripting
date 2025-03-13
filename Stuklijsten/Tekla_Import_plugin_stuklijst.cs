@@ -779,16 +779,39 @@ public class RidderScript : CommandScript
 
 		}
 
-		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
-		rsSlArt.UseDataChanges = true;
-		rsSlArt.AddNew();
-		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
-		rsSlArt.Fields["FK_ITEM"].Value = artID;
-		rsSlArt.Fields["LENGTH"].Value = lengte2;
-		rsSlArt.Fields["WIDTH"].Value = breedte2;
-		rsSlArt.Fields["QUANTITY"].Value = aantal;
-		rsSlArt.Fields["CAMPARAMETER"].Value = TAG;
-		rsSlArt.Update();
+		// check max lengte/breedte
+
+		decimal MaxL = Convert.ToDecimal(rsItem.Fields["TRADELENGTH"].Value.ToString());
+		decimal MaxB = Convert.ToDecimal(rsItem.Fields["TRADEWIDTH"].Value.ToString());
+
+		if (lengte2 > MaxL)
+		{
+			string ErrorRegel = "Artikel te lang - Code = " + Acode + " TAG= " + TAG + " extra - = " + watser;
+			ListError.Add(ErrorRegel);		
+
+		}
+
+		else if (breedte2 > MaxB)
+		{
+			string ErrorRegel = "Artikel te breed - Code = " + Acode + " TAG= " + TAG + " extra - = " + watser;
+			ListError.Add(ErrorRegel);
+		}
+
+		else
+		{
+			ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
+			rsSlArt.UseDataChanges = true;
+			rsSlArt.AddNew();
+			rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
+			rsSlArt.Fields["FK_ITEM"].Value = artID;
+			rsSlArt.Fields["LENGTH"].Value = lengte2;
+			rsSlArt.Fields["WIDTH"].Value = breedte2;
+			rsSlArt.Fields["QUANTITY"].Value = aantal;
+			rsSlArt.Fields["CAMPARAMETER"].Value = TAG;
+			rsSlArt.Update();
+
+		}
+		
 	} // artikel importeren
 
 	public void sub1input(ref string StuklijstId, ref int aantal, ref String sub1, ref List<string> ListError)
