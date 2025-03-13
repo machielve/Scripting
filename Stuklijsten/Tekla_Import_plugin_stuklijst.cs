@@ -457,9 +457,9 @@ public class RidderScript : CommandScript
 													ref List<string> listH,
 													ref List<string> ListError)
 	{		
-		decimal aantalKrT = 0;
-		decimal aantalKcT = 0;
-		decimal aantalL = 0;
+		decimal KnieRL = 0;
+		decimal KickRL = 0;
+		decimal LeuningL = 0;
 
 		for (int i = 1; i < regels; i++)
 		{
@@ -469,28 +469,25 @@ public class RidderScript : CommandScript
 			if (phase == 5 && ItemCode == "10367    ")
 			{
 				int aantalKr = Convert.ToInt32(listC[i].ToString());
-				int LengteKr = Convert.ToInt32(listE[i].ToString());
-				decimal KnieRL = aantalKr * LengteKr / 1000;
-				decimal aantal = Math.Ceiling(KnieRL / 6);
-				aantalKrT = aantalKrT + aantal;
+				int LengteKr = Convert.ToInt32(listE[i].ToString());				
+				decimal aantal = aantalKr * LengteKr / 1000;
+				KnieRL = KnieRL + aantal;
 			}
 
 			else if (phase == 5 && ItemCode == "10370    ")
 			{
 				int aantalKr = Convert.ToInt32(listC[i].ToString());
 				int LengteKr = Convert.ToInt32(listE[i].ToString());
-				decimal KickRL = aantalKr * LengteKr / 1000;
-				decimal aantal = Math.Ceiling(KickRL / 6);
-				aantalKcT = aantalKcT + aantal;
+				decimal aantal = aantalKr * LengteKr / 1000;
+				KickRL = KickRL + aantal;
 			}
 
 			else if (phase == 5 && ItemCode == "10553    ")
 			{
 				int aantalLt = Convert.ToInt32(listC[i].ToString());
 				int LengteLt = Convert.ToInt32(listE[i].ToString());
-				decimal LeuningL = aantalLt * LengteLt / 1000;
-				decimal aantal = Math.Ceiling(LeuningL / 6);
-				aantalL = aantalL + aantal;
+				decimal aantal = aantalLt * LengteLt / 1000;
+				LeuningL = LeuningL + aantal;
 			}
 
 			else if (phase == 5 && (ItemCode != "10553    " || ItemCode != "10370    " || ItemCode != "10367    "))
@@ -501,13 +498,16 @@ public class RidderScript : CommandScript
 		}
 
 		// Leuning aangepast erin
+		string ItemC;
+		int ItemID ;
+		
 
-		if (aantalL > 0) // handrail aantal groter als 0
+		if (LeuningL > 0) // handrail aantal groter als 0
 		{
-			decimal aantal = aantalL;
+			decimal aantal = Math.Ceiling(LeuningL / 6);
 			// profiel
-			string ItemC = "10553";
-			int ItemID = 571;
+			ItemC = "10553";
+			ItemID = 571;
 
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 
@@ -518,12 +518,12 @@ public class RidderScript : CommandScript
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 		}
 		
-		if (aantalKrT > 0) // knierail aantal groter als 0
+		if (KnieRL > 0) // knierail aantal groter als 0
 		{
-			decimal aantal = aantalKrT;
+			decimal aantal = Math.Ceiling(KnieRL / 6);
 			// profiel
-			string ItemC = "10367";
-			int ItemID = 385;
+			ItemC = "10367";
+			ItemID = 385;
 
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 
@@ -534,12 +534,12 @@ public class RidderScript : CommandScript
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 		}
 		
-		if (aantalKcT > 0) // kickrail aantal groter als 0
+		if (KickRL > 0) // kickrail aantal groter als 0
 		{
-			decimal aantal = aantalKcT;
+			decimal aantal = Math.Ceiling(KickRL / 6);
 			// profiel
-			string ItemC = "10370";
-			int ItemID = 388;
+			ItemC = "10370";
+			ItemID = 388;
 
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 
