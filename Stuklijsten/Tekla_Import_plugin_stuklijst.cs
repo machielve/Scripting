@@ -549,25 +549,32 @@ public class RidderScript : CommandScript
 
 			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
 		}
-		
+
 		//	aantal meter in trefwoorden veld
+
+		string bericht = "";
+		string bericht1 = "";
 		
-		decimal LL1 = Math.Ceiling(KnieRL/2);
+		decimal LL1 = Math.Ceiling(LeuningL);
 		string LL = Convert.ToString(LL1);
+		
+		decimal KN1 = Math.Ceiling(KnieRL/2);
+		string KN = Convert.ToString(KN1);
 
 		decimal KR1 = Math.Ceiling(KickRL);
 		string KR = Convert.ToString(KR1);
 
-		string bericht1 = LL + " meter leuning.";
-		string bericht2 = KR + " meter schoprand.";
+		if (LL1 > 0) bericht1 = LL + " meter leuning."; // SHS 50 handrail
 
-		string bericht = "";
+		else bericht1 = KN + " meter leuning."; // knierail als handrail
+		
+		
+				
+		string bericht3 = KR + " meter schoprand.";
 
-		if (LL1 == 0 && KR1 == 0) bericht = bericht;
+		if (KR1 == 0) bericht = bericht1;
 
-		else if (KR1 == 0 && LL1 != 0) bericht = bericht1;
-
-		else bericht = bericht1 + " En " + bericht2;
+		else bericht = bericht1 + " En " + bericht3;
 
 
 		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + StuklijstId, "");
