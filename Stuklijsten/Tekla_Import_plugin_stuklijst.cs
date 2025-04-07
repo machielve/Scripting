@@ -231,11 +231,11 @@ public class RidderScript : CommandScript
 					// Phase -> naar lijst A				
 					if (values[0].ToString().Substring(0, 2) == " Fa")
 					{
-						listA.Add("0");
+						listA.Add("00");
 					}
 					else if (values[0].ToString().Substring(0, 3) == "   ")
 					{
-						listA.Add("0");
+						listA.Add("00");
 					}
 					else listA.Add(values[0]);
 
@@ -390,8 +390,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 3)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "3 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -413,8 +413,10 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 4)
+			MessageBox.Show(listA[i].ToString() + "-"+listB[i].ToString());
+			
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "4 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -436,8 +438,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 6)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "6 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -456,7 +458,7 @@ public class RidderScript : CommandScript
 													ref List<string> listF,
 													ref List<string> listH,
 													ref List<string> ListError)
-	{		
+	{
 		decimal KnieRL = 0;
 		decimal KickRL = 0;
 		decimal LeuningL = 0;
@@ -464,17 +466,17 @@ public class RidderScript : CommandScript
 		for (int i = 1; i < regels; i++)
 		{
 			string ItemCode = listB[i].ToString();
-			int phase = Convert.ToInt32((listA[i]).ToString());
+			string phase = listA[i].ToString().Substring(0, 2);
 
-			if (phase == 5 && ItemCode == "10367    ")
+			if (phase == "5 " && ItemCode == "10367    ")
 			{
 				int aantalKr = Convert.ToInt32(listC[i].ToString());
-				int LengteKr = Convert.ToInt32(listE[i].ToString());				
+				int LengteKr = Convert.ToInt32(listE[i].ToString());
 				decimal aantal = aantalKr * LengteKr / 1000;
 				KnieRL = KnieRL + aantal;
 			}
 
-			else if (phase == 5 && ItemCode == "10370    ")
+			else if (phase == "5 " && ItemCode == "10370    ")
 			{
 				int aantalKr = Convert.ToInt32(listC[i].ToString());
 				int LengteKr = Convert.ToInt32(listE[i].ToString());
@@ -482,7 +484,7 @@ public class RidderScript : CommandScript
 				KickRL = KickRL + aantal;
 			}
 
-			else if (phase == 5 && ItemCode == "10553    ")
+			else if (phase == "5 " && ItemCode == "10553    ")
 			{
 				int aantalLt = Convert.ToInt32(listC[i].ToString());
 				int LengteLt = Convert.ToInt32(listE[i].ToString());
@@ -490,17 +492,22 @@ public class RidderScript : CommandScript
 				LeuningL = LeuningL + aantal;
 			}
 
-			else if (phase == 5 && (ItemCode != "10553    " || ItemCode != "10370    " || ItemCode != "10367    "))
+			else if (phase == "5 " && (ItemCode != "10553    " || ItemCode != "10370    " || ItemCode != "10367    "))
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
-			}
+				
+			}		
+		
 
 		}
 
+
 		// Leuning aangepast erin
 		string ItemC;
-		int ItemID ;
-		
+		int ItemID;
+		int Length;
+
+
 
 		if (LeuningL > 0) // handrail aantal groter als 0
 		{
@@ -508,57 +515,64 @@ public class RidderScript : CommandScript
 			// profiel
 			ItemC = "10553";
 			ItemID = 571;
+			Length = 6;			
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
 
 			//splice
 			ItemC = "12258";
 			ItemID = 2285;
+			Length = 0;
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
 		}
-		
+
 		if (KnieRL > 0) // knierail aantal groter als 0
 		{
 			decimal aantal = Math.Ceiling(KnieRL / 6);
 			// profiel
 			ItemC = "10367";
 			ItemID = 385;
+			Length = 6;
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
 
 			//splice
 			ItemC = "12260";
 			ItemID = 2287;
+			Length = 0;
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
-		}
 		
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
+		}
+
 		if (KickRL > 0) // kickrail aantal groter als 0
 		{
 			decimal aantal = Math.Ceiling(KickRL / 6);
 			// profiel
 			ItemC = "10370";
 			ItemID = 388;
+			Length = 6;
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
 
 			//splice  
 			ItemC = "10371";
 			ItemID = 389;
+			Length = 0;
 
-			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID);
+			LeuningErin(ref StuklijstId, ref aantal, ref ItemC, ref ItemID, ref Length);
 		}
 
 		//	aantal meter in trefwoorden veld
 
 		string bericht = "";
 		string bericht1 = "";
-		
+
 		decimal LL1 = Math.Ceiling(LeuningL);
 		string LL = Convert.ToString(LL1);
-		
-		decimal KN1 = Math.Ceiling(KnieRL/2);
+
+		decimal KN1 = Math.Ceiling(KnieRL / 2);
 		string KN = Convert.ToString(KN1);
 
 		decimal KR1 = Math.Ceiling(KickRL);
@@ -567,9 +581,9 @@ public class RidderScript : CommandScript
 		if (LL1 > 0) bericht1 = LL + " meter leuning."; // SHS 50 handrail
 
 		else bericht1 = KN + " meter leuning."; // knierail als handrail
-		
-		
-				
+
+
+
 		string bericht3 = KR + " meter schoprand.";
 
 		if (KR1 == 0) bericht = bericht1;
@@ -602,8 +616,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 8)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "8 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -625,8 +639,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 7)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "7 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -648,8 +662,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 10)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "10")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 
@@ -671,8 +685,8 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			int phase = Convert.ToInt32((listA[i]).ToString());
-			if (phase == 2)
+			string phase = listA[i].ToString().Substring(0, 2);
+			if (phase == "2 ")
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 			}
@@ -722,7 +736,7 @@ public class RidderScript : CommandScript
 
 	} //complete regel importeren	
 
-	public void artinput(ref string StuklijstId, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, 
+	public void artinput(ref string StuklijstId, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte,
 												ref decimal extraInfo, ref string TAG, ref string watser, ref List<string> ListError)
 	{
 		int artID;
@@ -737,7 +751,7 @@ public class RidderScript : CommandScript
 		{
 			artID = 0;
 
-			string ErrorRegel = "Code onbekend - Code = " + Acode  + " TAG= " + TAG + " extra - = " + watser;
+			string ErrorRegel = "Code onbekend - Code = " + Acode + " TAG= " + TAG + " extra - = " + watser;
 			ListError.Add(ErrorRegel);
 
 			/*
@@ -787,7 +801,7 @@ public class RidderScript : CommandScript
 		if (lengte2 > MaxL)
 		{
 			string ErrorRegel = "Artikel te lang - Code = " + Acode + " TAG= " + TAG + " extra - = " + watser;
-			ListError.Add(ErrorRegel);		
+			ListError.Add(ErrorRegel);
 
 		}
 
@@ -811,7 +825,7 @@ public class RidderScript : CommandScript
 			rsSlArt.Update();
 
 		}
-		
+
 	} // artikel importeren
 
 	public void sub1input(ref string StuklijstId, ref int aantal, ref String sub1, ref List<string> ListError)
@@ -861,28 +875,30 @@ public class RidderScript : CommandScript
 
 	} // sub-stuklijsten importeren op stuklijst
 
-	public void LeuningErin(ref string StuklijstId, ref decimal aantal, ref string ItemC, ref int ItemID)	
+	public void LeuningErin(ref string StuklijstId, ref decimal aantal, ref string ItemC, ref int ItemID, ref int Length)
 	{
+		
 		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 		rsSlArt.UseDataChanges = true;
 		rsSlArt.AddNew();
 		rsSlArt.Fields["FK_ASSEMBLY"].Value = StuklijstId;
 		rsSlArt.Fields["FK_ITEM"].Value = ItemID;
 		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Fields["LENGTH"].Value = Length;
 		rsSlArt.Update();
-	
+
 	} // gecombineerde leuning erin
 
 
 
 
-	
-	
+
+
 	// maken van mappen en lijsten	
-	
+
 	public void MapBuilder(ref string SalesOffer, ref string Filelocation, ref string Fullpath)
 	{
-		string BaseFolder = @"T:\Offertes\";   
+		string BaseFolder = @"T:\Offertes\";
 
 		string OfferStart = SalesOffer.Substring(0, 3);
 
@@ -996,8 +1012,8 @@ public class RidderScript : CommandScript
 
 	public void ErrorBuilder(ref string SalesOffer, ref string Filelocation, ref string ErrorLocation, ref string Fullpath)
 	{
-			ErrorLocation = Fullpath + @"\ALM_Errors";
-			// Now you can use 'fullPath' to access the folder.
+		ErrorLocation = Fullpath + @"\ALM_Errors";
+		// Now you can use 'fullPath' to access the folder.
 
 	}
 
@@ -1044,13 +1060,13 @@ public class RidderScript : CommandScript
 
 	// pop-ups voor input
 
-	private static DialogResult ShowInputDialog1(ref string SalesOffer, ref bool cb1, 
-																		ref bool cb2, 
-																		ref bool cb3, 
-																		ref bool cb4, 
-																		ref bool cb5, 
-																		ref bool cb6, 
-																		ref bool cb7, 
+	private static DialogResult ShowInputDialog1(ref string SalesOffer, ref bool cb1,
+																		ref bool cb2,
+																		ref bool cb3,
+																		ref bool cb4,
+																		ref bool cb5,
+																		ref bool cb6,
+																		ref bool cb7,
 																		ref bool cb8)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
