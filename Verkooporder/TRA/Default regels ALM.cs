@@ -24,7 +24,7 @@ public class RidderScript : CommandScript
 
 		Default TRA regels, het  programma om de default TRA regels op een Meer magazijn order toe te voegen
 		Uit te voeren vanuit een order
-		Geschreven door: Machiel R. van Emden jan-2023
+		Geschreven door: Machiel R. van Emden apr-2025
 
 		*/
 
@@ -44,7 +44,7 @@ public class RidderScript : CommandScript
 		if (regelaantal > 0)
 
 		{
-			MessageBox.Show("TRA regels al ingevuld, verwijder eerst bestaande regels.","Error");
+			MessageBox.Show("TRA regels al ingevuld, verwijder eerst bestaande regels.", "Error");
 			return;
 		}
 
@@ -115,14 +115,14 @@ public class RidderScript : CommandScript
 			risiconummer = 56;           //communicatie
 			maatregelnummer = 134;       //communicatie
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
-			
+
 			//regel 12  NOG DOEN
 			taaknummer = 33;              //beklemming
 			risiconummer = 152;           //-----
 			maatregelnummer = 295;        //verwijder sierraden
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
-			MessageBox.Show("Default regels op TRA toegevoegd.","Default TRA regels");
+			MessageBox.Show("Default regels op TRA toegevoegd.", "Default TRA regels");
 
 		}
 	}
