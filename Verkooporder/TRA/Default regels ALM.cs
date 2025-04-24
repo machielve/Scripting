@@ -57,7 +57,7 @@ public class RidderScript : CommandScript
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
 			//regel 2 
-			taaknummer = 1;             //werken op hoogte
+			taaknummer = 9;             //werken op hoogte
 			risiconummer = 145;         //onder elkaar werken
 			maatregelnummer = 268;      //draag helm
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
@@ -88,7 +88,7 @@ public class RidderScript : CommandScript
 
 			//regel 7
 			taaknummer = 18;             //vallen van voorwerpen
-			risiconummer = 88;           //onder, boven elkaar werken
+			risiconummer = 85;           //onder, boven elkaar werken
 			maatregelnummer = 178;       //geen los gereedschap
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
@@ -116,11 +116,13 @@ public class RidderScript : CommandScript
 			maatregelnummer = 134;       //communicatie
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
+			/*
 			//regel 12  NOG DOEN
 			taaknummer = 33;              //beklemming
 			risiconummer = 152;           //-----
 			maatregelnummer = 295;        //verwijder sierraden
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
+			*/
 
 			MessageBox.Show("Default regels op TRA toegevoegd.", "Default TRA regels");
 
