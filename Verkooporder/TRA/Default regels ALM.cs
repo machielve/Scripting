@@ -100,7 +100,7 @@ public class RidderScript : CommandScript
 
 			//regel 9
 			taaknummer = 22;             //geluid
-			risiconummer = 103           //geluidsniveau
+			risiconummer = 103;          //geluidsniveau
 			maatregelnummer = 205;       //gehoorbescherming
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
