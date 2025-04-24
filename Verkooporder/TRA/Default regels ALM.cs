@@ -56,10 +56,10 @@ public class RidderScript : CommandScript
 			maatregelnummer = 115;      //gebruik harnas 
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
-			//regel 2  NOG DOEN
+			//regel 2 
 			taaknummer = 1;             //werken op hoogte
-			risiconummer = 38;          //onder elkaar werken
-			maatregelnummer = 37;       //draag helm
+			risiconummer = 145;         //onder elkaar werken
+			maatregelnummer = 268;      //draag helm
 			RegelVuller(ref ordernummer, ref taaknummer, ref risiconummer, ref maatregelnummer, ref actiedoor);
 
 			//regel 3
