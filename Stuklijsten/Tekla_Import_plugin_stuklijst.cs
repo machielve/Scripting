@@ -352,10 +352,9 @@ public class RidderScript : CommandScript
 
 
 
+		int hoofdlijstNmr = Convert.ToInt32(StuklijstId);
 
-
-
-
+		subcombine(ref hoofdlijstNmr);
 
 
 
@@ -413,7 +412,7 @@ public class RidderScript : CommandScript
 	{
 		for (int i = 1; i < regels; i++)
 		{
-			MessageBox.Show(listA[i].ToString() + "-"+listB[i].ToString());
+		//	MessageBox.Show(listA[i].ToString() + "-"+listB[i].ToString());
 			
 			string phase = listA[i].ToString().Substring(0, 2);
 			if (phase == "4 ")
@@ -467,19 +466,21 @@ public class RidderScript : CommandScript
 		{
 			string ItemCode = listB[i].ToString();
 			string phase = listA[i].ToString().Substring(0, 2);
+			
+		//	MessageBox.Show(listD[i].ToString()+" - "+listB[i].ToString()+" - ");
 
 			if (phase == "5 " && ItemCode == "10367    ")
 			{
-				int aantalKr = Convert.ToInt32(listC[i].ToString());
-				int LengteKr = Convert.ToInt32(listE[i].ToString());
-				decimal aantal = aantalKr * LengteKr / 1000;
-				KnieRL = KnieRL + aantal;
+				int aantalKn = Convert.ToInt32(listC[i].ToString());
+				decimal LengteKn = Convert.ToDecimal(listE[i].ToString());
+				decimal aantal = aantalKn * LengteKn / 1000;
+				KnieRL = KnieRL + aantal;		
 			}
 
 			else if (phase == "5 " && ItemCode == "10370    ")
 			{
 				int aantalKr = Convert.ToInt32(listC[i].ToString());
-				int LengteKr = Convert.ToInt32(listE[i].ToString());
+				decimal LengteKr = Convert.ToDecimal(listE[i].ToString());
 				decimal aantal = aantalKr * LengteKr / 1000;
 				KickRL = KickRL + aantal;
 			}
@@ -487,7 +488,7 @@ public class RidderScript : CommandScript
 			else if (phase == "5 " && ItemCode == "10553    ")
 			{
 				int aantalLt = Convert.ToInt32(listC[i].ToString());
-				int LengteLt = Convert.ToInt32(listE[i].ToString());
+				decimal LengteLt = Convert.ToDecimal(listE[i].ToString());
 				decimal aantal = aantalLt * LengteLt / 1000;
 				LeuningL = LeuningL + aantal;
 			}
@@ -496,10 +497,13 @@ public class RidderScript : CommandScript
 			{
 				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
 				
-			}		
+			}
+		
 		
 
 		}
+
+
 
 
 		// Leuning aangepast erin
@@ -888,6 +892,44 @@ public class RidderScript : CommandScript
 		rsSlArt.Update();
 
 	} // gecombineerde leuning erin
+
+
+	public void subcombine(ref int hoofdlijstNmr)
+	{
+		ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY = " + hoofdlijstNmr, "FK_SUBASSEMBLY");
+		rsSub.MoveFirst();
+		rsSub.UseDataChanges = true;
+
+		while (!rsSub.EOF)
+		{
+			int aantal = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
+			string code = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
+			rsSub.MoveNext();
+
+			if (rsSub.EOF)
+			{
+				continue;
+			}
+
+			int aantal1 = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
+			string code1 = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
+
+			if (code == code1)
+			{
+				int totaal = aantal + aantal1;
+				rsSub.Fields["QUANTITY"].Value = totaal;
+				rsSub.MovePrevious();
+				rsSub.Delete();
+				rsSub.Update();
+				rsSub.MoveFirst();
+			}
+
+			rsSub.Update();
+
+
+		}
+
+	}                                           //alle sub-stuklijsten combineeren als ze gelijk zijn
 
 
 
