@@ -38,6 +38,7 @@ public class RidderScript : CommandScript
 		inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 		inputBox.ClientSize = size;
 		inputBox.Text = "Agincourt";
+		//	inputBox.Icon = new System.Drawing.Icon(@"W:\Machiel\Ridder\Scripting\icons\bow_2128896.png");
 		inputBox.AutoScroll = true;
 
 		Button okButton = new Button();
@@ -131,6 +132,7 @@ public class RidderScript : CommandScript
 		rbutton1.Location = new System.Drawing.Point(10, 50);
 		rbutton1.Checked = rb1;
 		rbutton1.Text = "Type 1 - (BG naar landing)";
+		rbutton1.Font = new Font(rbutton1.Font, FontStyle.Strikeout);
 		groepBoxType.Controls.Add(rbutton1);
 
 		System.Windows.Forms.RadioButton rbutton2 = new RadioButton();
@@ -138,6 +140,7 @@ public class RidderScript : CommandScript
 		rbutton2.Location = new System.Drawing.Point(10, 75);
 		rbutton2.Checked = rb2;
 		rbutton2.Text = "Type 2 - (Landing naar platform)";
+		rbutton2.Font = new Font(rbutton2.Font, FontStyle.Strikeout);
 		groepBoxType.Controls.Add(rbutton2);
 
 		System.Windows.Forms.RadioButton rbutton3 = new RadioButton();
@@ -145,6 +148,7 @@ public class RidderScript : CommandScript
 		rbutton3.Location = new System.Drawing.Point(10, 100);
 		rbutton3.Checked = rb3;
 		rbutton3.Text = "Type 3 - (Landing naar landing)";
+		rbutton3.Font = new Font(rbutton3.Font, FontStyle.Strikeout);
 		groepBoxType.Controls.Add(rbutton3);
 
 		System.Windows.Forms.RadioButton rbutton4 = new RadioButton();
@@ -159,6 +163,7 @@ public class RidderScript : CommandScript
 		rbutton5.Location = new System.Drawing.Point(10, 150);
 		rbutton5.Checked = rb5;
 		rbutton5.Text = "Type 5 - (Platform naar landing)";
+		rbutton5.Font = new Font(rbutton5.Font, FontStyle.Strikeout);
 		groepBoxType.Controls.Add(rbutton5);
 
 		System.Windows.Forms.RadioButton rbutton6 = new RadioButton();
@@ -172,7 +177,7 @@ public class RidderScript : CommandScript
 		rbutton7.Size = new System.Drawing.Size(250, 25);
 		rbutton7.Location = new System.Drawing.Point(10, 200);
 		rbutton7.Checked = rb6;
-		rbutton7.Text = "Type 7 - (Niet in gebruik)";
+		rbutton7.Text = "Type 7 - (BaseLine trap)";
 		groepBoxType.Controls.Add(rbutton7);
 
 
@@ -302,8 +307,6 @@ public class RidderScript : CommandScript
 		textBox40.Location = new System.Drawing.Point(10, 75);
 		textBox40.Text = input40;
 		groepBoxUitloop.Controls.Add(textBox40);
-
-
 
 		inputBox.Controls.Add(groepBoxUitloop);
 
@@ -516,7 +519,7 @@ public class RidderScript : CommandScript
 			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() + " mm.";
 		}
 
-		loop = inloop + "\n" + uitloop;
+		loop = "In: " + inloop + "\n" + "Uit: " + uitloop;
 
 		//Selecteren van de juiste trapboomset
 		if (rb0 == true)
@@ -620,7 +623,7 @@ public class RidderScript : CommandScript
 		else if (rb7)
 		{
 			type = 7;
-			bevessettrap = "S100522";
+			bevessettrap = "S100509";
 			traptype = "T7";
 			if (optrede < 26)
 			{
@@ -943,6 +946,39 @@ public class RidderScript : CommandScript
 				}
 
 			}
+
+
+			{   // Basic korting toevoegen
+
+				if (rb7 == true)
+				{
+
+					ScriptRecordset rsDiv = this.GetRecordset("R_MISC", "PK_R_MISC, DESCRIPTION, CODE", string.Format("CODE= '{0}'", "D4000"), "");
+					rsDiv.MoveFirst();
+
+					if (rsDiv != null && rsDiv.RecordCount == 0)
+					{
+						MessageBox.Show("Geen overeenkomstig diverse post kunnen vinden. Diverse: D4000");
+					}
+					else
+					{
+						ScriptRecordset rsAssemblyDiv = this.GetRecordset("R_ASSEMBLYDETAILMISC", "", "PK_R_ASSEMBLYDETAILMISC= -1", "");
+						rsAssemblyDiv.UseDataChanges = true;
+						rsAssemblyDiv.AddNew();
+
+						rsAssemblyDiv.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
+						rsAssemblyDiv.Fields["FK_MISC"].Value = rsDiv.Fields["PK_R_MISC"].Value;
+						rsAssemblyDiv.Fields["QUANTITY"].Value = Convert.ToDouble(inputdec);
+						rsAssemblyDiv.Fields["COSTPRICE"].Value = Convert.ToDouble("-200");
+
+						rsAssemblyDiv.Update();
+					}
+				}
+
+
+
+			}
+
 
 
 
