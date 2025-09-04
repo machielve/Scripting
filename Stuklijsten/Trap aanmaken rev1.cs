@@ -513,8 +513,8 @@ public class RidderScript : CommandScript
 			uitloopL = Int32.Parse(input40);
 			uitloopT = Math.Ceiling(uitloopL / uitloopB);
 
-			treden = treden + inloopT;
-			optrede = optrede + inloopT;
+			treden = treden + uitloopT;
+			optrede = optrede + uitloopT;
 
 			uitloop = "Inclusief uitloop L= " + uitloopL.ToString() + " mm.";
 		}
