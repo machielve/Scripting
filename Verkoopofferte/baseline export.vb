@@ -3,9 +3,8 @@ Sub ExportRangeToCSV()
     Dim ExportSheet As Worksheet
     Dim ExportRange As Range
     Dim BasePath As String
-    Dim OrderNumber As Long
+    Dim OfferNumber As String
     Dim FileName As String
-    Dim RangeFolder As String
     Dim FullPath As String
     Dim FileNum As Integer
     Dim Row As Long, Col As Long
@@ -15,23 +14,19 @@ Sub ExportRangeToCSV()
     Set ExportSheet = ThisWorkbook.Sheets("Sheet1")
     Set ExportRange = ExportSheet.Range("A1:F100")
     BasePath = "W:\Almacon Offertes\Ridder Offertes\"
-    OrderNumber = ExportSheet.Range("B2").Value      ' 24667
-    FileName = CleanFileName(ExportSheet.Range("B3").Value) ' 24667-1
+    OfferNumber = CleanFileName(ExportSheet.Range("B2").Value)
+    FileName = CleanFileName(ExportSheet.Range("B3").Value)
     ' =====================
 
-    If FileName = "" Or OrderNumber = 0 Then
-        MsgBox "Order number or filename missing.", vbExclamation
+    If OfferNumber = "" Or FileName = "" Then
+        MsgBox "Offer number or filename is missing.", vbExclamation
         Exit Sub
     End If
 
-    ' Build range folder (24600-24699)
-    RangeFolder = (OrderNumber \ 100) * 100 & "-" & ((OrderNumber \ 100) * 100 + 99)
-
     ' Build full path
-    FullPath = BasePath & RangeFolder & "\" & OrderNumber & "\"
+    FullPath = BasePath & OfferNumber & "\"
 
-    ' Ensure folders exist
-    CreateFolderIfMissing BasePath & RangeFolder
+    ' Ensure folder exists
     CreateFolderIfMissing FullPath
 
     FileNum = FreeFile
