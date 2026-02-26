@@ -466,7 +466,12 @@ public class RidderScript : CommandScript
 		{
 			optreden = Int32.Parse(input10);
 			aantreden = Int32.Parse(input11);
-			hoek = 42;
+
+			if (aantreden > 230)
+			{ hoek = 37; }
+			
+			else hoek = 42;
+			
 
 			optrede = Math.Ceiling(hoog / optreden);
 			treden = optrede - 1;
