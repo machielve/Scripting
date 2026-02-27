@@ -952,7 +952,6 @@ public class RidderScript : CommandScript
 
 			}
 
-
 			{   // Basic korting toevoegen
 
 				if (rb7 == true)
@@ -984,6 +983,39 @@ public class RidderScript : CommandScript
 
 			}
 
+			{	// substuklijsten combineren
+			
+				string hoofdlijstNmr = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
+				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY = " + hoofdlijstNmr, "FK_SUBASSEMBLY");
+				rsSub.MoveFirst();
+				rsSub.UseDataChanges = true;
+
+				while (!rsSub.EOF)
+				{
+					int aantal = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
+					string code = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
+					rsSub.MoveNext();
+
+					if (rsSub.EOF)
+					{
+					continue;
+					}
+
+				int aantal1 = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
+				string code1 = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
+
+				if (code == code1)
+				{
+					int totaal = aantal + aantal1;
+					rsSub.Fields["QUANTITY"].Value = totaal;
+					rsSub.MovePrevious();
+					rsSub.Delete();
+					rsSub.Update();
+					rsSub.MoveFirst();
+				}
+
+				rsSub.Update();}
+			}
 
 
 
