@@ -482,7 +482,7 @@ public class RidderScript : CommandScript
 		string input3 = groepnmr;
 
 		DialogResult result = ShowInputDialog(ref input, ref input2, ref input3, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7);
-		
+
 		if (result != DialogResult.OK)
 		{
 			MessageBox.Show("BricsCAD import afgebroken");
@@ -812,6 +812,8 @@ public class RidderScript : CommandScript
 
 		}
 
+
+
 		int regels = listA.Count;
 
 		if (cb1 == true)    //staalconstructie injectie	
@@ -856,7 +858,7 @@ public class RidderScript : CommandScript
 
 	}
 
-	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser)
+	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser, ref int korteJoist)
 	{
 		int artID;
 
@@ -870,6 +872,16 @@ public class RidderScript : CommandScript
 		}
 		else artID = Convert.ToInt32(rsItem.Fields["PK_R_ITEM"].Value.ToString());
 
+
+		string aGRoup = rsItem.Fields["FK_ITEMGROUP"].Value.ToString();
+
+
+		if (aGRoup == "119" && (lengte / 1000) < 1)
+		{
+			korteJoist += aantal;
+		}
+
+
 		ScriptRecordset rsSlArt = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 		rsSlArt.UseDataChanges = true;
 		rsSlArt.AddNew();
@@ -879,6 +891,8 @@ public class RidderScript : CommandScript
 		rsSlArt.Fields["WIDTH"].Value = breedte / 1000;
 		rsSlArt.Fields["QUANTITY"].Value = aantal;
 		rsSlArt.Update();
+
+
 	}       //artikel import
 
 	public void artfix(ref List<string> listF, ref string wiewatwaar)
@@ -1227,49 +1241,36 @@ public class RidderScript : CommandScript
 							ref List<string> listT,
 							ref List<string> listAA)
 	{
-		decimal totaalvloer = 0;
+		//	decimal totaalvloer = 0;
+
+		int korteJoist = 0;
 
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Staalconstructie")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
-			/*
-			if (listB[i] == "Polyline" && listH[i] == "Vloer")
-			{
-				int aantalR = Convert.ToInt32(listA[i]);
-				decimal vloerOpp = Convert.ToDecimal(listAA[i]) / 1000 / 1000;
-
-				decimal EXOpp = aantalR * vloerOpp;
-
-				totaalvloer += EXOpp;
-
-			}
-			*/
 		}
 
-		/*
+		if (korteJoist > 0)
+		{
 
-		decimal LL1 = Math.Ceiling(totaalvloer);
+			ScriptRecordset rsStuklijstUBW = this.GetRecordset("R_ASSEMBLYDETAILOUTSOURCED", "", "PK_R_ASSEMBLYDETAILOUTSOURCED= -1", "");
+			rsStuklijstUBW.AddNew();
 
-		string LL = Convert.ToString(LL1);
+			rsStuklijstUBW.Fields["FK_ASSEMBLY"].Value = Convert.ToInt32(hoofdlijstNmr);
+			rsStuklijstUBW.Fields["FK_OUTSOURCEDACTIVITY"].Value = 24;
+			rsStuklijstUBW.Fields["QUANTITY"].Value = korteJoist;
 
-		ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLY", "", "PK_R_ASSEMBLY= " + hoofdlijstNmr, "");
-		rsAssemblyItem.MoveFirst();
-		rsAssemblyItem.UseDataChanges = true;
+			rsStuklijstUBW.Update();
 
-		rsAssemblyItem.Fields["KEYWORDS"].Value = LL + " m² oppervlakte";
+		//	MessageBox.Show(korteJoist.ToString() + " stuks korte joists");
 
-		rsAssemblyItem.Update();
+		}
 
-		*/
-
-
-
-		// MessageBox.Show("staal klaar");
 
 	}                                           //importeren van alle regels met groep staalconstructie
 
@@ -1282,13 +1283,16 @@ public class RidderScript : CommandScript
 							ref List<string> listQ,
 							ref List<string> listR,
 							ref List<string> listS,
-							ref List<string> listT)
+							ref List<string> listT
+							)
 	{
+		int korteJoist = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Vloerplaten")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
@@ -1308,11 +1312,13 @@ public class RidderScript : CommandScript
 							ref List<string> listS,
 							ref List<string> listT)
 	{
+		int korteJoist = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Trappen")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1332,11 +1338,13 @@ public class RidderScript : CommandScript
 							ref List<string> listS,
 							ref List<string> listT)
 	{
+		int korteJoist = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Ladders")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1358,14 +1366,15 @@ public class RidderScript : CommandScript
 							ref List<string> listZ,
 							ref List<string> listAB)
 	{
+		int korteJoist = 0;
 		decimal leuninglengte = 0;
 		decimal schoprandlengte = 0;
 
-		for (int i = 2; i < regels; i++)
+		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Leuning")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
@@ -1406,7 +1415,7 @@ public class RidderScript : CommandScript
 		decimal lengte = 6000;
 		decimal breedte = 0;
 
-		if (aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
+		if (aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist);
 
 
 		decimal LL1 = Math.Ceiling(leuninglengte);
@@ -1456,11 +1465,13 @@ public class RidderScript : CommandScript
 							ref List<string> listS,
 							ref List<string> listT)
 	{
+		int korteJoist = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "POP")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1479,11 +1490,13 @@ public class RidderScript : CommandScript
 							ref List<string> listS,
 							ref List<string> listT)
 	{
+		int korteJoist = 0;
+
 		for (int i = 1; i < regels; i++)
 		{
 			if (listH[i] == "Kolom bescherming")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1491,6 +1504,7 @@ public class RidderScript : CommandScript
 		// MessageBox.Show("Ladders klaar");
 
 	}                                           //importeren van alle regels met groep Ladders
+
 	public void knalErin(ref int regels, ref int hoofdlijstNmr, ref List<string> listA,
 							ref List<string> listD,
 							ref List<string> listU,
@@ -1500,7 +1514,9 @@ public class RidderScript : CommandScript
 							ref List<string> listQ,
 							ref List<string> listR,
 							ref List<string> listS,
-							ref List<string> listT, ref int i)
+							ref List<string> listT,
+							ref int i,
+							ref int korteJoist)
 	{
 		int aantal = Convert.ToInt32(listA[i]);
 		decimal lengte = Convert.ToDecimal(listL[i]);
@@ -1512,7 +1528,9 @@ public class RidderScript : CommandScript
 		string sub4 = listT[i];
 		string watser = listD[i] + " - " + listU[i];
 
-		if (Acode != "-") artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser);
+
+
+		if (Acode != "-") artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist);
 
 		if (sub1 != "-") sub1input(ref hoofdlijstNmr, ref aantal, ref sub1);
 
