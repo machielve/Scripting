@@ -24,7 +24,7 @@ public class RidderScript : CommandScript
 
 	*/
 
-	private static DialogResult ShowInputDialog(ref decimal input1)
+	private static DialogResult ShowInputDialog(ref decimal input1, ref DateTime input2)
 	{
 
 		System.Drawing.Size size = new System.Drawing.Size(300, 400);
@@ -68,6 +68,20 @@ public class RidderScript : CommandScript
 
 		inputBox.Controls.Add(groepprijs);
 
+		//groep datum
+		GroupBox groepdatum = new GroupBox();
+		groepdatum.Size = new System.Drawing.Size(180, 60);
+		groepdatum.Location = new System.Drawing.Point(10, 150);
+		groepdatum.Text = "Datum aangemaakt";
+
+		System.Windows.Forms.DateTimePicker textbox2 = new DateTimePicker();
+		textbox2.Size = new System.Drawing.Size(100, 25);
+		textbox2.Location = new System.Drawing.Point(5, 25);
+		textbox2.Value = input2;
+		groepdatum.Controls.Add(textbox2);
+
+		inputBox.Controls.Add(groepdatum);
+
 		inputBox.AcceptButton = okButton;
 		inputBox.CancelButton = cancelButton;
 
@@ -75,14 +89,17 @@ public class RidderScript : CommandScript
 		DialogResult result = inputBox.ShowDialog();
 
 		input1 = textBox1.Value;
+		input2 = textbox2.Value;
 
 		return result;
 	}
 
 	public void Execute()
 	{
+		DateTime now = DateTime.Now;
 		decimal input1 = 0;
-		DialogResult result = ShowInputDialog(ref input1);
+		DateTime input2 = now;
+		DialogResult result = ShowInputDialog(ref input1, ref input2);
 
 		if (result != DialogResult.OK)
 		{
@@ -117,12 +134,18 @@ public class RidderScript : CommandScript
 				return;
 			}
 			string StuklijstId = rsStuklijst.Fields["PK_R_ASSEMBLY"].Value.ToString();
+			
+			
+			
 
 			// lijst met benodigde artikelen maken
 			ScriptRecordset rsSlRegel = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "FK_ASSEMBLY = " + StuklijstId, "POSITION");
 			rsSlRegel.MoveFirst();
 
 			List<string> FoutLijst = new List<string>();
+			
+			
+			
 
 			// loop om totaal aanwezige voorraad te checken			
 			Totalcheck(ref rsSlRegel, ref input1, ref FoutLijst);
@@ -137,21 +160,19 @@ public class RidderScript : CommandScript
 			}
 
 
-
 			// loop om te checken of er gesplitst moet worden
 			decimal checkert = 0;
 			Splitcheck(ref rsSlRegel, ref input1, ref checkert);
 
 
 
-
 			if (checkert == 0) // uit en in boeken zonder te splitten
 			{
 				// loop om gebruikte artikelen uit te boeken zonder splitsen
-				TotalRemove(ref rsSlRegel, ref rsItem, ref input1);
+				TotalRemove(ref rsSlRegel, ref rsItem, ref input1, ref input2);
 
 				// maakdeel aanvullen
-				AddNew(ref rsItem, ref ItemNmr, ref input1);
+				AddNew(ref rsItem, ref ItemNmr, ref input1, ref input2);
 			}
 
 
@@ -159,10 +180,10 @@ public class RidderScript : CommandScript
 			else if (checkert > 0) //uit en in boeken met splitten
 			{
 				// loop om gebruikte artikelen uit te boeken met splitsen
-				PartRemove(ref rsSlRegel, ref rsItem, ref input1);
+				PartRemove(ref rsSlRegel, ref rsItem, ref input1, ref input2);
 
 				// maakdeel aanvullen
-				AddNew(ref rsItem, ref ItemNmr, ref input1);
+				AddNew(ref rsItem, ref ItemNmr, ref input1, ref input2);
 			}
 
 
@@ -186,7 +207,26 @@ public class RidderScript : CommandScript
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal AantalNodig = 0;
+			
+			int Item = Convert.ToInt32(rsSlRegel.Fields["FK_ITEM"].Value.ToString());
+			decimal Lengte = Convert.ToDecimal(rsSlRegel.Fields["LENGTH"].Value.ToString());
+			decimal aantal = Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+
+			ScriptRecordset rsArtikelInfo = this.GetRecordset("R_ITEM", "", "PK_R_ITEM= " + Item, "");
+			rsArtikelInfo.MoveFirst();
+			decimal HLengte = Convert.ToDecimal(rsArtikelInfo.Fields["TRADELENGTH"].Value.ToString());
+
+			if (HLengte > 0)
+			{
+				AantalNodig = (input1 * aantal * Lengte) / HLengte;
+			}
+
+			else
+			{
+				AantalNodig = input1 * aantal;
+			}
+
 			ScriptRecordset rsItemCheck1 = this.GetRecordset("R_ITEM", "", "PK_R_ITEM = " + Item1, "");
 			rsItemCheck1.MoveFirst();
 
@@ -227,7 +267,31 @@ public class RidderScript : CommandScript
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+
+			decimal AantalNodig = 0;
+			
+			int Item = Convert.ToInt32(rsSlRegel.Fields["FK_ITEM"].Value.ToString());
+			decimal Lengte = Convert.ToDecimal(rsSlRegel.Fields["LENGTH"].Value.ToString());
+			decimal aantal = Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+
+			ScriptRecordset rsArtikelInfo = this.GetRecordset("R_ITEM", "", "PK_R_ITEM= " + Item, "");
+			rsArtikelInfo.MoveFirst();
+			decimal HLengte = Convert.ToDecimal(rsArtikelInfo.Fields["TRADELENGTH"].Value.ToString());
+
+			if (HLengte > 0)
+			{
+				AantalNodig = (input1 * aantal * Lengte) / HLengte;
+			}
+
+			else
+			{
+				AantalNodig = input1 * aantal;
+			}
+			
+			
+			
+
+			
 
 			ScriptRecordset rsItemIn1 = this.GetRecordset("R_STOCKIN", "", "FK_ITEM = " + Item1, "");
 			rsItemIn1.MoveFirst();
@@ -297,7 +361,7 @@ public class RidderScript : CommandScript
 
 	}
 
-	public void TotalRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1)
+	public void TotalRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1, ref DateTime input2)
 	{
 		List<string> UitLijst = new List<string>();
 
@@ -308,12 +372,35 @@ public class RidderScript : CommandScript
 			rsArtikelUit.UseDataChanges = true;
 			rsArtikelUit.AddNew();
 
-			decimal aantaleruit = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			int Item = Convert.ToInt32(rsSlRegel.Fields["FK_ITEM"].Value.ToString());
+			decimal Lengte = Convert.ToDecimal(rsSlRegel.Fields["LENGTH"].Value.ToString());
+			decimal aantal = Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+
+			decimal aantaleruit = 0;
+
+			ScriptRecordset rsArtikelInfo = this.GetRecordset("R_ITEM", "", "PK_R_ITEM= " + Item, "");
+			rsArtikelInfo.MoveFirst();			
+			decimal HLengte = Convert.ToDecimal(rsArtikelInfo.Fields["TRADELENGTH"].Value.ToString());
+
+			if (HLengte > 0)
+			{
+				aantaleruit = (input1 * aantal * Lengte) / HLengte;
+			}
+
+			else
+			{
+				aantaleruit = input1 * aantal;
+			}
+			
+			
+
+			
 			string EruitAantal = aantaleruit.ToString();
 			string EruitNaam = rsSlRegel.Fields["DESCRIPTION"].Value.ToString();
 
 			rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 			rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
+			rsArtikelUit.Fields["STOCKOUTDATE"].Value = input2;
 			rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 			rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
@@ -330,7 +417,7 @@ public class RidderScript : CommandScript
 		MessageBox.Show(message, "Totaal uitgeboekt");
 	}
 
-	public void PartRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1)
+	public void PartRemove(ref ScriptRecordset rsSlRegel, ref ScriptRecordset rsItem, ref decimal input1, ref DateTime input2)
 	{
 		List<string> UitLijst = new List<string>();
 
@@ -338,8 +425,27 @@ public class RidderScript : CommandScript
 		while (rsSlRegel.EOF == false)
 		{
 			string Item1 = rsSlRegel.Fields["FK_ITEM"].Value.ToString();
-			decimal AantalNodig = input1 * Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+			decimal AantalNodig = 0;
 
+			int Item = Convert.ToInt32(rsSlRegel.Fields["FK_ITEM"].Value.ToString());
+			decimal Lengte = Convert.ToDecimal(rsSlRegel.Fields["LENGTH"].Value.ToString());
+			decimal aantal = Convert.ToDecimal(rsSlRegel.Fields["QUANTITY"].Value.ToString());
+
+			ScriptRecordset rsArtikelInfo = this.GetRecordset("R_ITEM", "", "PK_R_ITEM= " + Item, "");
+			rsArtikelInfo.MoveFirst();
+			decimal HLengte = Convert.ToDecimal(rsArtikelInfo.Fields["TRADELENGTH"].Value.ToString());
+
+			if (HLengte > 0)
+			{
+				AantalNodig = (input1 * aantal * Lengte) / HLengte;
+			}
+
+			else
+			{
+				AantalNodig = input1 * aantal;
+			}		
+
+			
 			ScriptRecordset rsItemIn1 = this.GetRecordset("R_STOCKIN", "", "FK_ITEM = " + Item1, "");
 			rsItemIn1.MoveFirst();
 
@@ -384,6 +490,7 @@ public class RidderScript : CommandScript
 
 					rsArtikelUit.Fields["FK_ITEM"].Value = rsSlRegel.Fields["FK_ITEM"].Value;
 					rsArtikelUit.Fields["QUANTITY"].Value = aantaleruit;
+					rsArtikelUit.Fields["STOCKOUTDATE"].Value = input2;
 					rsArtikelUit.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 					rsArtikelUit.Fields["FK_STOCKIN"].Value = rsItemIn1.Fields["PK_R_STOCKIN"].Value;
@@ -444,7 +551,7 @@ public class RidderScript : CommandScript
 
 	}
 
-	public void AddNew(ref ScriptRecordset rsItem, ref string ItemNmr, ref decimal input1)
+	public void AddNew(ref ScriptRecordset rsItem, ref string ItemNmr, ref decimal input1, ref DateTime input2)
 	{
 		ScriptRecordset rsArtikelIn = this.GetRecordset("R_STOCKIN", "", "PK_R_STOCKIN= -1", "");
 		rsArtikelIn.UseDataChanges = true;
@@ -452,6 +559,7 @@ public class RidderScript : CommandScript
 
 		rsArtikelIn.Fields["FK_ITEM"].Value = Convert.ToInt32(ItemNmr);
 		rsArtikelIn.Fields["QUANTITY"].Value = input1;
+		rsArtikelIn.Fields["DATE"].Value = input2;
 		rsArtikelIn.Fields["DESCRIPTION"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - "; //+ rsItem.Fields["DESCRIPTION"].Value.ToString();
 		rsArtikelIn.Fields["MEMO"].Value = "MvE maakdeel script: " + rsItem.Fields["CODE"].Value.ToString() + " - " + rsItem.Fields["DESCRIPTION"].Value.ToString();
 
