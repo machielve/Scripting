@@ -35,6 +35,14 @@ public class RidderScript : CommandScript
 
 		foreach (IRecord record in records)
 		{
+			ScriptRecordset rsInstRegel = this.GetRecordset("U_MONTAGE_INSTR_REGEL", "", "FK_MONATGE_INSTRUCTIE = " + (int)record.GetPrimaryKeyValue(), "");
+			int aantal = rsInstRegel.RecordCount;
+
+			if (aantal > 0)
+			{
+				MessageBox.Show("Instructie word al op " + aantal.ToString() + " regel(s) gebruikt.");
+			}			
+			
 			ScriptRecordset rsInst = this.GetRecordset("U_MONTAGE_STRUCTIES", "", "PK_U_MONTAGE_STRUCTIES = " + (int)record.GetPrimaryKeyValue(), "");
 			rsInst.MoveFirst();
 
