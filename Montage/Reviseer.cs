@@ -20,7 +20,6 @@ public class RidderScript : CommandScript
 
 		/*
 			het Reviseren van de geselecteerde montage instructies
-
 		*/
 
 
