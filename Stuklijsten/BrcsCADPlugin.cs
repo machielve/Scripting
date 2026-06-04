@@ -890,6 +890,7 @@ public class RidderScript : CommandScript
 		rsSlArt.Fields["LENGTH"].Value = lengte / 1000;
 		rsSlArt.Fields["WIDTH"].Value = breedte / 1000;
 		rsSlArt.Fields["QUANTITY"].Value = aantal;
+		rsSlArt.Fields["CAMPARAMETER"].Value = TAG;
 		rsSlArt.Update();
 
 
