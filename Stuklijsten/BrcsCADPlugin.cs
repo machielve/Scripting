@@ -818,37 +818,37 @@ public class RidderScript : CommandScript
 
 		if (cb1 == true)    //staalconstructie injectie	
 		{
-			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAA);
+			staalinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listAA);
 		}
 
 		if (cb2 == true) //vloer injectie
 		{
-			vloerinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			vloerinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		if (cb3 == true) //trappen injectie
 		{
-			trapinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			trapinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		if (cb4 == true) //leuning injectie
 		{
-			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listZ, ref listAB);
+			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listZ, ref listAB);
 		}
 
 		if (cb5 == true) //POP injectie
 		{
-			POPinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			POPinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		if (cb6 == true) //Ladder injectie
 		{
-			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			Ladderinput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		if (cb7 == true) //Bescherm injectie
 		{
-			Bescherminput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
+			Bescherminput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT);
 		}
 
 		subcombine(ref hoofdlijstNmr);
@@ -858,7 +858,7 @@ public class RidderScript : CommandScript
 
 	}
 
-	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser, ref int korteJoist)
+	public void artinput(ref int hoofdlijstNmr, ref int aantal, ref String Acode, ref decimal lengte, ref decimal breedte, ref string watser, ref int korteJoist, ref string TAG)
 	{
 		int artID;
 
@@ -1230,6 +1230,7 @@ public class RidderScript : CommandScript
 	}                                           //alle sub-stuklijsten combineeren als ze gelijk zijn
 
 	public void staalinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1249,7 +1250,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Staalconstructie")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
@@ -1275,6 +1276,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep staalconstructie
 
 	public void vloerinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1292,7 +1294,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Vloerplaten")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
@@ -1302,6 +1304,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep Vloerplaten
 
 	public void trapinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1318,7 +1321,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Trappen")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1328,6 +1331,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep trappen
 
 	public void Ladderinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1344,7 +1348,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Ladders")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1354,6 +1358,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep Ladders
 
 	public void leuninginput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1374,7 +1379,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Leuning")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 
@@ -1415,7 +1420,9 @@ public class RidderScript : CommandScript
 		decimal lengte = 6000;
 		decimal breedte = 0;
 
-		if (aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist);
+		string TAG = "";
+
+		if (aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist, ref TAG);
 
 
 		decimal LL1 = Math.Ceiling(leuninglengte);
@@ -1455,6 +1462,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep leuning
 
 	public void POPinput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1471,7 +1479,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "POP")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1480,6 +1488,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep POP
 
 	public void Bescherminput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1496,7 +1505,7 @@ public class RidderScript : CommandScript
 		{
 			if (listH[i] == "Kolom bescherming")
 			{
-				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
+				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
 		}
@@ -1506,6 +1515,7 @@ public class RidderScript : CommandScript
 	}                                           //importeren van alle regels met groep Ladders
 
 	public void knalErin(ref int regels, ref int hoofdlijstNmr, ref List<string> listA,
+							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
 							ref List<string> listL,
@@ -1527,10 +1537,11 @@ public class RidderScript : CommandScript
 		string sub3 = listS[i];
 		string sub4 = listT[i];
 		string watser = listD[i] + " - " + listU[i];
+		string TAG = listC[i]; 
 
 
 
-		if (Acode != "-") artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist);
+		if (Acode != "-") artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist, ref TAG);
 
 		if (sub1 != "-") sub1input(ref hoofdlijstNmr, ref aantal, ref sub1);
 
