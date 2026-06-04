@@ -40,6 +40,7 @@ public class RidderScript : CommandScript
 			
 			string omschrijving = rsInst.Fields["OMSCHRIJVING"].Value.ToString();
 			string instructie = rsInst.Fields["INSTRUCTIE_TEKST"].Value.ToString();
+			string onderdelen = rsInst.Fields["ONDERDELENLIJST"].Value.ToString();;
 
 			object imageA = rsInst.Fields["AFBEELDING_A"].Value;
 			object imageB = rsInst.Fields["AFBEELDING_B"].Value;
@@ -56,13 +57,6 @@ public class RidderScript : CommandScript
 			string versie2 = editie2.ToString();
 
 
-
-
-
-
-
-
-
 			//maken van nieuwe data
 			ScriptRecordset rsInstNew = this.GetRecordset("U_MONTAGE_STRUCTIES", "", "PK_U_MONTAGE_STRUCTIES= -1", "");
 			rsInstNew.UseDataChanges = true;
@@ -72,6 +66,7 @@ public class RidderScript : CommandScript
 			rsInstNew.Fields["STATUS_MONTAGE_INSTRUCTIE"].Value = 3;
 			rsInstNew.Fields["OMSCHRIJVING"].Value = omschrijving;
 			rsInstNew.Fields["INSTRUCTIE_TEKST"].Value = instructie;
+			rsInstNew.Fields["ONDERDELENLIJST"].Value = onderdelen;			
 
 			rsInstNew.Fields["AFBEELDING_A"].Value = imageA;
 			rsInstNew.Fields["AFBEELDING_B"].Value = imageB;
