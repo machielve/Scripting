@@ -783,11 +783,9 @@ public class RidderScript : CommandScript
 
 			// extra spul hieronder
 
-
-
 			listB.Add(values[Name]);
+			
 			listZ.Add(values[Layer]);
-
 
 			listC.Add(values[Tag]);
 			listD.Add(values[Afmeting]);
@@ -807,9 +805,6 @@ public class RidderScript : CommandScript
 			listW.Add(values[Voet]);
 			listX.Add(values[W]);
 			listY.Add(values[W1]);
-
-
-
 		}
 
 
@@ -833,7 +828,7 @@ public class RidderScript : CommandScript
 
 		if (cb4 == true) //leuning injectie
 		{
-			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listC, ref listB, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listZ, ref listAB);
+			leuninginput(ref regels, ref hoofdlijstNmr, ref listH, ref listA, ref listB, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref listZ, ref listAB);
 		}
 
 		if (cb5 == true) //POP injectie
@@ -1358,7 +1353,8 @@ public class RidderScript : CommandScript
 
 	}                                           //importeren van alle regels met groep Ladders
 
-	public void leuninginput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, ref List<string> listB,
+	public void leuninginput(ref int regels, ref int hoofdlijstNmr, ref List<string> listH, ref List<string> listA, 
+							ref List<string> listB,
 							ref List<string> listC,
 							ref List<string> listD,
 							ref List<string> listU,
@@ -1377,9 +1373,9 @@ public class RidderScript : CommandScript
 		decimal schoprandlengte = 0;
 
 		for (int i = 1; i < regels; i++)
-		{
+		{	
 			if (listH[i] == "Leuning")
-			{
+			{				
 				knalErin(ref regels, ref hoofdlijstNmr, ref listA, ref listC, ref listD, ref listU, ref listL, ref listG, ref listF, ref listQ, ref listR, ref listS, ref listT, ref i, ref korteJoist);
 
 			}
@@ -1392,7 +1388,10 @@ public class RidderScript : CommandScript
 				decimal EXlengte = aantalR * lengteR;
 
 				leuninglengte += EXlengte;
+
 			}
+
+		
 
 			if (listB[i] == "Polyline" && listH[i] == "Leuning" && listZ[i] == "ALM_KICKRAIL")
 			{
@@ -1409,9 +1408,8 @@ public class RidderScript : CommandScript
 		decimal calc1 = Math.Ceiling(calc);
 		int aantalT = Convert.ToInt32(calc1);
 		string sub0 = "S100223";
-
+		
 		if (aantalT > 0) sub1input(ref hoofdlijstNmr, ref aantalT, ref sub0);
-
 
 		decimal KRcalc = schoprandlengte / 6;
 		decimal KRcalc1 = Math.Ceiling(KRcalc);
@@ -1421,7 +1419,7 @@ public class RidderScript : CommandScript
 		decimal lengte = 6000;
 		decimal breedte = 0;
 
-		string TAG = "";
+		string TAG = "-";
 
 		if (aantal > 0) artinput(ref hoofdlijstNmr, ref aantal, ref Acode, ref lengte, ref breedte, ref watser, ref korteJoist, ref TAG);
 
