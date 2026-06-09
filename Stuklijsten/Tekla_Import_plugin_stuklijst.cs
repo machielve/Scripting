@@ -27,6 +27,7 @@ public class RidderScript : CommandScript
 		string SkipRegel = "";
 		string LeuningRegel = "";
 		string Fullpath = "";
+		string TeklaFase = "";
 
 		bool cb1;           // S100217, staalcon
 		bool cb2;           // S100218, vloerplaten
@@ -36,12 +37,16 @@ public class RidderScript : CommandScript
 		bool cb6;           // S100542, cat-ladders
 		bool cb7;           // S100343, kolom bescherm
 		bool cb8;           // S100569, staalcon basic
+		bool cb9;           // vrije invoer tekla fase nummer
 
 		decimal spacerQnty = 0;
 		decimal shortjoistQnty = 0;
 
+		bool rb1;           // stuklijst vanaf offerte model
+		bool rb2;           // stuklijst vanaf order model
 
-
+		rb1 = true;
+		rb2 = false;
 
 		string StuklijstId = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 
@@ -56,8 +61,6 @@ public class RidderScript : CommandScript
 
 		SalesOffer = OfferteNummer;
 
-
-
 		if (StuklijstType == "S100217/")
 		{
 			cb1 = true;
@@ -68,6 +71,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100218/")
 		{
@@ -79,6 +83,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100215/")
 		{
@@ -90,6 +95,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100219/")
 		{
@@ -101,6 +107,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100220/")
 		{
@@ -112,6 +119,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100542/")
 		{
@@ -123,6 +131,7 @@ public class RidderScript : CommandScript
 			cb6 = true;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100343/")
 		{
@@ -134,6 +143,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = true;
 			cb8 = false;
+			cb9 = false;
 		}
 		else if (StuklijstType == "S100569/")
 		{
@@ -145,6 +155,7 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = true;
+			cb9 = false;
 		}
 		else
 		{
@@ -156,12 +167,12 @@ public class RidderScript : CommandScript
 			cb6 = false;
 			cb7 = false;
 			cb8 = false;
+			cb9 = false;
 		}
 
 		// csv bestand ophalen
 
-		DialogResult result = ShowInputDialog1(ref SalesOffer, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7, ref cb8);
-
+		DialogResult result = ShowInputDialog1(ref SalesOffer, ref cb1, ref cb2, ref cb3, ref cb4, ref cb5, ref cb6, ref cb7, ref cb8, ref cb9, ref rb1, ref rb2, ref TeklaFase);
 		if (result != DialogResult.OK)
 		{
 			MessageBox.Show("Offerte keuze afgebroken");
@@ -170,11 +181,12 @@ public class RidderScript : CommandScript
 
 
 
-		MapBuilder(ref SalesOffer, ref Filelocation, ref Fullpath);
+		MapBuilder(ref SalesOffer, ref Filelocation, ref Fullpath, ref rb1, ref rb2);
 		if (Filelocation == "")
 		{
 			return;
 		}
+
 
 
 
@@ -345,6 +357,11 @@ public class RidderScript : CommandScript
 		if (cb8 == true)    //staalconstructie basic injectie	
 		{
 			staalCinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError);
+		}
+
+		if (cb9 == true)    //vrije fase invoer injectie	
+		{
+			Vrijeinput(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref TeklaFase);
 		}
 
 
@@ -697,6 +714,28 @@ public class RidderScript : CommandScript
 		}
 	} // staalconstructie basic importeren
 
+	public void Vrijeinput(ref int regels, ref string StuklijstId, ref List<string> listA,
+															ref List<string> listB,
+															ref List<string> listC,
+															ref List<string> listD,
+															ref List<string> listE,
+															ref List<string> listK,
+															ref List<string> listL,
+															ref List<string> listM,
+															ref List<string> listF,
+															ref List<string> listH,
+															ref List<string> ListError,
+															ref string TeklaFase)
+	{
+		for (int i = 1; i < regels; i++)
+		{
+			string phase = listA[i].ToString().Substring(0, 3);
+			if (phase == TeklaFase)
+			{
+				knalErin(ref regels, ref StuklijstId, ref listA, ref listB, ref listC, ref listD, ref listE, ref listK, ref listL, ref listM, ref listF, ref listH, ref ListError, ref i);
+			}
+		}
+	} // staalconstructie basic importeren
 
 
 
@@ -938,11 +977,22 @@ public class RidderScript : CommandScript
 
 	// maken van mappen en lijsten	
 
-	public void MapBuilder(ref string SalesOffer, ref string Filelocation, ref string Fullpath)
+	public void MapBuilder(ref string SalesOffer, ref string Filelocation, ref string Fullpath, ref bool rb1, ref bool rb2)
 	{
-		string BaseFolder = @"T:\Offertes\";
+		string BaseFolder = "";
+		string OfferStart = "";
 
-		string OfferStart = SalesOffer.Substring(0, 3);
+		if (rb1 == true)
+		{
+			BaseFolder = @"T:\Offertes\";
+			OfferStart = SalesOffer.Substring(0, 3);
+		}
+
+		if (rb2 == true)
+		{
+			BaseFolder = @"T:\Projecten\";
+			OfferStart = SalesOffer.Substring(0, 2);
+		}
 
 		string OfferGroup = OfferStart + "00-" + OfferStart + @"99\";
 
@@ -1109,7 +1159,11 @@ public class RidderScript : CommandScript
 																		ref bool cb5,
 																		ref bool cb6,
 																		ref bool cb7,
-																		ref bool cb8)
+																		ref bool cb8,
+																		ref bool cb9,
+																		ref bool rb1,
+																		ref bool rb2,
+																		ref string TeklaFase)
 	{
 		System.Drawing.Size size = new System.Drawing.Size(400, 400);
 		Form inputBox = new Form();
@@ -1119,14 +1173,14 @@ public class RidderScript : CommandScript
 		inputBox.Text = "Cluedo (Tekla import 2.0)";
 
 		System.Windows.Forms.Label label = new Label();
-		label.Size = new System.Drawing.Size(95, 25);
+		label.Size = new System.Drawing.Size(140, 25);
 		label.Location = new System.Drawing.Point(5, 60);
-		label.Text = "Tekla offerte nummer";
+		label.Text = "Tekla model nummer";
 		inputBox.Controls.Add(label);
 
 		System.Windows.Forms.TextBox textBox = new TextBox();
-		textBox.Size = new System.Drawing.Size(200, 25);
-		textBox.Location = new System.Drawing.Point(100, 60);
+		textBox.Size = new System.Drawing.Size(100, 25);
+		textBox.Location = new System.Drawing.Point(150, 60);
 		textBox.Text = SalesOffer;
 		inputBox.Controls.Add(textBox);
 
@@ -1145,58 +1199,94 @@ public class RidderScript : CommandScript
 		cancelButton.Size = new System.Drawing.Size(75, 25);
 		cancelButton.Location = new System.Drawing.Point(125, 10);
 		inputBox.Controls.Add(cancelButton);
+		
+
+		System.Windows.Forms.RadioButton rbox1 = new RadioButton();
+		rbox1.Location = new System.Drawing.Point(210, 100);
+		rbox1.Checked = rb1;
+		rbox1.Text = "Offerte model";
+		inputBox.Controls.Add(rbox1);
+
+		System.Windows.Forms.RadioButton rbox2 = new RadioButton();
+		rbox2.Location = new System.Drawing.Point(210, 125);
+		rbox2.Checked = rb2;
+		rbox2.Text = "Order model";
+		inputBox.Controls.Add(rbox2);
+		
+		
 
 
 
 		System.Windows.Forms.CheckBox cbox1 = new CheckBox();
 		cbox1.Location = new System.Drawing.Point(5, 100);
+		cbox1.Size = new System.Drawing.Size(200, 25);
 		cbox1.Checked = cb1;
-		cbox1.Text = "Staalconstructie";
+		cbox1.Text = "Staalconstructie (Fase 3)";
 		inputBox.Controls.Add(cbox1);
 
 		System.Windows.Forms.CheckBox cbox2 = new CheckBox();
 		cbox2.Location = new System.Drawing.Point(5, 125);
+		cbox2.Size = new System.Drawing.Size(200, 25);
 		cbox2.Checked = cb2;
-		cbox2.Text = "Vloerplaten";
+		cbox2.Text = "Vloerplaten (Fase 4)";
 		inputBox.Controls.Add(cbox2);
 
 		System.Windows.Forms.CheckBox cbox3 = new CheckBox();
 		cbox3.Location = new System.Drawing.Point(5, 150);
+		cbox3.Size = new System.Drawing.Size(200, 25);
 		cbox3.Checked = cb3;
-		cbox3.Text = "Trappen";
+		cbox3.Text = "Trappen (Fase 6)";
 		inputBox.Controls.Add(cbox3);
 
 		System.Windows.Forms.CheckBox cbox6 = new CheckBox();
 		cbox6.Location = new System.Drawing.Point(5, 175);
+		cbox6.Size = new System.Drawing.Size(200, 25);
 		cbox6.Checked = cb6;
-		cbox6.Text = "Ladders";
+		cbox6.Text = "Ladders (Fase 7)";
 		inputBox.Controls.Add(cbox6);
 
 		System.Windows.Forms.CheckBox cbox4 = new CheckBox();
 		cbox4.Location = new System.Drawing.Point(5, 200);
+		cbox4.Size = new System.Drawing.Size(200, 25);
 		cbox4.Checked = cb4;
-		cbox4.Text = "Leuning";
+		cbox4.Text = "Leuning (Fase 5)";
 		inputBox.Controls.Add(cbox4);
 
 		System.Windows.Forms.CheckBox cbox5 = new CheckBox();
 		cbox5.Location = new System.Drawing.Point(5, 225);
+		cbox5.Size = new System.Drawing.Size(200, 25);
 		cbox5.Checked = cb5;
-		cbox5.Text = "Opzetplekken";
+		cbox5.Text = "Opzetplekken (Fase 8)";
 		inputBox.Controls.Add(cbox5);
 
 		System.Windows.Forms.CheckBox cbox7 = new CheckBox();
 		cbox7.Location = new System.Drawing.Point(5, 250);
 		cbox7.Size = new System.Drawing.Size(200, 25);
 		cbox7.Checked = cb7;
-		cbox7.Text = "Kolom beschermers";
+		cbox7.Text = "Kolom beschermers (Fase 10)";
 		inputBox.Controls.Add(cbox7);
 
 		System.Windows.Forms.CheckBox cbox8 = new CheckBox();
 		cbox8.Location = new System.Drawing.Point(5, 275);
 		cbox8.Size = new System.Drawing.Size(200, 25);
 		cbox8.Checked = cb8;
-		cbox8.Text = "Staalconstructie basic";
+		cbox8.Text = "Staalconstructie basic (Fase 2)";
 		inputBox.Controls.Add(cbox8);
+
+		System.Windows.Forms.CheckBox cbox9 = new CheckBox();
+		cbox9.Location = new System.Drawing.Point(5, 300);
+		cbox9.Size = new System.Drawing.Size(150, 25);
+		cbox9.Checked = cb9;
+		cbox9.Text = "Vrije fase invoer";
+		inputBox.Controls.Add(cbox9);
+
+		System.Windows.Forms.TextBox textBox2 = new TextBox();
+		textBox2.Size = new System.Drawing.Size(100, 25);
+		textBox2.Location = new System.Drawing.Point(155, 300);
+		textBox2.Text = TeklaFase;
+		inputBox.Controls.Add(textBox2);
+		
+		
 
 
 		inputBox.AcceptButton = okButton;
@@ -1213,6 +1303,11 @@ public class RidderScript : CommandScript
 		cb6 = cbox6.Checked;
 		cb7 = cbox7.Checked;
 		cb8 = cbox8.Checked;
+		cb9 = cbox9.Checked;
+		TeklaFase = textBox2.Text;
+
+		rb1 = rbox1.Checked;
+		rb2 = rbox2.Checked;
 		return result;
 
 	} // bevestigen of wijzigen van het offertenummer
