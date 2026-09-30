@@ -401,20 +401,26 @@ public class RidderScript : CommandScript
 
 
 
-		int hoek = 0;
-		int type = 0;
-		int ssm = 0;
+		int hoek = 0; //trap hoek
+		int type = 0; //trap type
+		int ssm = 0; //stair suppprt aantal
+		int kta = 0; //kaletrede aantal
+		int tta = 0; //top trede aantal
 
 		string tredecode = "";
+		string kaletredecode = "";
 		string supportcode = "";
 		string hoeklijncode = "";
+		string weltredecode = "";
 		string trapcode = "";
 		string trapcodeRH = "";
 		string trapcodeLH = "";
+		
 		string bevessettrap = "";
 		string bevessettrede = "S100337";
 		string bevessetweltrede = "S100337";
 		string bevessetsupplate = "S100338";
+		
 		string traptype = "";
 		string Schoorlijst = "S100225";
 		decimal inloopB = 0;
@@ -469,9 +475,9 @@ public class RidderScript : CommandScript
 
 			if (aantreden > 230)
 			{ hoek = 37; }
-			
+
 			else hoek = 42;
-			
+
 
 			optrede = Math.Ceiling(hoog / optreden);
 			treden = optrede - 1;
@@ -650,64 +656,65 @@ public class RidderScript : CommandScript
 		//Selecteren tredes
 		if (hoek == 37)
 		{
-			if (breed == 600) { tredecode = "11960"; }
-			else if (breed == 650) { tredecode = "12075"; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = ""; }
-			else if (breed == 800) { tredecode = "10379"; }
-			else if (breed == 900) { tredecode = "10380"; }
-			else if (breed == 1000) { tredecode = "10381"; }
-			else if (breed == 1200) { tredecode = "10382"; }
+			if (breed == 600) 		{ tredecode = "11960"; 	kaletredecode = ""; }
+			else if (breed == 650) 	{ tredecode = "12075"; 	kaletredecode = ""; }
+			else if (breed == 700) 	{ tredecode = ""; 		kaletredecode = ""; }
+			else if (breed == 750) 	{ tredecode = ""; 		kaletredecode = ""; }
+			else if (breed == 800) 	{ tredecode = "10379"; 	kaletredecode = "10448"; }
+			else if (breed == 900) 	{ tredecode = "10380"; 	kaletredecode = "10449"; }
+			else if (breed == 1000) { tredecode = "10381"; 	kaletredecode = "10450"; }
+			else if (breed == 1200) { tredecode = "10382"; 	kaletredecode = "10451"; }
 		}
 
 		if (hoek == 42)
 		{
-			if (breed == 600) { tredecode = "11959"; }
-			else if (breed == 650) { tredecode = "12074"; }
-			else if (breed == 700) { tredecode = ""; }
-			else if (breed == 750) { tredecode = "13751"; }
-			else if (breed == 800) { tredecode = "10375"; }
-			else if (breed == 900) { tredecode = "10376"; }
-			else if (breed == 1000) { tredecode = "10377"; }
-			else if (breed == 1200) { tredecode = "10378"; }
+			if (breed == 600) 		{ tredecode = "11959"; 	kaletredecode = ""; }
+			else if (breed == 650) 	{ tredecode = "12074"; 	kaletredecode = ""; }
+			else if (breed == 700) 	{ tredecode = ""; 		kaletredecode = ""; }
+			else if (breed == 750) 	{ tredecode = "13751"; 	kaletredecode = ""; }
+			else if (breed == 800) 	{ tredecode = "10375"; 	kaletredecode = "10452"; }
+			else if (breed == 900) 	{ tredecode = "10376"; 	kaletredecode = "10453"; }
+			else if (breed == 1000) { tredecode = "10377"; 	kaletredecode = "10454"; }
+			else if (breed == 1200) { tredecode = "10378"; 	kaletredecode = "10455"; }
 		}
 
 		if (hoek != 00)
 		{
-			if (breed == 600) { supportcode = "13750"; hoeklijncode = ""; }
-			else if (breed == 650) { supportcode = ""; hoeklijncode = ""; }
-			else if (breed == 700) { supportcode = ""; hoeklijncode = ""; }
-			else if (breed == 750) { supportcode = "13752"; hoeklijncode = ""; }
-			else if (breed == 800) { supportcode = "13453"; hoeklijncode = "14266"; }
-			else if (breed == 900) { supportcode = "13452"; hoeklijncode = "14267"; }
-			else if (breed == 1000) { supportcode = "13451"; hoeklijncode = "14268"; }
-			else if (breed == 1200) { supportcode = "13450"; hoeklijncode = "14269"; }
+			if (breed == 600) 			{ supportcode = "13750"; 	hoeklijncode = ""; 			weltredecode = ""; }
+			else if (breed == 650) 		{ supportcode = ""; 		hoeklijncode = ""; 			weltredecode = ""; }
+			else if (breed == 700) 		{ supportcode = ""; 		hoeklijncode = ""; 			weltredecode = ""; }
+			else if (breed == 750) 		{ supportcode = "13752"; 	hoeklijncode = ""; 			weltredecode = ""; }
+			else if (breed == 800) 		{ supportcode = "13453"; 	hoeklijncode = "14266"; 	weltredecode = "14626";}
+			else if (breed == 900) 		{ supportcode = "13452"; 	hoeklijncode = "14267"; 	weltredecode = "14627";}
+			else if (breed == 1000) 	{ supportcode = "13451"; 	hoeklijncode = "14268"; 	weltredecode = "14625";}
+			else if (breed == 1200) 	{ supportcode = "13450"; 	hoeklijncode = "14269"; 	weltredecode = "14628";}
 		}
 
-		if (type == 0) { ssm = 1; }
-		else if (type == 1) { ssm = 0; }
-		else if (type == 2) { ssm = 1; }
-		else if (type == 3) { ssm = 0; }
-		else if (type == 4) { ssm = 2; }
-		else if (type == 5) { ssm = 1; }
-		else if (type == 6) { ssm = 1; }
-		else if (type == 7) { ssm = 1; }
+		if (type == 0) 		{ ssm = 1; kta = 0; tta = 1; }
+		else if (type == 1) { ssm = 0; kta = 0; tta = 1; }
+		else if (type == 2) { ssm = 1; kta = 1; tta = 1; }
+		else if (type == 3) { ssm = 0; kta = 1; tta = 1; }
+		else if (type == 4) { ssm = 2; kta = 1; tta = 1; }
+		else if (type == 5) { ssm = 1; kta = 0; tta = 1; }
+		else if (type == 6) { ssm = 1; kta = 0; tta = 1; }
+		else if (type == 7) { ssm = 1; kta = 0; tta = 1; }
 
 		decimal inputdec = Convert.ToDecimal(input);
-
-		decimal tottrede = inputdec * treden;
+		
 		decimal totsupp = inputdec * ssm;
+		decimal totwel = inputdec * tta;
+		decimal totin = inputdec * kta;	
+		decimal tottrede = inputdec * treden;	
 
 		string trapcheck = trapcodeRH + " / " + trapcodeLH;
 		string trapcheck1 = trapcodeRH + trapcodeLH;
 
-
-		if (tredecode == "" || supportcode == "" || trapcheck1 == "" || bevessettrap == "" || inputdec == 0 || hoeklijncode == "")
+		if (tredecode == "" || trapcheck1 == "" || bevessettrap == "" || inputdec == 0 || weltredecode == "")
 		{
 			MessageBox.Show("Er ontbreken artikelcodes");
 			MessageBox.Show("Stringer set = " + trapcheck +
 							"\nTrap trede = " + tredecode +
-							"\nWeltrede code = " + supportcode
+							"\nWeltrede code = " + weltredecode
 							, "WipWapWop");
 			// cancel als artikelcodes niet ingevuld zijn
 			return;
@@ -724,8 +731,7 @@ public class RidderScript : CommandScript
 							"\n" +
 							"\n" +
 							"\nArtikelcode roostertrede: " + tredecode + " - " + tottrede + " x" +
-							"\nArtikelcode weltrede: " + supportcode + " - " + totsupp + " x" +
-							"\nArtikelcode hoeklijn: " + hoeklijncode + " - " + totsupp + " x" +
+							"\nArtikelcode weltrede: " + weltredecode + " - " + totsupp + " x" +
 							"\nArtikelcode trapboom RH: " + trapcodeRH + " - " + inputdec + " x" +
 							"\nArtikelcode trapboom LH: " + trapcodeLH + " - " + inputdec + " x"
 							, "Trebuchet");
@@ -754,16 +760,16 @@ public class RidderScript : CommandScript
 			}
 
 			{   //weltrede invoegen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", supportcode), "");
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", weltredecode), "");
 				rsItem.MoveFirst();
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + supportcode);
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + weltredecode);
 				}
 				else
 				{
-					if (totsupp > 0)
+					if (totwel > 0)
 					{
 						ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 						rsAssemblyItem.UseDataChanges = true;
@@ -771,24 +777,25 @@ public class RidderScript : CommandScript
 
 						rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 						rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-						rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
+						rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totwel);
 
 						rsAssemblyItem.Update();
 					}
 				}
 			}
+			
 
-			{   //hoeklijn invoegen
-				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", hoeklijncode), "");
+			{   //kale trede invoegen
+				ScriptRecordset rsItem = this.GetRecordset("R_ITEM", "PK_R_ITEM, DESCRIPTION, CODE", string.Format("CODE = '{0}'", kaletredecode), "");
 				rsItem.MoveFirst();
 
 				if (rsItem != null && rsItem.RecordCount == 0)
 				{
-					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + hoeklijncode);
+					MessageBox.Show("Geen overeenkomstig artikel kunnen vinden. Artikel: " + kaletredecode);
 				}
 				else
 				{
-					if (totsupp > 0)
+					if (totin > 0)
 					{
 						ScriptRecordset rsAssemblyItem = this.GetRecordset("R_ASSEMBLYDETAILITEM", "", "PK_R_ASSEMBLYDETAILITEM= -1", "");
 						rsAssemblyItem.UseDataChanges = true;
@@ -796,7 +803,7 @@ public class RidderScript : CommandScript
 
 						rsAssemblyItem.Fields["FK_ASSEMBLY"].Value = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue();
 						rsAssemblyItem.Fields["FK_ITEM"].Value = rsItem.Fields["PK_R_ITEM"].Value;
-						rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totsupp);
+						rsAssemblyItem.Fields["QUANTITY"].Value = Convert.ToDouble(totin);
 
 						rsAssemblyItem.Update();
 					}
@@ -983,8 +990,8 @@ public class RidderScript : CommandScript
 
 			}
 
-			{	// substuklijsten combineren
-			
+			{   // substuklijsten combineren
+
 				string hoofdlijstNmr = this.FormDataAwareFunctions.CurrentRecord.GetPrimaryKeyValue().ToString();
 				ScriptRecordset rsSub = this.GetRecordset("R_ASSEMBLYDETAILSUBASSEMBLY", "", "FK_ASSEMBLY = " + hoofdlijstNmr, "FK_SUBASSEMBLY");
 				rsSub.MoveFirst();
@@ -998,23 +1005,24 @@ public class RidderScript : CommandScript
 
 					if (rsSub.EOF)
 					{
-					continue;
+						continue;
 					}
 
-				int aantal1 = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
-				string code1 = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
+					int aantal1 = Convert.ToInt32(rsSub.Fields["QUANTITY"].Value.ToString());
+					string code1 = rsSub.Fields["FK_SUBASSEMBLY"].Value.ToString();
 
-				if (code == code1)
-				{
-					int totaal = aantal + aantal1;
-					rsSub.Fields["QUANTITY"].Value = totaal;
-					rsSub.MovePrevious();
-					rsSub.Delete();
+					if (code == code1)
+					{
+						int totaal = aantal + aantal1;
+						rsSub.Fields["QUANTITY"].Value = totaal;
+						rsSub.MovePrevious();
+						rsSub.Delete();
+						rsSub.Update();
+						rsSub.MoveFirst();
+					}
+
 					rsSub.Update();
-					rsSub.MoveFirst();
 				}
-
-				rsSub.Update();}
 			}
 
 
